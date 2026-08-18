@@ -11,6 +11,8 @@ const loginSchema = z.object({
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH ? `${process.env.NEXT_PUBLIC_BASE_PATH}/api/auth` : "/api/auth",
   ...authConfig,
   providers: [
     Credentials({
