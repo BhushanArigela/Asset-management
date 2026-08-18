@@ -1,26 +1,93 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Background: #FAFAFA */
+    --background: 0 0% 98%;
+    /* Text foreground: #171717 */
+    --foreground: 0 0% 9%;
+    /* Card: #FFFFFF */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    /* Primary: Deep Navy #1B2A4A */
+    --primary: 218 46% 20%;
+    --primary-foreground: 0 0% 100%;
+    /* Muted: #F5F5F5 */
+    --muted: 0 0% 96.1%;
+    /* Muted foreground: #737373 */
+    --muted-foreground: 0 0% 45.1%;
+    /* Accent: Warm Gold #C5A55A */
+    --accent: 42 50% 56%;
+    --accent-foreground: 0 0% 100%;
+    /* Destructive: #EF4444 */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    /* Border: #E5E5E5 */
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 218 46% 20%;
+    --radius: 0.5rem;
+    
+    /* Success: #22C55E */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    /* Warning: #F59E0B */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    /* Custom Scrollbar */
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--color-muted);
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--color-primary);
+      border-radius: 4px;
+    }
+  }
 }

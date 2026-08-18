@@ -1,0 +1,773 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// Authentication & Users
+// ==========================================
+
+model User {
+  id           String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name         String   @map("name")
+  email        String   @unique @map("email")
+  passwordHash String   @map("password_hash")
+  roleId       String   @map("role_id") @db.VarChar(36)
+  phone        String?  @map("phone")
+  isActive     Boolean  @default(true) @map("is_active")
+  avatar       String?  @map("avatar")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  role         Role     @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  // Relations
+  assetsCreated           Asset[]                @relation("AssetCreator")
+  documentsUploaded       AssetDocument[]        @relation("DocumentUploader")
+  movementsTransferred    AssetMovement[]        @relation("MovementTransferrer")
+  statusChanges           AssetStatusChange[]    @relation("StatusChanger")
+  conditionChanges        AssetConditionChange[] @relation("ConditionChanger")
+  maintenanceCreated      MaintenanceRequest[]   @relation("MaintenanceCreator")
+  maintenanceDocsUploaded MaintenanceDocument[]  @relation("MaintenanceDocUploader")
+  disposals               AssetDisposal[]        @relation("Disposer")
+  disposalDocsUploaded    DisposalDocument[]     @relation("DisposalDocUploader")
+  auditSessionsCreated    AuditSession[]         @relation("SessionCreator")
+  auditSessionsAudited    AuditSession[]         @relation("SessionAuditor")
+  auditResultsScanned     AuditResult[]          @relation("ResultScanner")
+  auditLogs               AuditLog[]             @relation("LogUser")
+  importLogs              ImportLog[]            @relation("ImportInitiator")
+
+  @@index([roleId])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name        String   @unique @map("name")
+  description String?  @map("description")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  users           User[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  module      String   @map("module")
+  action      String   @map("action")
+  description String?  @map("description")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  rolePermissions RolePermission[]
+
+  @@unique([module, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  roleId       String   @map("role_id") @db.VarChar(36)
+  permissionId String   @map("permission_id") @db.VarChar(36)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+// ==========================================
+// Location Masters
+// ==========================================
+
+model Company {
+  id            String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name          String   @map("name")
+  code          String   @unique @map("code")
+  address       String?  @map("address")
+  contactPerson String?  @map("contact_person")
+  phone         String?  @map("phone")
+  email         String?  @map("email")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  buildings Building[]
+  assets    Asset[]
+
+  movementsFrom AssetMovement[] @relation("CompanyFrom")
+  movementsTo   AssetMovement[] @relation("CompanyTo")
+
+  @@map("companies")
+}
+
+model Building {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  companyId   String   @map("company_id") @db.VarChar(36)
+  name        String   @map("name")
+  code        String   @map("code")
+  description String?  @map("description")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  floors  Floor[]
+  assets  Asset[]
+
+  movementsFrom AssetMovement[] @relation("BuildingFrom")
+  movementsTo   AssetMovement[] @relation("BuildingTo")
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@map("buildings")
+}
+
+model Floor {
+  id         String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  buildingId String   @map("building_id") @db.VarChar(36)
+  name       String   @map("name")
+  code       String   @map("code")
+  sortOrder  Int      @default(0) @map("sort_order")
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  building Building @relation(fields: [buildingId], references: [id], onDelete: Restrict)
+  rooms    Room[]
+  assets   Asset[]
+
+  movementsFrom AssetMovement[] @relation("FloorFrom")
+  movementsTo   AssetMovement[] @relation("FloorTo")
+
+  @@unique([buildingId, code])
+  @@index([buildingId])
+  @@map("floors")
+}
+
+model Room {
+  id        String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  floorId   String   @map("floor_id") @db.VarChar(36)
+  name      String   @map("name")
+  code      String   @map("code")
+  roomType  String?  @map("room_type")
+  qrCode    String?  @map("qr_code") @db.Text
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  floor  Floor   @relation(fields: [floorId], references: [id], onDelete: Restrict)
+  assets Asset[]
+
+  movementsFrom AssetMovement[] @relation("RoomFrom")
+  movementsTo   AssetMovement[] @relation("RoomTo")
+
+  @@unique([floorId, code])
+  @@index([floorId])
+  @@map("rooms")
+}
+
+model Department {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name        String   @map("name")
+  code        String   @unique @map("code")
+  description String?  @map("description")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  assets Asset[]
+
+  movementsFrom AssetMovement[] @relation("DepartmentFrom")
+  movementsTo   AssetMovement[] @relation("DepartmentTo")
+
+  @@map("departments")
+}
+
+// ==========================================
+// Asset Classification Masters
+// ==========================================
+
+model AssetCategory {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name        String   @map("name")
+  code        String   @unique @map("code")
+  description String?  @map("description")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  subCategories AssetSubCategory[]
+  assets        Asset[]
+
+  @@map("asset_categories")
+}
+
+model AssetSubCategory {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  categoryId  String   @map("category_id") @db.VarChar(36)
+  name        String   @map("name")
+  code        String   @map("code")
+  description String?  @map("description")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  category AssetCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  assets   Asset[]
+
+  @@unique([categoryId, code])
+  @@index([categoryId])
+  @@map("asset_sub_categories")
+}
+
+model Brand {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name        String   @unique @map("name")
+  description String?  @map("description")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  assets Asset[]
+
+  @@map("brands")
+}
+
+model AssetCondition {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name        String   @unique @map("name")
+  colorCode   String?  @map("color_code") @db.VarChar(7)
+  description String?  @map("description")
+  sortOrder   Int      @default(0) @map("sort_order")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  assets                    Asset[]
+  assetConditionChangesOld  AssetConditionChange[] @relation("ConditionChangeOld")
+  assetConditionChangesNew  AssetConditionChange[] @relation("ConditionChangeNew")
+
+  @@map("asset_conditions")
+}
+
+model AssetStatus {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name        String   @unique @map("name")
+  colorCode   String?  @map("color_code") @db.VarChar(7)
+  description String?  @map("description")
+  sortOrder   Int      @default(0) @map("sort_order")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  assets                Asset[]
+  assetStatusChangesOld AssetStatusChange[] @relation("StatusChangeOld")
+  assetStatusChangesNew AssetStatusChange[] @relation("StatusChangeNew")
+
+  @@map("asset_statuses")
+}
+
+// ==========================================
+// Vendor Masters
+// ==========================================
+
+model Vendor {
+  id            String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name          String   @map("name")
+  code          String   @unique @map("code")
+  contactPerson String?  @map("contact_person")
+  email         String?  @map("email")
+  phone         String?  @map("phone")
+  address       String?  @map("address") @db.Text
+  gstNumber     String?  @map("gst_number")
+  panNumber     String?  @map("pan_number")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  vendorTypeMappings  VendorTypeMapping[]
+  assets              Asset[]              @relation("AssetSupplier")
+  assetWarranties     AssetWarranty[]
+  assetAmcs           AssetAmc[]
+  maintenanceRequests MaintenanceRequest[]
+
+  @@map("vendors")
+}
+
+model VendorType {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  name        String   @unique @map("name")
+  description String?  @map("description")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  vendorTypeMappings VendorTypeMapping[]
+
+  @@map("vendor_types")
+}
+
+model VendorTypeMapping {
+  id           String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  vendorId     String   @map("vendor_id") @db.VarChar(36)
+  vendorTypeId String   @map("vendor_type_id") @db.VarChar(36)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  vendor     Vendor     @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  vendorType VendorType @relation(fields: [vendorTypeId], references: [id], onDelete: Cascade)
+
+  @@unique([vendorId, vendorTypeId])
+  @@index([vendorId])
+  @@index([vendorTypeId])
+  @@map("vendor_type_mappings")
+}
+
+// ==========================================
+// Assets (Core)
+// ==========================================
+
+model Asset {
+  id                 String    @id @default(cuid()) @map("id") @db.VarChar(36)
+  assetCode          String    @unique @map("asset_code") @db.VarChar(50)
+  name               String    @map("name")
+  description        String?   @map("description") @db.Text
+  categoryId         String    @map("category_id") @db.VarChar(36)
+  subCategoryId      String?   @map("sub_category_id") @db.VarChar(36)
+  brandId            String?   @map("brand_id") @db.VarChar(36)
+  model              String?   @map("model") @db.VarChar(255)
+  serialNumber       String?   @map("serial_number") @db.VarChar(255)
+  purchaseDate       DateTime? @map("purchase_date")
+  purchaseCost       Decimal?  @map("purchase_cost") @db.Decimal(14, 2)
+  vendorId           String?   @map("vendor_id") @db.VarChar(36)
+  invoiceRef         String?   @map("invoice_ref") @db.VarChar(255)
+  commissioningDate  DateTime? @map("commissioning_date")
+  companyId          String    @map("company_id") @db.VarChar(36)
+  buildingId         String?   @map("building_id") @db.VarChar(36)
+  floorId            String?   @map("floor_id") @db.VarChar(36)
+  roomId             String?   @map("room_id") @db.VarChar(36)
+  departmentId       String?   @map("department_id") @db.VarChar(36)
+  responsiblePerson  String?   @map("responsible_person") @db.VarChar(255)
+  statusId           String    @map("status_id") @db.VarChar(36)
+  conditionId        String    @map("condition_id") @db.VarChar(36)
+  warrantyApplicable Boolean   @default(false) @map("warranty_applicable")
+  amcApplicable      Boolean   @default(false) @map("amc_applicable")
+  qrCode             String?   @map("qr_code") @db.Text
+  isDisposed         Boolean   @default(false) @map("is_disposed")
+  notes              String?   @map("notes") @db.Text
+  imageUrl           String?   @map("image_url") @db.Text
+  createdById        String    @map("created_by_id") @db.VarChar(36)
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  category      AssetCategory     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  subCategory   AssetSubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: Restrict)
+  brand         Brand?            @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  vendor        Vendor?           @relation("AssetSupplier", fields: [vendorId], references: [id], onDelete: Restrict)
+  company       Company           @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  building      Building?         @relation(fields: [buildingId], references: [id], onDelete: Restrict)
+  floor         Floor?            @relation(fields: [floorId], references: [id], onDelete: Restrict)
+  room          Room?             @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  department    Department?       @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  status        AssetStatus       @relation(fields: [statusId], references: [id], onDelete: Restrict)
+  condition     AssetCondition    @relation(fields: [conditionId], references: [id], onDelete: Restrict)
+  createdBy     User              @relation("AssetCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
+  assetDocuments        AssetDocument[]
+  assetWarranties       AssetWarranty[]
+  assetAmcs             AssetAmc[]
+  assetMovements        AssetMovement[]
+  assetStatusChanges    AssetStatusChange[]
+  assetConditionChanges AssetConditionChange[]
+  maintenanceRequests   MaintenanceRequest[]
+  assetDisposal         AssetDisposal?
+  auditExpectedAssets   AuditExpectedAsset[]
+  auditResults          AuditResult[]
+
+  @@index([assetCode])
+  @@index([categoryId])
+  @@index([statusId])
+  @@index([conditionId])
+  @@index([companyId])
+  @@index([buildingId])
+  @@index([departmentId])
+  @@index([subCategoryId])
+  @@index([brandId])
+  @@index([vendorId])
+  @@index([floorId])
+  @@index([roomId])
+  @@index([createdById])
+  @@map("assets")
+}
+
+model AssetDocument {
+  id           String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  assetId      String   @map("asset_id") @db.VarChar(36)
+  documentType String   @map("document_type")
+  fileName     String   @map("file_name")
+  originalName String   @map("original_name")
+  filePath     String   @map("file_path")
+  fileSize     Int      @map("file_size")
+  mimeType     String   @map("mime_type")
+  uploadedById String   @map("uploaded_by_id") @db.VarChar(36)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  asset      Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  uploadedBy User  @relation("DocumentUploader", fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([assetId])
+  @@index([uploadedById])
+  @@map("asset_documents")
+}
+
+model AssetWarranty {
+  id               String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  assetId          String   @map("asset_id") @db.VarChar(36)
+  providerVendorId String   @map("provider_vendor_id") @db.VarChar(36)
+  startDate        DateTime @map("start_date")
+  expiryDate       DateTime @map("expiry_date")
+  reference        String?  @map("reference") @db.VarChar(255)
+  terms            String?  @map("terms") @db.Text
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  asset          Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  providerVendor Vendor @relation(fields: [providerVendorId], references: [id], onDelete: Restrict)
+
+  @@index([assetId])
+  @@index([expiryDate])
+  @@index([providerVendorId])
+  @@map("asset_warranties")
+}
+
+model AssetAmc {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  assetId     String   @map("asset_id") @db.VarChar(36)
+  vendorId    String   @map("vendor_id") @db.VarChar(36)
+  startDate   DateTime @map("start_date")
+  expiryDate  DateTime @map("expiry_date")
+  contractRef String?  @map("contract_ref") @db.VarChar(255)
+  value       Decimal? @map("value") @db.Decimal(14, 2)
+  terms       String?  @map("terms") @db.Text
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  asset  Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+
+  @@index([assetId])
+  @@index([expiryDate])
+  @@index([vendorId])
+  @@map("asset_amcs")
+}
+
+model AssetMovement {
+  id                    String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  assetId               String   @map("asset_id") @db.VarChar(36)
+  fromCompanyId         String?  @map("from_company_id") @db.VarChar(36)
+  toCompanyId           String?  @map("to_company_id") @db.VarChar(36)
+  fromBuildingId        String?  @map("from_building_id") @db.VarChar(36)
+  toBuildingId          String?  @map("to_building_id") @db.VarChar(36)
+  fromFloorId           String?  @map("from_floor_id") @db.VarChar(36)
+  toFloorId             String?  @map("to_floor_id") @db.VarChar(36)
+  fromRoomId            String?  @map("from_room_id") @db.VarChar(36)
+  toRoomId              String?  @map("to_room_id") @db.VarChar(36)
+  fromDepartmentId      String?  @map("from_department_id") @db.VarChar(36)
+  toDepartmentId        String?  @map("to_department_id") @db.VarChar(36)
+  fromResponsiblePerson String?  @map("from_responsible_person")
+  toResponsiblePerson   String?  @map("to_responsible_person")
+  transferDate          DateTime @map("transfer_date")
+  reason                String?  @map("reason") @db.Text
+  transferredById       String   @map("transferred_by_id") @db.VarChar(36)
+  remarks               String?  @map("remarks") @db.Text
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  asset           Asset       @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  fromCompany     Company?    @relation("CompanyFrom", fields: [fromCompanyId], references: [id], onDelete: SetNull)
+  toCompany       Company?    @relation("CompanyTo", fields: [toCompanyId], references: [id], onDelete: SetNull)
+  fromBuilding    Building?   @relation("BuildingFrom", fields: [fromBuildingId], references: [id], onDelete: SetNull)
+  toBuilding      Building?   @relation("BuildingTo", fields: [toBuildingId], references: [id], onDelete: SetNull)
+  fromFloor       Floor?      @relation("FloorFrom", fields: [fromFloorId], references: [id], onDelete: SetNull)
+  toFloor         Floor?      @relation("FloorTo", fields: [toFloorId], references: [id], onDelete: SetNull)
+  fromRoom        Room?       @relation("RoomFrom", fields: [fromRoomId], references: [id], onDelete: SetNull)
+  toRoom          Room?       @relation("RoomTo", fields: [toRoomId], references: [id], onDelete: SetNull)
+  fromDepartment  Department? @relation("DepartmentFrom", fields: [fromDepartmentId], references: [id], onDelete: SetNull)
+  toDepartment    Department? @relation("DepartmentTo", fields: [toDepartmentId], references: [id], onDelete: SetNull)
+  transferredBy   User        @relation("MovementTransferrer", fields: [transferredById], references: [id], onDelete: Restrict)
+
+  @@index([assetId])
+  @@index([transferDate])
+  @@index([transferredById])
+  @@map("asset_movements")
+}
+
+model AssetStatusChange {
+  id          String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  assetId     String   @map("asset_id") @db.VarChar(36)
+  oldStatusId String   @map("old_status_id") @db.VarChar(36)
+  newStatusId String   @map("new_status_id") @db.VarChar(36)
+  changedById String   @map("changed_by_id") @db.VarChar(36)
+  remarks     String?  @map("remarks") @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  asset     Asset       @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  oldStatus AssetStatus @relation("StatusChangeOld", fields: [oldStatusId], references: [id], onDelete: Restrict)
+  newStatus AssetStatus @relation("StatusChangeNew", fields: [newStatusId], references: [id], onDelete: Restrict)
+  changedBy User        @relation("StatusChanger", fields: [changedById], references: [id], onDelete: Restrict)
+
+  @@index([assetId])
+  @@index([oldStatusId])
+  @@index([newStatusId])
+  @@index([changedById])
+  @@map("asset_status_changes")
+}
+
+model AssetConditionChange {
+  id             String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  assetId        String   @map("asset_id") @db.VarChar(36)
+  oldConditionId String   @map("old_condition_id") @db.VarChar(36)
+  newConditionId String   @map("new_condition_id") @db.VarChar(36)
+  changedById    String   @map("changed_by_id") @db.VarChar(36)
+  remarks        String?  @map("remarks") @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  asset        Asset          @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  oldCondition AssetCondition @relation("ConditionChangeOld", fields: [oldConditionId], references: [id], onDelete: Restrict)
+  newCondition AssetCondition @relation("ConditionChangeNew", fields: [newConditionId], references: [id], onDelete: Restrict)
+  changedBy    User           @relation("ConditionChanger", fields: [changedById], references: [id], onDelete: Restrict)
+
+  @@index([assetId])
+  @@index([oldConditionId])
+  @@index([newConditionId])
+  @@index([changedById])
+  @@map("asset_condition_changes")
+}
+
+// ==========================================
+// Maintenance
+// ==========================================
+
+model MaintenanceRequest {
+  id              String    @id @default(cuid()) @map("id") @db.VarChar(36)
+  requestNumber   String    @unique @map("request_number") @db.VarChar(50)
+  assetId         String    @map("asset_id") @db.VarChar(36)
+  description     String    @map("description") @db.Text
+  priority        String    @map("priority") // LOW, MEDIUM, HIGH, CRITICAL
+  assignedTo      String?   @map("assigned_to") @db.VarChar(255)
+  vendorId        String?   @map("vendor_id") @db.VarChar(36)
+  status          String    @map("status") // OPEN, IN_PROGRESS, ON_HOLD, COMPLETED, CANCELLED
+  maintenanceDate DateTime? @map("maintenance_date")
+  resolution      String?   @map("resolution") @db.Text
+  cost            Decimal?  @map("cost") @db.Decimal(14, 2)
+  createdById     String    @map("created_by_id") @db.VarChar(36)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  asset       Asset                 @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  vendor      Vendor?               @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  createdBy   User                  @relation("MaintenanceCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  maintenanceDocuments MaintenanceDocument[]
+
+  @@index([assetId])
+  @@index([status])
+  @@index([vendorId])
+  @@index([createdById])
+  @@map("maintenance_requests")
+}
+
+model MaintenanceDocument {
+  id            String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  maintenanceId String   @map("maintenance_id") @db.VarChar(36)
+  fileName      String   @map("file_name")
+  originalName  String   @map("original_name")
+  filePath      String   @map("file_path")
+  fileSize      Int      @map("file_size")
+  mimeType      String   @map("mime_type")
+  uploadedById  String   @map("uploaded_by_id") @db.VarChar(36)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  maintenance MaintenanceRequest @relation(fields: [maintenanceId], references: [id], onDelete: Cascade)
+  uploadedBy  User               @relation("MaintenanceDocUploader", fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([maintenanceId])
+  @@index([uploadedById])
+  @@map("maintenance_documents")
+}
+
+// ==========================================
+// Asset Disposal
+// ==========================================
+
+model AssetDisposal {
+  id           String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  assetId      String   @unique @map("asset_id") @db.VarChar(36)
+  disposalDate DateTime @map("disposal_date")
+  reason       String   @map("reason") @db.Text
+  method       String   @map("method") @db.VarChar(255)
+  value        Decimal? @map("value") @db.Decimal(14, 2)
+  approvalRef  String?  @map("approval_ref") @db.VarChar(255)
+  disposedById String   @map("disposed_by_id") @db.VarChar(36)
+  remarks      String?  @map("remarks") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  asset        Asset              @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  disposedBy   User               @relation("Disposer", fields: [disposedById], references: [id], onDelete: Restrict)
+  disposalDocuments DisposalDocument[]
+
+  @@index([disposedById])
+  @@map("asset_disposals")
+}
+
+model DisposalDocument {
+  id           String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  disposalId   String   @map("disposal_id") @db.VarChar(36)
+  fileName     String   @map("file_name")
+  originalName String   @map("original_name")
+  filePath     String   @map("file_path")
+  fileSize     Int      @map("file_size")
+  mimeType     String   @map("mime_type")
+  uploadedById String   @map("uploaded_by_id") @db.VarChar(36)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  disposal   AssetDisposal @relation(fields: [disposalId], references: [id], onDelete: Cascade)
+  uploadedBy User          @relation("DisposalDocUploader", fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([disposalId])
+  @@index([uploadedById])
+  @@map("disposal_documents")
+}
+
+// ==========================================
+// Asset Audits (Physical Verification)
+// ==========================================
+
+model AuditSession {
+  id                 String    @id @default(cuid()) @map("id") @db.VarChar(36)
+  name               String    @map("name")
+  scopeType          String    @map("scope_type") @db.VarChar(50) // COMPANY, BUILDING, FLOOR, ROOM, DEPARTMENT, CATEGORY
+  scopeId            String    @map("scope_id")
+  auditorId          String?   @map("auditor_id") @db.VarChar(36)
+  auditDate          DateTime  @map("audit_date")
+  status             String    @map("status") // PLANNED, IN_PROGRESS, COMPLETED, LOCKED
+  totalExpected      Int       @default(0) @map("total_expected")
+  totalVerified      Int       @default(0) @map("total_verified")
+  totalMissing       Int       @default(0) @map("total_missing")
+  totalWrongLocation Int       @default(0) @map("total_wrong_location")
+  totalDamaged       Int       @default(0) @map("total_damaged")
+  totalUnexpected    Int       @default(0) @map("total_unexpected")
+  notes              String?   @map("notes") @db.Text
+  completedAt        DateTime? @map("completed_at")
+  createdById        String    @map("created_by_id") @db.VarChar(36)
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  auditor   User?  @relation("SessionAuditor", fields: [auditorId], references: [id], onDelete: SetNull)
+  createdBy User   @relation("SessionCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  
+  auditExpectedAssets AuditExpectedAsset[]
+  auditResults        AuditResult[]
+
+  @@index([auditorId])
+  @@index([createdById])
+  @@map("audit_sessions")
+}
+
+model AuditExpectedAsset {
+  id        String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  sessionId String   @map("session_id") @db.VarChar(36)
+  assetId   String   @map("asset_id") @db.VarChar(36)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  session AuditSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  asset   Asset        @relation(fields: [assetId], references: [id], onDelete: Restrict)
+
+  @@unique([sessionId, assetId])
+  @@index([sessionId])
+  @@index([assetId])
+  @@map("audit_expected_assets")
+}
+
+model AuditResult {
+  id                String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  sessionId         String   @map("session_id") @db.VarChar(36)
+  assetId           String?  @map("asset_id") @db.VarChar(36)
+  assetCode         String?  @map("asset_code") @db.VarChar(50)
+  classification    String   @map("classification") // VERIFIED, NOT_VERIFIED, MISSING, WRONG_LOCATION, DAMAGED, UNEXPECTED
+  physicalCondition String?  @map("physical_condition") @db.VarChar(255)
+  remarks           String?  @map("remarks") @db.Text
+  photoPath         String?  @map("photo_path") @db.VarChar(500)
+  scannedById       String   @map("scanned_by_id") @db.VarChar(36)
+  scannedAt         DateTime @map("scanned_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  session   AuditSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  asset     Asset?       @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  scannedBy User         @relation("ResultScanner", fields: [scannedById], references: [id], onDelete: Restrict)
+
+  @@index([sessionId])
+  @@index([classification])
+  @@index([assetId])
+  @@index([scannedById])
+  @@map("audit_results")
+}
+
+// ==========================================
+// System Audit Logs
+// ==========================================
+
+model AuditLog {
+  id            String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  userId        String?  @map("user_id") @db.VarChar(36)
+  module        String   @map("module") @db.VarChar(100)
+  entityType    String   @map("entity_type") @db.VarChar(100)
+  entityId      String?  @map("entity_id") @db.VarChar(100)
+  action        String   @map("action") @db.VarChar(100)
+  previousValue Json?    @map("previous_value")
+  newValue      Json?    @map("new_value")
+  ipAddress     String?  @map("ip_address") @db.VarChar(50)
+  userAgent     String?  @map("user_agent") @db.Text
+  remarks       String?  @map("remarks") @db.Text
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  user User? @relation("LogUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([module])
+  @@index([entityType])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ==========================================
+// Bulk Import
+// ==========================================
+
+model ImportLog {
+  id                String    @id @default(cuid()) @map("id") @db.VarChar(36)
+  fileName          String    @map("file_name")
+  initiatedById     String    @map("initiated_by_id") @db.VarChar(36)
+  totalRecords      Int       @default(0) @map("total_records")
+  successfulRecords Int       @default(0) @map("successful_records")
+  failedRecords     Int       @default(0) @map("failed_records")
+  status            String    @map("status") // PENDING, PROCESSING, COMPLETED, FAILED
+  errorReportPath   String?   @map("error_report_path") @db.VarChar(500)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  completedAt       DateTime? @map("completed_at")
+
+  initiatedBy User @relation("ImportInitiator", fields: [initiatedById], references: [id], onDelete: Restrict)
+
+  @@index([initiatedById])
+  @@map("import_logs")
+}

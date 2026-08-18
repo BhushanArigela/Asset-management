@@ -1,0 +1,257 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { Search, MapPin, Tag, Box, Loader2, Info, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Filter } from "lucide-react";
+
+interface AssetSearchProps {
+  initialQuery?: string;
+}
+
+export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState(initialQuery);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialQuery);
+  
+  // Filters state
+  const [categoryId, setCategoryId] = useState("");
+  const [roomId, setRoomId] = useState("");
+  const [departmentId, setDepartmentId] = useState("");
+  const [statusId, setStatusId] = useState("");
+
+  // Master data state
+  const [categories, setCategories] = useState<any[]>([]);
+  const [rooms, setRooms] = useState<any[]>([]);
+  const [departments, setDepartments] = useState<any[]>([]);
+  const [statuses, setStatuses] = useState<any[]>([]);
+
+  useEffect(() => {
+    Promise.all([
+      fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/categories`).then(res => res.json()),
+      fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/rooms`).then(res => res.json()),
+      fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/departments`).then(res => res.json()),
+      fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/statuses`).then(res => res.json()),
+    ]).then(([cats, rms, depts, stats]) => {
+      setCategories(cats.data || []);
+      setRooms(rms.data || []);
+      setDepartments(depts.data || []);
+      setStatuses(stats.data || []);
+    });
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["assetsSearch", debouncedSearch, categoryId, roomId, departmentId, statusId],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (debouncedSearch) params.append("search", debouncedSearch);
+      if (categoryId && categoryId !== "none") params.append("categoryId", categoryId);
+      if (roomId && roomId !== "none") params.append("roomId", roomId);
+      if (departmentId && departmentId !== "none") params.append("departmentId", departmentId);
+      if (statusId && statusId !== "none") params.append("statusId", statusId);
+      params.append("limit", "50");
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/assets?${params.toString()}`);
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || "Failed to fetch");
+      }
+      return res.json();
+    },
+    enabled: debouncedSearch.length > 0 || 
+             (categoryId !== "" && categoryId !== "none") || 
+             (roomId !== "" && roomId !== "none") || 
+             (departmentId !== "" && departmentId !== "none") || 
+             (statusId !== "" && statusId !== "none"),
+  });
+
+  const assets = data?.data || [];
+  const isSearching = debouncedSearch.length > 0 || 
+                      (categoryId !== "" && categoryId !== "none") || 
+                      (roomId !== "" && roomId !== "none") || 
+                      (departmentId !== "" && departmentId !== "none") || 
+                      (statusId !== "" && statusId !== "none");
+
+  return (
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className={`flex flex-col transition-all duration-300 ${isSearching ? "pb-4 space-y-3" : "items-center justify-center space-y-4 py-8"}`}>
+        {!isSearching && (
+          <>
+            <h1 className="text-3xl font-bold tracking-tight">Search Assets</h1>
+            <p className="text-muted-foreground text-center max-w-lg">
+              Quickly find assets by their QR Code, Name, Model, or Serial Number.
+            </p>
+          </>
+        )}
+        
+        <div className={`w-full relative shadow-sm group ${isSearching ? "max-w-full" : "max-w-2xl mt-4"}`}>
+          <Search className="absolute left-4 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          <Input 
+            type="search" 
+            placeholder="Scan QR or type keywords..." 
+            className="w-full h-12 pl-12 pr-4 text-lg rounded-full bg-background border-2 focus-visible:ring-0 focus-visible:border-primary transition-all"
+            value={searchTerm}
+            onChange={(e) => {
+              let val = e.target.value;
+              if (val.includes('http://') || val.includes('https://')) {
+                try {
+                  const url = new URL(val);
+                  if (url.searchParams.has('roomCode')) {
+                    val = url.searchParams.get('roomCode') || val;
+                  } else if (url.pathname.includes('/assets/')) {
+                    val = url.pathname.split('/').pop() || val;
+                  }
+                } catch (e) {}
+              }
+              setSearchTerm(val);
+            }}
+            autoFocus
+          />
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2 px-1">
+          {isSearching && (
+            <div className="text-sm text-muted-foreground font-medium">
+              {assets.length} results found
+            </div>
+          )}
+        </div>
+
+        {/* Filters Panel - always visible */}
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+          <Select value={categoryId} onValueChange={setCategoryId}>
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none" className="text-muted-foreground italic">All Categories</SelectItem>
+                {categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+
+            <Select value={roomId} onValueChange={setRoomId}>
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="Room/Location" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none" className="text-muted-foreground italic">All Rooms</SelectItem>
+                {rooms.map(r => <SelectItem key={r.id} value={r.id}>{r.name} ({r.code})</SelectItem>)}
+              </SelectContent>
+            </Select>
+
+            <Select value={departmentId} onValueChange={setDepartmentId}>
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="Department" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none" className="text-muted-foreground italic">All Departments</SelectItem>
+                {departments.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+
+            <Select value={statusId} onValueChange={setStatusId}>
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none" className="text-muted-foreground italic">All Statuses</SelectItem>
+                {statuses.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+      </div>
+
+      {!isSearching ? (
+        <div className="flex flex-col justify-center items-center py-20 text-muted-foreground">
+          <Search className="h-16 w-16 mb-4 opacity-20" />
+          <p className="text-lg font-medium">Ready to search</p>
+          <p className="text-sm">Start typing a name, model, or scan a QR code</p>
+        </div>
+      ) : isLoading ? (
+        <div className="flex justify-center items-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : isError ? (
+        <div className="text-center text-destructive py-20">
+          Failed to load assets: {(error as any)?.message}
+        </div>
+      ) : assets.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
+          {assets.map((asset: any) => (
+            <Card 
+              key={asset.id} 
+              className="cursor-pointer hover:shadow-md hover:border-primary/50 transition-all overflow-hidden group"
+              onClick={() => router.push(`/assets/${asset.id}`)}
+            >
+              <CardContent className="p-0">
+                {asset.assetDocuments && asset.assetDocuments.length > 0 && (
+                  <div className="w-full h-40 overflow-hidden relative border-b">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img 
+                      src={asset.assetDocuments[0].filePath} 
+                      alt={asset.name} 
+                      className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300"
+                    />
+                  </div>
+                )}
+                <div className="p-5 border-b bg-slate-50/50 group-hover:bg-primary/5 transition-colors relative">
+                  <div className="flex justify-between items-start mb-2">
+                    <Badge variant="outline" className="bg-white">{asset.assetCode}</Badge>
+                    <Badge variant={asset.status?.name === 'Active' ? 'default' : 'secondary'}>
+                      {asset.status?.name || 'Unknown'}
+                    </Badge>
+                  </div>
+                  <h3 className="font-semibold text-lg line-clamp-1 pr-8" title={asset.name}>{asset.name}</h3>
+                  <div className="flex justify-between items-end mt-1">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Tag className="mr-1 h-3 w-3" />
+                      {asset.category?.name} {asset.brand?.name ? `• ${asset.brand.name}` : ''}
+                    </div>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full opacity-0 group-hover:opacity-100 transition-all bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground absolute bottom-4 right-4">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="p-5 space-y-3 bg-white">
+                  <div className="flex items-start gap-2 text-sm">
+                    <MapPin className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                    <div className="line-clamp-2 leading-tight">
+                      <span className="font-medium text-foreground">{asset.building?.name || 'No Location'}</span>
+                      <br/>
+                      <span className="text-muted-foreground">{asset.room?.name || 'No Room'}, {asset.department?.name || 'No Dept'}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2 text-sm">
+                    <Info className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                    <div className="text-muted-foreground">
+                      Condition: <span className="font-medium text-foreground">{asset.condition?.name || 'N/A'}</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col justify-center items-center py-20 text-muted-foreground">
+          <Box className="h-16 w-16 mb-4 opacity-20" />
+          <p className="text-lg font-medium">No assets found</p>
+          <p className="text-sm">Try adjusting your search terms</p>
+        </div>
+      )}
+    </div>
+  );
+}

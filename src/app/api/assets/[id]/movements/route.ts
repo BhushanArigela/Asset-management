@@ -1,0 +1,106 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { z } from "zod";
+import { createAuditLog, AUDIT_ACTIONS, AUDIT_MODULES } from "@/lib/audit-logger";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
+
+
+const movementSchema = z.object({
+  toCompanyId: z.string().min(1),
+  toBuildingId: z.string().min(1),
+  toFloorId: z.string().min(1),
+  toRoomId: z.string().optional(),
+  toDepartmentId: z.string().optional(),
+  toResponsiblePerson: z.string().optional(),
+  reason: z.string().min(1),
+  remarks: z.string().optional(),
+});
+
+export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  try {
+    const movements = await prisma.assetMovement.findMany({
+      where: { assetId: params.id },
+      include: {
+        fromBuilding: true,
+        toBuilding: true,
+        user: true,
+      },
+      orderBy: { movementDate: "desc" },
+    });
+    return NextResponse.json(movements);
+  } catch (error) {
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  try {
+    const session = await auth();
+    if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!hasPermission(session.user.permissions, [PERMISSIONS.TRANSFER_ASSET] as any)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+    const body = await req.json();
+    const data = movementSchema.parse(body);
+
+    const asset = await prisma.asset.findUnique({
+      where: { id: params.id },
+    });
+
+    if (!asset) return NextResponse.json({ error: "Asset not found" }, { status: 404 });
+
+    const result = await prisma.$transaction(async (tx) => {
+      const movement = await tx.assetMovement.create({
+        data: {
+          assetId: params.id,
+          fromCompanyId: asset.companyId,
+          fromBuildingId: asset.buildingId,
+          fromFloorId: asset.floorId,
+          fromRoomId: asset.roomId,
+          fromDepartmentId: asset.departmentId,
+          fromResponsiblePerson: asset.responsiblePerson,
+          toCompanyId: data.toCompanyId,
+          toBuildingId: data.toBuildingId,
+          toFloorId: data.toFloorId,
+          toRoomId: data.toRoomId,
+          toDepartmentId: data.toDepartmentId,
+          toResponsiblePerson: data.toResponsiblePerson,
+          reason: data.reason,
+          remarks: data.remarks,
+          createdById: session.user.id,
+        },
+      });
+
+      const updatedAsset = await tx.asset.update({
+        where: { id: params.id },
+        data: {
+          companyId: data.toCompanyId,
+          buildingId: data.toBuildingId,
+          floorId: data.toFloorId,
+          roomId: data.toRoomId,
+          departmentId: data.toDepartmentId,
+          responsiblePerson: data.toResponsiblePerson,
+        },
+      });
+
+      return { movement, updatedAsset };
+    });
+
+    await createAuditLog({
+      action: AUDIT_ACTIONS.UPDATE,
+      module: AUDIT_MODULES.ASSETS,
+      entityId: params.id,
+      createdById: session.user.id,
+      details: `Asset transferred. Reason: ${data.reason}`,
+      oldData: asset,
+      newData: result.updatedAsset,
+    });
+
+    return NextResponse.json(result, { status: 201 });
+  } catch (error) {
+    if (error instanceof z.ZodError) return NextResponse.json({ error: error.errors }, { status: 400 });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
