@@ -6,8 +6,8 @@ export const authConfig: NextAuthConfig = {
     maxAge: 8 * 60 * 60, // 8 hours
   },
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/login`,
+    error: `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/login`,
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
