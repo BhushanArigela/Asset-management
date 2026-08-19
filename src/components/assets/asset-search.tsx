@@ -261,7 +261,7 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
               onClick={() => router.push(`/assets/${asset.id}`)}
             >
               <CardContent className="p-0">
-                {(asset.imageUrl || (asset.assetDocuments && asset.assetDocuments.length > 0)) && (
+                {(asset.imageUrl || (asset.assetDocuments && asset.assetDocuments.length > 0)) ? (
                   <div className="w-full h-40 overflow-hidden relative border-b">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
@@ -269,6 +269,10 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
                       alt={asset.name} 
                       className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300"
                     />
+                  </div>
+                ) : (
+                  <div className="w-full h-40 overflow-hidden relative border-b bg-muted flex items-center justify-center">
+                    <span className="text-muted-foreground text-sm font-medium">No Image</span>
                   </div>
                 )}
                 <div className="p-5 border-b bg-slate-50/50 group-hover:bg-primary/5 transition-colors relative">
