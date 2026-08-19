@@ -85,7 +85,7 @@ export function UserFormDialog({ open, onOpenChange, user, onSuccess }: UserForm
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/users/${user.id}` : "/api/users";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/users/${user.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/users";
       const method = isEdit ? "PUT" : "POST";
       
       const payload = { ...values };
