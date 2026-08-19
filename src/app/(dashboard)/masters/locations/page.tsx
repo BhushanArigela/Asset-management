@@ -11,18 +11,20 @@ export const metadata = {
 
 export default function LocationsPage() {
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight text-[#1B2A4A]">Locations Master</h2>
       </div>
-      <Tabs defaultValue="companies" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="companies">Companies</TabsTrigger>
-          <TabsTrigger value="buildings">Buildings</TabsTrigger>
-          <TabsTrigger value="floors">Floors</TabsTrigger>
-          <TabsTrigger value="rooms">Rooms</TabsTrigger>
-          <TabsTrigger value="departments">Departments</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="companies" className="space-y-4 w-full">
+        <div className="w-full overflow-x-auto pb-2">
+          <TabsList className="inline-flex w-max min-w-full justify-start">
+            <TabsTrigger value="companies">Companies</TabsTrigger>
+            <TabsTrigger value="buildings">Buildings</TabsTrigger>
+            <TabsTrigger value="floors">Floors</TabsTrigger>
+            <TabsTrigger value="rooms">Rooms</TabsTrigger>
+            <TabsTrigger value="departments">Departments</TabsTrigger>
+          </TabsList>
+        </div>
         <TabsContent value="companies" className="space-y-4">
           <CompanyTab />
         </TabsContent>
