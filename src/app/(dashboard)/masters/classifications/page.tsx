@@ -11,18 +11,20 @@ export const metadata = {
 
 export default function ClassificationsPage() {
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight text-[#1B2A4A]">Classifications Master</h2>
       </div>
-      <Tabs defaultValue="categories" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="categories">Categories</TabsTrigger>
-          <TabsTrigger value="sub-categories">Sub-Categories</TabsTrigger>
-          <TabsTrigger value="brands">Brands</TabsTrigger>
-          <TabsTrigger value="conditions">Conditions</TabsTrigger>
-          <TabsTrigger value="statuses">Statuses</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="categories" className="space-y-4 w-full">
+        <div className="w-full overflow-x-auto pb-2">
+          <TabsList className="inline-flex w-max min-w-full justify-start">
+            <TabsTrigger value="categories">Categories</TabsTrigger>
+            <TabsTrigger value="sub-categories">Sub-Categories</TabsTrigger>
+            <TabsTrigger value="brands">Brands</TabsTrigger>
+            <TabsTrigger value="conditions">Conditions</TabsTrigger>
+            <TabsTrigger value="statuses">Statuses</TabsTrigger>
+          </TabsList>
+        </div>
         <TabsContent value="categories" className="space-y-4">
           <CategoryTab />
         </TabsContent>
