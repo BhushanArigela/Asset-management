@@ -92,17 +92,17 @@ export function AssetForm({ initialData }: { initialData?: any }) {
         const [
           cat, subcat, br, ven, comp, bldg, flr, rm, dept, stat, cond
         ] = await Promise.all([
-          fetchUrl("/api/masters/categories"),
-          fetchUrl("/api/masters/sub-categories"),
-          fetchUrl("/api/masters/brands"),
-          fetchUrl("/api/masters/vendors"),
-          fetchUrl("/api/masters/companies"),
-          fetchUrl("/api/masters/buildings"),
-          fetchUrl("/api/masters/floors"),
-          fetchUrl("/api/masters/rooms"),
-          fetchUrl("/api/masters/departments"),
-          fetchUrl("/api/masters/statuses"),
-          fetchUrl("/api/masters/conditions"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/categories"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/sub-categories"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/brands"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/vendors"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/companies"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/buildings"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/floors"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/rooms"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/departments"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/statuses"),
+          fetchUrl((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/conditions"),
         ]);
 
         setCategories(cat);
@@ -227,7 +227,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
-      const url = initialData ? `/api/assets/${initialData.id}` : "/api/assets";
+      const url = initialData ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/assets/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/assets";
       const method = initialData ? "PUT" : "POST";
       
       const res = await fetch(url, {

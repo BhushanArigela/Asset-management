@@ -31,7 +31,7 @@ export function ImportPage() {
   } | null>(null);
 
   const handleDownloadTemplate = () => {
-    window.open("/api/assets/import/template", "_blank");
+    window.open((process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/assets/import/template", "_blank");
   };
 
   const handlePreview = async (overrideAutoCreate?: boolean) => {

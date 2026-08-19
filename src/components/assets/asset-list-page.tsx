@@ -71,7 +71,7 @@ export function AssetListPage() {
 
   const handleExport = () => {
     toast.success("Export started");
-    window.open(`/api/assets/export?search=${debouncedSearch}`, "_blank");
+    window.open(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/assets/export?search=${debouncedSearch}`, "_blank");
   };
 
   return (
