@@ -50,7 +50,13 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
             { facingMode: "environment" }, // prefer back camera
             { fps: 10, qrbox: { width: 250, height: 250 } },
             (decodedText) => {
-              setSearchTerm(decodedText);
+              let val = decodedText;
+              if (val.includes('/assets/')) {
+                val = val.split('/assets/').pop() || val;
+              } else if (val.includes('roomCode=')) {
+                val = val.split('roomCode=')[1].split('&')[0] || val;
+              }
+              setSearchTerm(val);
               setIsScanning(false);
             },
             (errorMessage) => {
@@ -150,15 +156,20 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
             value={searchTerm}
             onChange={(e) => {
               let val = e.target.value;
-              if (val.includes('http://') || val.includes('https://')) {
+              if (val.includes('/assets/')) {
                 try {
                   const url = new URL(val);
-                  if (url.searchParams.has('roomCode')) {
-                    val = url.searchParams.get('roomCode') || val;
-                  } else if (url.pathname.includes('/assets/')) {
-                    val = url.pathname.split('/').pop() || val;
-                  }
-                } catch (e) {}
+                  val = url.pathname.split('/').pop() || val;
+                } catch (e) {
+                  val = val.split('/assets/').pop() || val;
+                }
+              } else if (val.includes('roomCode=')) {
+                try {
+                  const url = new URL(val);
+                  val = url.searchParams.get('roomCode') || val;
+                } catch (e) {
+                  val = val.split('roomCode=')[1].split('&')[0] || val;
+                }
               }
               setSearchTerm(val);
             }}
