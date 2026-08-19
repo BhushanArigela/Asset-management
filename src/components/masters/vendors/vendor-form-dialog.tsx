@@ -59,7 +59,7 @@ export function VendorFormDialog({ open, onOpenChange, onSuccess, initialData }:
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/vendors/${initialData.id}` : "/api/masters/vendors";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/vendors/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/vendors";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {
