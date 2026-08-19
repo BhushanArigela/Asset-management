@@ -54,7 +54,7 @@ export function SubCategoryFormDialog({ open, onOpenChange, onSuccess, initialDa
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/sub-categories/${initialData.id}` : "/api/masters/sub-categories";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/sub-categories/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/sub-categories";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {

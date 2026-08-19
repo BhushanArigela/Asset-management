@@ -49,7 +49,7 @@ export function CategoryFormDialog({ open, onOpenChange, onSuccess, initialData 
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/categories/${initialData.id}` : "/api/masters/categories";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/categories/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/categories";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {

@@ -51,7 +51,7 @@ export function StatusFormDialog({ open, onOpenChange, onSuccess, initialData }:
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/statuses/${initialData.id}` : "/api/masters/statuses";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/statuses/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/statuses";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {

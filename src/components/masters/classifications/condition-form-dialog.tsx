@@ -51,7 +51,7 @@ export function ConditionFormDialog({ open, onOpenChange, onSuccess, initialData
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/conditions/${initialData.id}` : "/api/masters/conditions";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/conditions/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/conditions";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {

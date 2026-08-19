@@ -47,7 +47,7 @@ export function BrandFormDialog({ open, onOpenChange, onSuccess, initialData }: 
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/brands/${initialData.id}` : "/api/masters/brands";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/brands/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/brands";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {
