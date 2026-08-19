@@ -10,9 +10,18 @@ const loginSchema = z.object({
   password: z.string().min(6),
 });
 
+const useSecureCookies = process.env.NEXTAUTH_URL?.startsWith("https://") || process.env.AUTH_URL?.startsWith("https://");
+const cookiePrefix = useSecureCookies ? "__Secure-" : "";
+const hostPrefix = useSecureCookies ? "__Host-" : "";
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: true,
   trustHost: true,
+  cookies: {
+    csrfToken: { name: `${hostPrefix}authjs.csrf-token`, options: { path: '/', sameSite: 'lax', secure: useSecureCookies } },
+    sessionToken: { name: `${cookiePrefix}authjs.session-token`, options: { path: '/', sameSite: 'lax', secure: useSecureCookies, httpOnly: true } },
+    callbackUrl: { name: `${cookiePrefix}authjs.callback-url`, options: { path: '/', sameSite: 'lax', secure: useSecureCookies } },
+  },
   ...authConfig,
   providers: [
     Credentials({
