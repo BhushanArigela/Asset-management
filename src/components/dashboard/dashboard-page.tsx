@@ -67,68 +67,68 @@ export function DashboardPage() {
   return (
     <div className="space-y-4">
       {/* KPI Cards */}
-      <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Assets</CardTitle>
-            <Package className="h-4 w-4 text-[#1B2A4A]" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
+            <CardTitle className="text-sm font-medium leading-tight">Total Assets</CardTitle>
+            <Package className="h-4 w-4 text-[#1B2A4A] shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.totalAssets}</div>
+            <div className="text-2xl font-bold truncate">{data.totalAssets}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Value</CardTitle>
-            <Activity className="h-4 w-4 text-[#C5A55A]" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
+            <CardTitle className="text-sm font-medium leading-tight">Total Value</CardTitle>
+            <Activity className="h-4 w-4 text-[#C5A55A] shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(data.totalAssetValue)}</div>
+            <div className="text-2xl font-bold truncate" title={formatCurrency(data.totalAssetValue)}>{formatCurrency(data.totalAssetValue)}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Under Maintenance</CardTitle>
-            <Wrench className="h-4 w-4 text-[#3B82F6]" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
+            <CardTitle className="text-sm font-medium leading-tight">Under Maintenance</CardTitle>
+            <Wrench className="h-4 w-4 text-[#3B82F6] shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.assetsUnderMaintenance}</div>
+            <div className="text-2xl font-bold truncate">{data.assetsUnderMaintenance}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-red-600">Damaged Assets</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-red-600" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
+            <CardTitle className="text-sm font-medium text-red-600 leading-tight">Damaged Assets</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-red-600 shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{data.damagedAssets}</div>
+            <div className="text-2xl font-bold text-red-600 truncate">{data.damagedAssets}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-orange-600">Missing Assets</CardTitle>
-            <ShieldAlert className="h-4 w-4 text-orange-600" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
+            <CardTitle className="text-sm font-medium text-orange-600 leading-tight">Missing Assets</CardTitle>
+            <ShieldAlert className="h-4 w-4 text-orange-600 shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{data.missingAssets}</div>
+            <div className="text-2xl font-bold text-orange-600 truncate">{data.missingAssets}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Warranties Expiring (30d)</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
+            <CardTitle className="text-sm font-medium leading-tight">Warranties Expiring (30d)</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.warrantiesExpiring}</div>
+            <div className="text-2xl font-bold truncate">{data.warrantiesExpiring}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">AMCs Expiring (30d)</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
+            <CardTitle className="text-sm font-medium leading-tight">AMCs Expiring (30d)</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.amcsExpiring}</div>
+            <div className="text-2xl font-bold truncate">{data.amcsExpiring}</div>
           </CardContent>
         </Card>
       </div>
