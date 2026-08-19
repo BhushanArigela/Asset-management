@@ -123,12 +123,12 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h2 className="text-3xl font-bold tracking-tight">{asset.name}</h2>
-          {asset.isDisposed && <Badge variant="destructive" className="text-sm">Disposed</Badge>}
+      <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full lg:w-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">{asset.name}</h2>
+          {asset.isDisposed && <Badge variant="destructive" className="text-sm w-fit">Disposed</Badge>}
         </div>
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
           {!asset.isDisposed && (
             <>
               <Button variant="outline" onClick={() => router.push(`/assets/${asset.id}/edit`)}>
@@ -228,15 +228,17 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
         </div>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="warranty">Warranty</TabsTrigger>
-          <TabsTrigger value="amc">AMC</TabsTrigger>
-          <TabsTrigger value="movements">Movement History</TabsTrigger>
-          <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="overview" className="space-y-4 w-full">
+        <div className="w-full overflow-x-auto pb-2">
+          <TabsList className="inline-flex w-max min-w-full justify-start">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="warranty">Warranty</TabsTrigger>
+            <TabsTrigger value="amc">AMC</TabsTrigger>
+            <TabsTrigger value="movements">Movement History</TabsTrigger>
+            <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+          </TabsList>
+        </div>
         <TabsContent value="overview" className="space-y-6">
           <div className="flex flex-col lg:flex-row gap-6">
             {asset.imageUrl && (
