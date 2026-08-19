@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5QrcodeScanner, Html5Qrcode } from "html5-qrcode";
 import { Filter } from "lucide-react";
 
 interface AssetSearchProps {
@@ -36,25 +36,31 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
   const [isScanning, setIsScanning] = useState(false);
 
   useEffect(() => {
-    let scanner: Html5QrcodeScanner | null = null;
+    let html5QrCode: Html5Qrcode | null = null;
     let timeout: NodeJS.Timeout;
+    let isMounted = true;
     
     if (isScanning) {
       timeout = setTimeout(() => {
         try {
-          scanner = new Html5QrcodeScanner(
-            "search-qr-reader",
+          if (!isMounted) return;
+          html5QrCode = new Html5Qrcode("search-qr-reader");
+          
+          html5QrCode.start(
+            { facingMode: "environment" }, // prefer back camera
             { fps: 10, qrbox: { width: 250, height: 250 } },
-            false
-          );
-
-          scanner.render(
             (decodedText) => {
               setSearchTerm(decodedText);
               setIsScanning(false);
             },
-            (err) => {}
-          );
+            (errorMessage) => {
+              // ignore background scan errors
+            }
+          ).catch((err) => {
+            console.error("Camera start failed", err);
+            // If starting the camera fails (e.g. permissions denied), we keep the dialog open
+            // but it will be empty. You could add a toast.error here if needed.
+          });
         } catch (e) {
           console.error("Scanner init failed", e);
         }
@@ -62,9 +68,12 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
     }
 
     return () => {
+      isMounted = false;
       clearTimeout(timeout);
-      if (scanner) {
-        scanner.clear().catch(() => {});
+      if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().catch(() => {}).then(() => {
+          html5QrCode?.clear();
+        });
       }
     };
   }, [isScanning]);
