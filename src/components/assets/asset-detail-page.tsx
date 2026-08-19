@@ -243,7 +243,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
               <div className="w-full lg:w-1/3 flex-shrink-0">
                 <div className="bg-white p-2 rounded-xl border shadow-sm flex items-center justify-center h-full min-h-[300px]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={asset.imageUrl} alt={asset.name} className="w-full max-h-[400px] object-contain rounded-lg" />
+                  <img src={asset.imageUrl ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${asset.imageUrl}` : undefined} alt={asset.name} className="w-full max-h-[400px] object-contain rounded-lg" />
                 </div>
               </div>
             )}
@@ -311,7 +311,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                         {asset.assetDisposal.disposalDocuments.map((doc: any) => (
                           <li key={doc.id} className="flex items-center text-sm">
                             <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
-                            <a href={doc.filePath} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+                            <a href={doc.filePath ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${doc.filePath}` : "#"} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
                               {doc.originalName}
                             </a>
                           </li>
@@ -379,7 +379,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                           <p className="text-xs text-muted-foreground">{doc.documentType} • {(doc.fileSize / 1024).toFixed(1)} KB</p>
                         </div>
                       </div>
-                      <a href={doc.filePath} target="_blank" className="text-sm font-medium text-primary hover:underline">View</a>
+                      <a href={doc.filePath ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${doc.filePath}` : "#"} target="_blank" className="text-sm font-medium text-primary hover:underline">View</a>
                     </li>
                   ))}
                 </ul>

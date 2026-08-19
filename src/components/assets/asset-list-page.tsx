@@ -158,10 +158,10 @@ export function AssetListPage() {
                     <TableCell>
                       {asset.imageUrl ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
-                        <img src={asset.imageUrl} alt="Asset" className="h-10 w-10 object-cover rounded-md border" />
+                        <img src={asset.imageUrl ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${asset.imageUrl}` : undefined} alt="Asset" className="h-10 w-10 object-cover rounded-md border" />
                       ) : asset.assetDocuments && asset.assetDocuments.length > 0 ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
-                        <img src={asset.assetDocuments[0].filePath} alt="Asset" className="h-10 w-10 object-cover rounded-md border" />
+                        <img src={asset.assetDocuments[0]?.filePath ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${asset.assetDocuments[0].filePath}` : undefined} alt="Asset" className="h-10 w-10 object-cover rounded-md border" />
                       ) : (
                         <div className="h-10 w-10 bg-muted rounded-md border flex items-center justify-center text-xs text-muted-foreground">No img</div>
                       )}

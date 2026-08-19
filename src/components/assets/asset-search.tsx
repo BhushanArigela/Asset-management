@@ -199,7 +199,7 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
                   <div className="w-full h-40 overflow-hidden relative border-b">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
-                      src={asset.assetDocuments[0].filePath} 
+                      src={asset.assetDocuments[0]?.filePath ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${asset.assetDocuments[0].filePath}` : undefined} 
                       alt={asset.name} 
                       className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300"
                     />
