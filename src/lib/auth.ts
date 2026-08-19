@@ -17,6 +17,7 @@ const hostPrefix = useSecureCookies ? "__Host-" : "";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: true,
   trustHost: true,
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH ? `${process.env.NEXT_PUBLIC_BASE_PATH}/api/auth` : "/api/auth",
   cookies: {
     csrfToken: { name: `${hostPrefix}authjs.csrf-token`, options: { path: '/', sameSite: 'lax', secure: useSecureCookies } },
     sessionToken: { name: `${cookiePrefix}authjs.session-token`, options: { path: '/', sameSite: 'lax', secure: useSecureCookies, httpOnly: true } },
