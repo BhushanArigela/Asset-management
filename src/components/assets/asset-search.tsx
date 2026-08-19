@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Search, MapPin, Tag, Box, Loader2, Info, Eye } from "lucide-react";
+import { Search, MapPin, Tag, Box, Loader2, Info, Eye, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import { Filter } from "lucide-react";
 
 interface AssetSearchProps {
@@ -31,6 +33,41 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
   const [rooms, setRooms] = useState<any[]>([]);
   const [departments, setDepartments] = useState<any[]>([]);
   const [statuses, setStatuses] = useState<any[]>([]);
+  const [isScanning, setIsScanning] = useState(false);
+
+  useEffect(() => {
+    let scanner: Html5QrcodeScanner | null = null;
+    let timeout: NodeJS.Timeout;
+    
+    if (isScanning) {
+      timeout = setTimeout(() => {
+        try {
+          scanner = new Html5QrcodeScanner(
+            "search-qr-reader",
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            false
+          );
+
+          scanner.render(
+            (decodedText) => {
+              setSearchTerm(decodedText);
+              setIsScanning(false);
+            },
+            (err) => {}
+          );
+        } catch (e) {
+          console.error("Scanner init failed", e);
+        }
+      }, 150);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+      if (scanner) {
+        scanner.clear().catch(() => {});
+      }
+    };
+  }, [isScanning]);
 
   useEffect(() => {
     Promise.all([
@@ -100,7 +137,7 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
           <Input 
             type="search" 
             placeholder="Scan QR or type keywords..." 
-            className="w-full h-12 pl-12 pr-4 text-lg rounded-full bg-background border-2 focus-visible:ring-0 focus-visible:border-primary transition-all"
+            className="w-full h-12 pl-12 pr-12 text-lg rounded-full bg-background border-2 focus-visible:ring-0 focus-visible:border-primary transition-all"
             value={searchTerm}
             onChange={(e) => {
               let val = e.target.value;
@@ -118,6 +155,15 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
             }}
             autoFocus
           />
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="absolute right-2 top-2 h-8 w-8 text-muted-foreground hover:text-primary rounded-full hover:bg-muted"
+            onClick={() => setIsScanning(true)}
+            title="Scan QR Code"
+          >
+            <QrCode className="h-5 w-5" />
+          </Button>
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2 px-1">
@@ -252,6 +298,16 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
           <p className="text-sm">Try adjusting your search terms</p>
         </div>
       )}
+      
+      <Dialog open={isScanning} onOpenChange={setIsScanning}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Scan QR Code</DialogTitle>
+          </DialogHeader>
+          <div id="search-qr-reader" className="w-full rounded-md border overflow-hidden mt-2 min-h-[300px] bg-slate-50 flex items-center justify-center">
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
