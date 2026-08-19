@@ -67,7 +67,7 @@ export function ReportViewer({ type }: ReportViewerProps) {
     if (dateTo) params.append("dateTo", dateTo);
     if (buildingId && buildingId !== "all") params.append("buildingId", buildingId);
 
-    window.location.href = `/api/reports?${params.toString()}`;
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/reports?${params.toString()}`;
   };
 
   useEffect(() => {
