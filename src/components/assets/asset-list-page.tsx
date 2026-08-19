@@ -76,18 +76,18 @@ export function AssetListPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-3xl font-bold tracking-tight">Assets</h2>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={() => router.push("/assets/import")}>
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" onClick={() => router.push("/assets/import")} className="flex-1 sm:flex-none">
             <Download className="mr-2 h-4 w-4" />
             Import
           </Button>
-          <Button variant="outline" onClick={handleExport}>
+          <Button variant="outline" onClick={handleExport} className="flex-1 sm:flex-none">
             <Upload className="mr-2 h-4 w-4" />
             Export
           </Button>
-          <Button onClick={() => router.push("/assets/new")}>
+          <Button onClick={() => router.push("/assets/new")} className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" /> Register Asset
           </Button>
         </div>
@@ -217,27 +217,29 @@ export function AssetListPage() {
           </Table>
 
           {!isLoading && !isError && totalPages > 1 && (
-            <div className="flex items-center justify-end space-x-2 p-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1}
-              >
-                Previous
-              </Button>
-              <div className="text-sm">
-                Page {page} of {totalPages}
+            <CardFooter className="flex flex-col sm:flex-row items-center justify-between py-4 gap-4">
+              <div className="text-sm text-muted-foreground text-center sm:text-left w-full sm:w-auto">
+                Page {page} of {totalPages} (Total {data?.pagination?.total || 0} assets)
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-              >
-                Next
-              </Button>
-            </div>
+              <div className="flex items-center space-x-2 w-full sm:w-auto justify-center sm:justify-end">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            </CardFooter>
           )}
         </CardContent>
       </Card>
