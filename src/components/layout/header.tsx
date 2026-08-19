@@ -38,7 +38,7 @@ export function Header({ user }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b bg-background px-4 md:px-8">
-      <div className="flex flex-1 items-center gap-4 md:ml-0 ml-12">
+      <div className="flex flex-1 items-center gap-4 xl:ml-0 ml-12">
         <Breadcrumbs />
       </div>
       <div className="flex items-center gap-4">

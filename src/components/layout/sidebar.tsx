@@ -117,15 +117,15 @@ export function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-background border-r">
+      <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0 bg-background border-r">
         <SidebarContent />
       </div>
 
-      {/* Mobile Sidebar */}
-      <div className="md:hidden">
+      {/* Mobile/Tablet Sidebar */}
+      <div className="xl:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden fixed top-3 left-4 z-50">
+            <Button variant="ghost" size="icon" className="xl:hidden fixed top-3 left-4 z-50">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
