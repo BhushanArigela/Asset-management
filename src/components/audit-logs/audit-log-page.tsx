@@ -59,7 +59,7 @@ export function AuditLogPage() {
     const params = new URLSearchParams({ format: "excel" });
     if (moduleFilter !== "all") params.append("module", moduleFilter);
     if (actionFilter !== "all") params.append("action", actionFilter);
-    window.location.href = `/api/audit-logs?${params.toString()}`;
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/audit-logs?${params.toString()}`;
   };
 
   return (
