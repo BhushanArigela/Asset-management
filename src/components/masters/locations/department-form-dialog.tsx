@@ -47,7 +47,7 @@ export function DepartmentFormDialog({ open, onOpenChange, onSuccess, initialDat
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/departments/${initialData.id}` : "/api/masters/departments";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/departments/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/departments";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {

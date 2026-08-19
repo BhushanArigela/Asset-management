@@ -53,7 +53,7 @@ export function CompanyFormDialog({ open, onOpenChange, onSuccess, initialData }
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/companies/${initialData.id}` : "/api/masters/companies";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/companies/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/companies";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {

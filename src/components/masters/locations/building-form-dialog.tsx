@@ -55,7 +55,7 @@ export function BuildingFormDialog({ open, onOpenChange, onSuccess, initialData 
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/buildings/${initialData.id}` : "/api/masters/buildings";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/buildings/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/buildings";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {

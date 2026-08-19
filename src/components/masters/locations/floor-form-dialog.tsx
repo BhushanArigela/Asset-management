@@ -55,7 +55,7 @@ export function FloorFormDialog({ open, onOpenChange, onSuccess, initialData }: 
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/floors/${initialData.id}` : "/api/masters/floors";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/floors/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/floors";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {

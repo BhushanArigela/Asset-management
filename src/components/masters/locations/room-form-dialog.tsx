@@ -55,7 +55,7 @@ export function RoomFormDialog({ open, onOpenChange, onSuccess, initialData }: a
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/masters/rooms/${initialData.id}` : "/api/masters/rooms";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/rooms/${initialData.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/masters/rooms";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {
