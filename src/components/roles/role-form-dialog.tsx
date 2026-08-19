@@ -61,7 +61,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `/api/roles/${role.id}` : "/api/roles";
+      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/roles/${role.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/roles";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {
