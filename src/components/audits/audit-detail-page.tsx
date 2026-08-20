@@ -211,7 +211,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                           {r.asset ? `${r.asset.building?.name || 'Unknown'} / ${r.asset.room?.name || 'Unknown'}` : 'Unknown'}
                         </TableCell>
                         <TableCell>
-                          {r.classification === "MISSING" ? "N/A (Missing)" : `${audit.building?.name || 'Unknown'} / ${audit.room?.name || 'Unknown'}`}
+                          {r.classification === "MISSING" ? "N/A (Missing)" : `Audit: ${audit.name}`}
                         </TableCell>
                         <TableCell>{r.remarks || "No remarks"}</TableCell>
                       </TableRow>
