@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
@@ -79,6 +79,13 @@ export function AuditForm({ userId }: { userId: string }) {
     }
   };
 
+  const roomsByBuilding = rooms.reduce((acc: any, r: any) => {
+    const buildingName = r.floor?.building?.name || "Unknown Building";
+    if (!acc[buildingName]) acc[buildingName] = [];
+    acc[buildingName].push(r);
+    return acc;
+  }, {});
+
   return (
     <Card>
       <CardContent className="pt-6">
@@ -126,8 +133,15 @@ export function AuditForm({ userId }: { userId: string }) {
                 <Select value={formData.scopeId} onValueChange={(v) => setFormData({...formData, scopeId: v})}>
                   <SelectTrigger><SelectValue placeholder="Select Room" /></SelectTrigger>
                   <SelectContent>
-                    {rooms.map((r: any) => (
-                      <SelectItem key={r.id} value={r.id}>{r.name} ({r.code})</SelectItem>
+                    {Object.entries(roomsByBuilding).map(([buildingName, buildingRooms]: [string, any]) => (
+                      <SelectGroup key={buildingName}>
+                        <SelectLabel className="text-primary font-bold">{buildingName}</SelectLabel>
+                        {buildingRooms.map((r: any) => (
+                          <SelectItem key={r.id} value={r.id} className="ml-2">
+                            {r.name} ({r.code}) - {r.floor?.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
                     ))}
                   </SelectContent>
                 </Select>
