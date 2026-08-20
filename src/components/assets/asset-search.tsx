@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Search, MapPin, Tag, Box, Loader2, Info, Eye, QrCode } from "lucide-react";
+import { Search, MapPin, Tag, Box, Loader2, Info, Eye, QrCode, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Html5QrcodeScanner, Html5Qrcode } from "html5-qrcode";
 import { Filter } from "lucide-react";
+import { toast } from "sonner";
+import QRCode from "qrcode";
 
 interface AssetSearchProps {
   initialQuery?: string;
@@ -34,6 +36,81 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
   const [departments, setDepartments] = useState<any[]>([]);
   const [statuses, setStatuses] = useState<any[]>([]);
   const [isScanning, setIsScanning] = useState(false);
+  const [isPrinting, setIsPrinting] = useState(false);
+  const printIframeRef = useRef<HTMLIFrameElement>(null);
+
+  const handleBulkPrint = async (assetsToPrint: any[]) => {
+    if (!assetsToPrint || assetsToPrint.length === 0) {
+      toast.error("No assets to print");
+      return;
+    }
+
+    setIsPrinting(true);
+    const iframe = printIframeRef.current;
+    if (!iframe) {
+      setIsPrinting(false);
+      return;
+    }
+
+    try {
+      let html = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Bulk Print QR - Search Results</title>
+            <style>
+              body { font-family: sans-serif; margin: 0; padding: 20px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+              .qr-container { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px dashed #ccc; padding: 15px; border-radius: 8px; width: 250px; text-align: center; page-break-inside: avoid; margin-bottom: 20px; }
+              img { max-width: 200px; max-height: 200px; margin-bottom: 10px; }
+              h3 { margin: 0 0 5px 0; font-size: 16px; word-break: break-word; }
+              p { margin: 0; font-size: 14px; color: #555; }
+            </style>
+          </head>
+          <body>
+      `;
+
+      for (const a of assetsToPrint) {
+        let qrDataUrl = a.qrCode;
+        if (!qrDataUrl) {
+          const appUrl = typeof window !== 'undefined' ? window.location.origin : "http://localhost:3000";
+          const assetUrl = `${appUrl}/assets/${a.assetCode}`;
+          qrDataUrl = await QRCode.toDataURL(assetUrl);
+        }
+
+        html += `
+          <div class="qr-container">
+            <img src="${qrDataUrl}" alt="${a.assetCode}" />
+            <h3>${a.assetCode}</h3>
+            <p>${a.name}</p>
+          </div>
+        `;
+      }
+
+      html += `
+          </body>
+        </html>
+      `;
+
+      const doc = iframe.contentWindow?.document;
+      if (doc) {
+        doc.open();
+        doc.write(html);
+        doc.close();
+
+        setTimeout(() => {
+          iframe.contentWindow?.focus();
+          iframe.contentWindow?.print();
+          setIsPrinting(false);
+        }, 500);
+      } else {
+        setIsPrinting(false);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to generate QR codes");
+      setIsPrinting(false);
+    }
+  };
 
   useEffect(() => {
     let html5QrCode: Html5Qrcode | null = null;
@@ -188,8 +265,20 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2 px-1">
           {isSearching && (
-            <div className="text-sm text-muted-foreground font-medium">
-              {assets.length} results found
+            <div className="flex items-center justify-between w-full">
+              <div className="text-sm text-muted-foreground font-medium">
+                {assets.length} results found
+              </div>
+              <Button 
+                onClick={() => handleBulkPrint(assets)} 
+                disabled={isPrinting || assets.length === 0} 
+                variant="outline" 
+                size="sm"
+                className="ml-auto"
+              >
+                {isPrinting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Printer className="w-4 h-4 mr-2" />}
+                {isPrinting ? "Generating..." : "Bulk Print QRs"}
+              </Button>
             </div>
           )}
         </div>
@@ -323,15 +412,19 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
         </div>
       )}
       
-      <Dialog open={isScanning} onOpenChange={setIsScanning}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Scan QR Code</DialogTitle>
-          </DialogHeader>
-          <div id="search-qr-reader" className="w-full rounded-md border overflow-hidden mt-2 min-h-[300px] bg-slate-50 flex items-center justify-center">
-          </div>
-        </DialogContent>
-      </Dialog>
+      {isScanning && (
+        <Dialog open={isScanning} onOpenChange={setIsScanning}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Scan Asset QR Code</DialogTitle>
+            </DialogHeader>
+            <div id="search-qr-reader" className="w-full"></div>
+            <Button variant="outline" onClick={() => setIsScanning(false)} className="w-full mt-4">Cancel</Button>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      <iframe ref={printIframeRef} style={{ display: "none" }} title="Print Frame" />
     </div>
   );
 }
