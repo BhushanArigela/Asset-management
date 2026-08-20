@@ -75,10 +75,17 @@ export function MovementForm() {
   const selectedCompanyId = form.watch("toCompanyId");
   const selectedBuildingId = form.watch("toBuildingId");
   const selectedFloorId = form.watch("toFloorId");
+  const selectedAssetId = form.watch("assetId");
+
+  const selectedAsset = assets.find(a => a.id === selectedAssetId);
 
   const filteredBuildings = selectedCompanyId ? buildings.filter(b => b.companyId === selectedCompanyId) : buildings;
   const filteredFloors = selectedBuildingId ? floors.filter(f => f.buildingId === selectedBuildingId) : floors;
-  const filteredRooms = selectedFloorId ? rooms.filter(r => r.floorId === selectedFloorId) : rooms;
+  let filteredRooms = selectedFloorId ? rooms.filter(r => r.floorId === selectedFloorId) : rooms;
+  
+  if (selectedAsset?.roomId) {
+    filteredRooms = filteredRooms.filter(r => r.id !== selectedAsset.roomId);
+  }
 
   // Auto-clear downstream fields when parent changes
   useEffect(() => {
