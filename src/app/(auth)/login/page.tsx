@@ -69,12 +69,15 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       <div className="flex flex-1 flex-col items-center justify-center bg-primary p-12 text-primary-foreground">
-        <div className="max-w-md space-y-6 text-center">
-          <div className="flex justify-center">
-            <Building2 className="h-16 w-16 text-accent" />
+        <div className="max-w-md space-y-6 text-center bg-white p-10 rounded-2xl shadow-xl">
+          <div className="flex justify-center h-24 sm:h-32 mb-2">
+            <img 
+              src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo.png`} 
+              alt="Sheraton Logo" 
+              className="h-full object-contain"
+            />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight">Sheraton Hotel</h1>
-          <p className="text-lg text-primary-foreground/80">
+          <p className="text-lg text-[#1B2A4A] font-medium px-4">
             Enterprise Asset Management System
           </p>
         </div>
