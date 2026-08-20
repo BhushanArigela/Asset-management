@@ -13,16 +13,17 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search") || "";
     
-    const whereClause: any = search
-      ? {
-          OR: [
-            { name: { contains: search } },
-            { assetCode: { contains: search } },
-            { description: { contains: search } },
-            { serialNumber: { contains: search } },
-          ],
-        }
-      : {};
+    const whereClause =
+      search && search !== ""
+        ? {
+            OR: [
+              { name: { contains: search, mode: "insensitive" } },
+              { assetCode: { contains: search, mode: "insensitive" } },
+              { description: { contains: search, mode: "insensitive" } },
+              { serialNumber: { contains: search, mode: "insensitive" } },
+            ],
+          }
+        : {};
 
     const assets = await prisma.asset.findMany({
       where: whereClause,

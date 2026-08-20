@@ -87,12 +87,12 @@ export async function GET(req: NextRequest) {
 
     if (search) {
       where.OR = [
-        { assetCode: { contains: search } },
-        { name: { contains: search } },
-        { serialNumber: { contains: search } },
-        { model: { contains: search } },
-        { room: { code: { contains: search } } },
-        { room: { name: { contains: search } } },
+        { assetCode: { contains: search, mode: "insensitive" } },
+        { name: { contains: search, mode: "insensitive" } },
+        { serialNumber: { contains: search, mode: "insensitive" } },
+        { model: { contains: search, mode: "insensitive" } },
+        { room: { code: { contains: search, mode: "insensitive" } } },
+        { room: { name: { contains: search, mode: "insensitive" } } },
       ];
     }
 
