@@ -129,20 +129,28 @@ export function MovementForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField control={form.control} name="assetId" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Asset</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Select Asset" /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {assets.map(a => <SelectItem key={a.id} value={a.id}>{a.assetCode} - {a.name}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )} />
+              <div className="md:col-span-2 space-y-4">
+                <FormField control={form.control} name="assetId" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Asset</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger><SelectValue placeholder="Select Asset" /></SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {assets.map(a => <SelectItem key={a.id} value={a.id}>{a.assetCode} - {a.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                {selectedAsset && (
+                  <div className="p-3 bg-muted rounded-md text-sm">
+                    <p><strong>Current Location:</strong> {[selectedAsset.building?.name, selectedAsset.floor?.name, selectedAsset.room?.name].filter(Boolean).join(" -> ") || "N/A"}</p>
+                    <p><strong>Current Department:</strong> {selectedAsset.department?.name || "N/A"}</p>
+                  </div>
+                )}
+              </div>
               <FormField control={form.control} name="toCompanyId" render={({ field }) => (
                 <FormItem>
                   <FormLabel>To Company</FormLabel>
