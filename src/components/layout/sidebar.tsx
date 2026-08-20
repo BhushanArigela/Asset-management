@@ -68,8 +68,8 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const SidebarContent = () => (
-    <>
-      <div className="flex h-16 shrink-0 items-center justify-center border-b px-6 py-3">
+    <div className="flex h-full flex-col bg-primary">
+      <div className="flex h-16 shrink-0 items-center justify-center bg-white border-b px-6 py-3">
         <img 
           src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo.png`} 
           alt="Sheraton Logo" 
@@ -80,7 +80,7 @@ export function Sidebar() {
         <nav className="flex-1 space-y-6">
           {navigation.map((group) => (
             <div key={group.title} className="space-y-2">
-              <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground px-2">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/60 px-2">
                 {group.title}
               </h4>
               <ul className="space-y-1">
@@ -91,16 +91,16 @@ export function Sidebar() {
                       <Link
                         href={item.href}
                         className={cn(
-                          "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
+                          "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-white/10 hover:text-white",
                           isActive
-                            ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                            : "text-muted-foreground"
+                            ? "bg-accent text-accent-foreground shadow-sm"
+                            : "text-primary-foreground/80"
                         )}
                       >
                         <item.icon
                           className={cn(
                             "h-4 w-4 shrink-0",
-                            isActive ? "text-accent" : "text-muted-foreground"
+                            isActive ? "text-accent-foreground" : "text-primary-foreground/60 group-hover:text-white"
                           )}
                           aria-hidden="true"
                         />
@@ -114,13 +114,13 @@ export function Sidebar() {
           ))}
         </nav>
       </div>
-    </>
+    </div>
   );
 
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0 bg-slate-50 border-r">
+      <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0 border-r border-[#1B2A4A]">
         <SidebarContent />
       </div>
 
@@ -133,7 +133,7 @@ export function Sidebar() {
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0 bg-slate-50">
+          <SheetContent side="left" className="w-64 p-0 border-r-0">
             <SidebarContent />
           </SheetContent>
         </Sheet>
