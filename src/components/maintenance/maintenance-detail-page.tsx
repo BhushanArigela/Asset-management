@@ -12,7 +12,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
+
 export function MaintenanceDetailPage({ id }: { id: string }) {
+  const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [status, setStatus] = useState("");
@@ -49,6 +53,8 @@ export function MaintenanceDetailPage({ id }: { id: string }) {
     onError: (err: any) => toast.error(err.message),
   });
 
+  const canEditMaintenance = hasPermission(session?.user?.permissions, [PERMISSIONS.MAINTENANCE_EDIT] as any);
+
   if (isLoading) return <div className="flex justify-center p-8"><Loader2 className="animate-spin text-muted-foreground w-8 h-8" /></div>;
   if (!mr) return <div>Request not found.</div>;
 
@@ -59,11 +65,13 @@ export function MaintenanceDetailPage({ id }: { id: string }) {
           <div className="text-sm text-muted-foreground font-medium mb-1">Request {mr.requestNumber}</div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-800">{mr.asset?.name} ({mr.asset?.assetCode})</h2>
         </div>
-        <Button onClick={() => {
-          setStatus(mr.status);
-          setNotes("");
-          setIsUpdateModalOpen(true);
-        }}>Update Status</Button>
+        {canEditMaintenance && (
+          <Button onClick={() => {
+            setStatus(mr.status);
+            setNotes("");
+            setIsUpdateModalOpen(true);
+          }}>Update Status</Button>
+        )}
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">

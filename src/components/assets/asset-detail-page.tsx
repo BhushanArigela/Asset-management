@@ -17,8 +17,11 @@ import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
 import { QrCodeModal } from "./qr-modal";
 import { AssetAccessoriesTab } from "./asset-accessories-tab";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 export function AssetDetailPage({ assetId }: { assetId: string }) {
+  const { data: session } = useSession();
   const router = useRouter();
   
   const [isUploading, setIsUploading] = useState(false);
@@ -561,26 +564,30 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                           <div className="font-semibold text-lg">{mr.requestNumber}</div>
                           <div className="text-sm text-slate-500 mt-1">{mr.description}</div>
                         </div>
-                        <div className="text-left sm:text-right flex flex-row sm:flex-col items-center sm:items-end gap-3 sm:gap-0">
+                          <div className="text-left sm:text-right flex flex-row sm:flex-col items-center sm:items-end gap-3 sm:gap-0">
                           <div><Badge>{mr.status}</Badge></div>
                           <div className="text-xs text-slate-500 sm:mt-2">Priority: {mr.priority}</div>
+                          {hasPermission(session?.user?.permissions, [PERMISSIONS.MAINTENANCE_EDIT] as any) && (
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="mt-2 sm:mt-2 h-7 text-xs hidden sm:flex"
+                              onClick={() => router.push(`/maintenance/${mr.id}`)}
+                            >
+                              Update & Details
+                            </Button>
+                          )}
+                        </div>
+                        {hasPermission(session?.user?.permissions, [PERMISSIONS.MAINTENANCE_EDIT] as any) && (
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="mt-2 sm:mt-2 h-7 text-xs hidden sm:flex"
+                            className="sm:hidden absolute top-4 right-4 h-8"
                             onClick={() => router.push(`/maintenance/${mr.id}`)}
                           >
-                            Update & Details
+                            Update
                           </Button>
-                        </div>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="sm:hidden absolute top-4 right-4 h-8"
-                          onClick={() => router.push(`/maintenance/${mr.id}`)}
-                        >
-                          Update
-                        </Button>
+                        )}
                       </div>
                       <div className="p-4 bg-white">
                         <h4 className="text-sm font-semibold text-slate-700 mb-3">Updates History</h4>
