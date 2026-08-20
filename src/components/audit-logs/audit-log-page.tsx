@@ -78,9 +78,13 @@ export function AuditLogPage() {
                 <SelectTrigger><SelectValue placeholder="All Modules" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Modules</SelectItem>
-                  <SelectItem value="ASSET">Asset Management</SelectItem>
-                  <SelectItem value="AUDIT">Physical Audits</SelectItem>
-                  <SelectItem value="USER">User Management</SelectItem>
+                  <SelectItem value="assets">Assets</SelectItem>
+                  <SelectItem value="masters">Masters</SelectItem>
+                  <SelectItem value="users">Users</SelectItem>
+                  <SelectItem value="roles">Roles</SelectItem>
+                  <SelectItem value="maintenance">Maintenance</SelectItem>
+                  <SelectItem value="movements">Movements</SelectItem>
+                  <SelectItem value="audits">Audits</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -90,10 +94,10 @@ export function AuditLogPage() {
                 <SelectTrigger><SelectValue placeholder="All Actions" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Actions</SelectItem>
-                  <SelectItem value="CREATE">Create</SelectItem>
-                  <SelectItem value="UPDATE">Update</SelectItem>
-                  <SelectItem value="DELETE">Delete</SelectItem>
-                  <SelectItem value="LOGIN">Login</SelectItem>
+                  <SelectItem value="created">Create</SelectItem>
+                  <SelectItem value="updated">Update</SelectItem>
+                  <SelectItem value="deleted">Delete</SelectItem>
+                  <SelectItem value="login">Login</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -154,15 +158,25 @@ export function AuditLogPage() {
                         </TableCell>
                         <TableCell>
                           <span className={`px-2 py-1 text-xs font-bold rounded-md ${
-                            log.action === 'CREATE' ? 'bg-green-100 text-green-700' :
-                            log.action === 'DELETE' ? 'bg-red-100 text-red-700' :
-                            log.action === 'UPDATE' ? 'bg-blue-100 text-blue-700' :
+                            log.action === 'created' ? 'bg-green-100 text-green-700' :
+                            log.action === 'deleted' ? 'bg-red-100 text-red-700' :
+                            log.action === 'updated' ? 'bg-blue-100 text-blue-700' :
                             'bg-gray-100 text-gray-700'
                           }`}>
                             {log.action}
                           </span>
                         </TableCell>
-                        <TableCell>{log.entityType} ({log.entityId.substring(0, 8)}...)</TableCell>
+                        <TableCell>{
+                          (() => {
+                            const payload = log.newValue || log.previousValue || {};
+                            const identifier = payload.name || payload.code || payload.email || payload.title || payload.roleName || null;
+                            let type = log.entityType !== "System" ? log.entityType : log.module;
+                            type = type ? type.charAt(0).toUpperCase() + type.slice(1) : "Record";
+                            
+                            if (identifier) return `${type}: ${identifier}`;
+                            return log.entityId ? `${type} (${log.entityId.substring(0, 8)})` : type;
+                          })()
+                        }</TableCell>
                         <TableCell className="text-muted-foreground text-sm">{log.ipAddress || 'N/A'}</TableCell>
                       </TableRow>
                       {expandedRows[log.id] && (
