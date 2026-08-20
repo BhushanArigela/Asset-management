@@ -390,6 +390,7 @@ model Asset {
   assetConditionChanges AssetConditionChange[]
   maintenanceRequests   MaintenanceRequest[]
   assetDisposal         AssetDisposal?
+  accessories           AssetAccessory[]
   auditExpectedAssets   AuditExpectedAsset[]
   auditResults          AuditResult[]
 
@@ -646,6 +647,21 @@ model DisposalDocument {
   @@index([disposalId])
   @@index([uploadedById])
   @@map("disposal_documents")
+}
+
+model AssetAccessory {
+  id           String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  assetId      String   @map("asset_id") @db.VarChar(36)
+  name         String   @map("name") @db.VarChar(255)
+  serialNumber String?  @map("serial_number") @db.VarChar(255)
+  qrCode       String?  @map("qr_code") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId])
+  @@map("asset_accessories")
 }
 
 // ==========================================

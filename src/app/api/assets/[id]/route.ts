@@ -122,6 +122,7 @@ export async function GET(
           orderBy: { createdAt: "desc" },
         },
         assetDisposal: true,
+        accessories: true,
         createdBy: { select: { name: true, email: true } },
       },
     });

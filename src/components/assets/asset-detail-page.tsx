@@ -16,6 +16,7 @@ import { Edit, ArrowRightLeft, Wrench, Trash2, QrCode, Upload, FileText, AlertTr
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
 import { QrCodeModal } from "./qr-modal";
+import { AssetAccessoriesTab } from "./asset-accessories-tab";
 
 export function AssetDetailPage({ assetId }: { assetId: string }) {
   const router = useRouter();
@@ -236,6 +237,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             <TabsTrigger value="warranty">Warranty</TabsTrigger>
             <TabsTrigger value="amc">AMC</TabsTrigger>
             <TabsTrigger value="movements">Movement History</TabsTrigger>
+            <TabsTrigger value="accessories">Accessories</TabsTrigger>
             <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
           </TabsList>
         </div>
@@ -540,6 +542,10 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
               ) : <p>No movements recorded.</p>}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="accessories">
+          <AssetAccessoriesTab assetId={asset.id} accessories={asset.accessories || []} />
         </TabsContent>
 
         <TabsContent value="maintenance">
