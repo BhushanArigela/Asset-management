@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Camera, Check, X } from "lucide-react";
+import { Camera, Check, X, Edit } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 interface AuditScannerProps {
@@ -119,7 +119,23 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
 
       toast.success("Asset recorded successfully");
       
-      setRecentScans(prev => [{ assetCode, classification, time: new Date() }, ...prev].slice(0, 5));
+      const proposedConditionObj = conditions.find((c: any) => c.id === newConditionId);
+      const proposedConditionName = proposedConditionObj?.name || "No Change";
+
+      setRecentScans(prev => {
+        const newScan = {
+          assetCode,
+          classification,
+          time: new Date(),
+          previousCondition: scannedAsset?.condition?.name || "Unknown",
+          proposedCondition: proposedConditionName,
+          newConditionId,
+          newStatusId,
+          remarks,
+        };
+        const filtered = prev.filter(s => s.assetCode !== assetCode);
+        return [newScan, ...filtered].slice(0, 5);
+      });
       setAssetCode("");
       setRemarks("");
       setClassification("VERIFIED");
@@ -279,18 +295,39 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
           <CardContent>
             <ul className="space-y-2">
               {recentScans.map((scan, i) => (
-                <li key={i} className="flex justify-between items-center p-2 bg-slate-50 rounded border">
+                <li key={i} className="flex justify-between items-center p-3 bg-slate-50 rounded border">
                   <div>
-                    <span className="font-medium">{scan.assetCode}</span>
-                    <span className="text-xs text-muted-foreground ml-2">
-                      {scan.time.toLocaleTimeString()}
-                    </span>
+                    <div>
+                      <span className="font-medium text-base">{scan.assetCode}</span>
+                      <span className="text-xs text-muted-foreground ml-2">
+                        {scan.time.toLocaleTimeString()}
+                      </span>
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      <span className="font-medium text-slate-700">Previous:</span> {scan.previousCondition} 
+                      <span className="mx-2">|</span> 
+                      <span className="font-medium text-slate-700">Selected:</span> {scan.proposedCondition}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
                     {scan.classification === "VERIFIED" ? 
                       <span className="text-green-600 flex items-center text-sm font-medium"><Check className="w-4 h-4 mr-1" /> Verified</span> :
-                      <span className="text-red-600 flex items-center text-sm font-medium"><X className="w-4 h-4 mr-1" /> {scan.classification}</span>
+                      <span className="text-red-600 flex items-center text-sm font-medium"><X className="w-4 h-4 mr-1" /> {scan.classification.replace("_", " ")}</span>
                     }
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => {
+                        setAssetCode(scan.assetCode);
+                        setClassification(scan.classification);
+                        setNewConditionId(scan.newConditionId || "none");
+                        setNewStatusId(scan.newStatusId || "none");
+                        setRemarks(scan.remarks || "");
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                    >
+                      <Edit className="w-4 h-4 mr-1" /> Edit
+                    </Button>
                   </div>
                 </li>
               ))}

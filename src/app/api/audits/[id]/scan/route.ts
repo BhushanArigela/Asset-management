@@ -38,23 +38,57 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
 
     // Record the scan result
     const result = await prisma.$transaction(async (tx) => {
-      const scan = await tx.auditResult.create({
-        data: {
-          sessionId: auditId,
-          assetId: asset.id,
-          assetCode: asset.assetCode,
-          classification: finalClassification,
-          physicalCondition,
-          newStatusId,
-          newConditionId,
-          remarks,
-          photoPath,
-          scannedById: session.user.id,
-          scannedAt: new Date(),
-        }
+      let scan = await tx.auditResult.findFirst({
+        where: { sessionId: auditId, assetId: asset.id }
       });
 
-      // Update counters on session
+      if (scan) {
+        // Decrement the old classification counter
+        const decField = 
+          scan.classification === "VERIFIED" ? "totalVerified" :
+          scan.classification === "WRONG_LOCATION" ? "totalWrongLocation" :
+          scan.classification === "DAMAGED" ? "totalDamaged" :
+          "totalUnexpected";
+
+        await tx.auditSession.update({
+          where: { id: auditId },
+          data: { [decField]: { decrement: 1 } }
+        });
+
+        // Update existing scan
+        scan = await tx.auditResult.update({
+          where: { id: scan.id },
+          data: {
+            classification: finalClassification,
+            physicalCondition,
+            newStatusId,
+            newConditionId,
+            remarks,
+            photoPath,
+            scannedById: session.user.id,
+            scannedAt: new Date(),
+          }
+        });
+      } else {
+        // Create new scan
+        scan = await tx.auditResult.create({
+          data: {
+            sessionId: auditId,
+            assetId: asset.id,
+            assetCode: asset.assetCode,
+            classification: finalClassification,
+            physicalCondition,
+            newStatusId,
+            newConditionId,
+            remarks,
+            photoPath,
+            scannedById: session.user.id,
+            scannedAt: new Date(),
+          }
+        });
+      }
+
+      // Increment new classification counter
       const incrementField = 
         finalClassification === "VERIFIED" ? "totalVerified" :
         finalClassification === "WRONG_LOCATION" ? "totalWrongLocation" :
