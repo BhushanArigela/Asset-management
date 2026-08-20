@@ -71,7 +71,7 @@ export function Sidebar() {
     <div className="flex h-full flex-col bg-primary">
       <div className="flex h-16 shrink-0 items-center justify-center bg-white border-b px-6 py-3">
         <img 
-          src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo.png`} 
+          src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo-inner.png`} 
           alt="Sheraton Logo" 
           className="h-full object-contain"
         />
