@@ -29,7 +29,8 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
     queryKey: ["statuses"],
     queryFn: async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/statuses`);
-      return res.json();
+      const data = await res.json();
+      return data.data || [];
     },
   });
 
@@ -37,7 +38,8 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
     queryKey: ["conditions"],
     queryFn: async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/conditions`);
-      return res.json();
+      const data = await res.json();
+      return data.data || [];
     },
   });
 

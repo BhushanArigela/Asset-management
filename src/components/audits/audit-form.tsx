@@ -29,7 +29,7 @@ export function AuditForm({ userId }: { userId: string }) {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/users?limit=1000`);
       if (!res.ok) throw new Error("Failed to fetch users");
       const data = await res.json();
-      return data.users || [];
+      return data.data || [];
     },
   });
 
@@ -38,7 +38,8 @@ export function AuditForm({ userId }: { userId: string }) {
     queryFn: async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/buildings`);
       if (!res.ok) throw new Error("Failed to fetch");
-      return res.json();
+      const data = await res.json();
+      return data.data || [];
     },
     enabled: formData.scopeType === "Building",
   });
@@ -48,7 +49,8 @@ export function AuditForm({ userId }: { userId: string }) {
     queryFn: async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/rooms`);
       if (!res.ok) throw new Error("Failed to fetch");
-      return res.json();
+      const data = await res.json();
+      return data.data || [];
     },
     enabled: formData.scopeType === "Room",
   });
