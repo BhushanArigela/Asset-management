@@ -123,101 +123,119 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
       <Card>
         <CardContent className="p-6">
           <Tabs defaultValue="expected">
-            <TabsList className="mb-4">
+            <TabsList className="mb-4 h-auto flex-wrap">
               <TabsTrigger value="expected">Expected Assets ({audit.auditExpectedAssets?.length || 0})</TabsTrigger>
               <TabsTrigger value="results">Scan Results ({audit.auditResults?.length || 0})</TabsTrigger>
               <TabsTrigger value="discrepancies">Discrepancies ({discrepancies.length})</TabsTrigger>
             </TabsList>
             
             <TabsContent value="expected">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Asset Code</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>System Status</TableHead>
-                    <TableHead>Audit Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {audit.auditExpectedAssets?.map((ea: any) => {
-                    const result = audit.auditResults?.find((r: any) => r.assetId === ea.assetId);
-                    return (
-                      <TableRow key={ea.id}>
-                        <TableCell className="font-medium">{ea.asset.assetCode}</TableCell>
-                        <TableCell>{ea.asset.name}</TableCell>
-                        <TableCell>{ea.asset.status?.name || "N/A"}</TableCell>
-                        <TableCell>
-                          <Badge variant={result ? "default" : "secondary"}>
-                            {result ? result.classification : "PENDING"}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Asset Code</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>System Status</TableHead>
+                      <TableHead>Audit Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {audit.auditExpectedAssets?.map((ea: any) => {
+                      const result = audit.auditResults?.find((r: any) => r.assetId === ea.assetId);
+                      return (
+                        <TableRow key={ea.id}>
+                          <TableCell className="font-medium">{ea.asset.assetCode}</TableCell>
+                          <TableCell>{ea.asset.name}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{ea.asset.status?.name || "Unknown"}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            {result ? (
+                              <Badge className={
+                                result.classification === "VERIFIED" ? "bg-green-600" :
+                                result.classification === "WRONG_LOCATION" ? "bg-orange-500" :
+                                result.classification === "DAMAGED" ? "bg-yellow-600" :
+                                result.classification === "MISSING" ? "bg-red-600" :
+                                "bg-purple-600"
+                              }>
+                                {result.classification.replace("_", " ")}
+                              </Badge>
+                            ) : (
+                              <Badge variant="secondary">PENDING</Badge>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
             </TabsContent>
             
             <TabsContent value="results">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Asset Code</TableHead>
-                    <TableHead>Classification</TableHead>
-                    <TableHead>Condition (Physical)</TableHead>
-                    <TableHead>Proposed Status</TableHead>
-                    <TableHead>Proposed Condition</TableHead>
-                    <TableHead>Scanned By</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {audit.auditResults?.map((r: any) => (
-                    <TableRow key={r.id}>
-                      <TableCell>{r.assetCode || r.asset?.assetCode}</TableCell>
-                      <TableCell><Badge>{r.classification}</Badge></TableCell>
-                      <TableCell>{r.physicalCondition || "N/A"}</TableCell>
-                      <TableCell>{r.newStatus ? r.newStatus.name : "No Change"}</TableCell>
-                      <TableCell>{r.newCondition ? r.newCondition.name : "No Change"}</TableCell>
-                      <TableCell>{r.scannedBy?.name || "Unknown"}</TableCell>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Asset Code</TableHead>
+                      <TableHead>Classification</TableHead>
+                      <TableHead>Condition (Physical)</TableHead>
+                      <TableHead>Proposed Status</TableHead>
+                      <TableHead>Proposed Condition</TableHead>
+                      <TableHead>Scanned By</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {audit.auditResults?.map((r: any) => (
+                      <TableRow key={r.id}>
+                        <TableCell>{r.assetCode || r.asset?.assetCode}</TableCell>
+                        <TableCell><Badge>{r.classification}</Badge></TableCell>
+                        <TableCell>{r.physicalCondition || "N/A"}</TableCell>
+                        <TableCell>{r.newStatus ? r.newStatus.name : "No Change"}</TableCell>
+                        <TableCell>{r.newCondition ? r.newCondition.name : "No Change"}</TableCell>
+                        <TableCell>{r.scannedBy?.name || "Unknown"}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </TabsContent>
             
             <TabsContent value="discrepancies">
               {discrepancies.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">No discrepancies found.</div>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Asset Code</TableHead>
-                      <TableHead>Issue</TableHead>
-                      <TableHead>System Location</TableHead>
-                      <TableHead>Found Location</TableHead>
-                      <TableHead>Remarks</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {discrepancies.map((r: any) => (
-                      <TableRow key={r.id}>
-                        <TableCell>{r.assetCode || r.asset?.assetCode}</TableCell>
-                        <TableCell>
-                          <span className="text-red-600 font-medium">{r.classification.replace("_", " ")}</span>
-                        </TableCell>
-                        <TableCell>
-                          {r.asset ? `${r.asset.building?.name || 'Unknown'} / ${r.asset.room?.name || 'Unknown'}` : 'Unknown'}
-                        </TableCell>
-                        <TableCell>
-                          {r.classification === "MISSING" ? "N/A (Missing)" : `Audit: ${audit.name}`}
-                        </TableCell>
-                        <TableCell>{r.remarks || "No remarks"}</TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Asset Code</TableHead>
+                        <TableHead>Issue</TableHead>
+                        <TableHead>System Location</TableHead>
+                        <TableHead>Found Location</TableHead>
+                        <TableHead>Remarks</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {discrepancies.map((r: any) => (
+                        <TableRow key={r.id}>
+                          <TableCell>{r.assetCode || r.asset?.assetCode}</TableCell>
+                          <TableCell>
+                            <span className="text-red-600 font-medium">{r.classification.replace("_", " ")}</span>
+                          </TableCell>
+                          <TableCell>
+                            {r.asset ? `${r.asset.building?.name || 'Unknown'} / ${r.asset.room?.name || 'Unknown'}` : 'Unknown'}
+                          </TableCell>
+                          <TableCell>
+                            {r.classification === "MISSING" ? "N/A (Missing)" : `Audit: ${audit.name}`}
+                          </TableCell>
+                          <TableCell>{r.remarks || "No remarks"}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               )}
             </TabsContent>
           </Tabs>
