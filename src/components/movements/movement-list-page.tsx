@@ -48,11 +48,11 @@ export function MovementListPage() {
               ) : (
                 movements.map((m: any) => (
                   <TableRow key={m.id}>
-                    <TableCell>{formatDateTime(m.movementDate)}</TableCell>
+                    <TableCell>{formatDateTime(m.transferDate)}</TableCell>
                     <TableCell>{m.asset?.name} ({m.asset?.assetCode})</TableCell>
                     <TableCell>{m.fromBuilding?.name || "N/A"}</TableCell>
                     <TableCell>{m.toBuilding?.name}</TableCell>
-                    <TableCell>{m.user?.name}</TableCell>
+                    <TableCell>{m.transferredBy?.name}</TableCell>
                   </TableRow>
                 ))
               )}

@@ -25,9 +25,9 @@ export async function GET(req: NextRequest, props: { params: Promise<{ id: strin
       include: {
         fromBuilding: true,
         toBuilding: true,
-        user: true,
+        transferredBy: true,
       },
-      orderBy: { movementDate: "desc" },
+      orderBy: { transferDate: "desc" },
     });
     return NextResponse.json(movements);
   } catch (error) {
