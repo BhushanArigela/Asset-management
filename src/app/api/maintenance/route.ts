@@ -56,10 +56,34 @@ export async function POST(req: NextRequest) {
         assetId: data.assetId,
         description: data.problemDescription,
         priority: data.priority,
-        status: "Open",
+        status: "OPEN",
         createdById: session.user.id,
       },
     });
+
+    const maintenanceStatus = await prisma.assetStatus.findFirst({
+      where: { name: { equals: "Maintenance", mode: "insensitive" } }
+    });
+
+    if (maintenanceStatus) {
+      const asset = await prisma.asset.findUnique({ where: { id: data.assetId } });
+      if (asset && asset.statusId !== maintenanceStatus.id) {
+        await prisma.asset.update({
+          where: { id: data.assetId },
+          data: { statusId: maintenanceStatus.id }
+        });
+        
+        await prisma.assetStatusChange.create({
+          data: {
+            assetId: data.assetId,
+            oldStatusId: asset.statusId,
+            newStatusId: maintenanceStatus.id,
+            reason: `Asset sent to maintenance (MR-${datePrefix}-${sequence})`,
+            changedById: session.user.id
+          }
+        });
+      }
+    }
 
     return NextResponse.json(mr, { status: 201 });
   } catch (error) {

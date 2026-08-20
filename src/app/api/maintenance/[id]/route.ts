@@ -55,10 +55,41 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ id: strin
       updateData.resolution = data.resolutionDetails;
     }
 
+    const existingMr = await prisma.maintenanceRequest.findUnique({
+      where: { id: params.id },
+      include: { asset: true }
+    });
+
+    if (!existingMr) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
     const mr = await prisma.maintenanceRequest.update({
       where: { id: params.id },
       data: updateData,
     });
+
+    if (data.status === "COMPLETED" || data.status === "CANCELLED") {
+      const activeStatus = await prisma.assetStatus.findFirst({
+        where: { name: { equals: "Active", mode: "insensitive" } }
+      });
+      if (activeStatus && existingMr.asset.statusId !== activeStatus.id) {
+        await prisma.asset.update({
+          where: { id: existingMr.assetId },
+          data: { statusId: activeStatus.id }
+        });
+
+        await prisma.assetStatusChange.create({
+          data: {
+            assetId: existingMr.assetId,
+            oldStatusId: existingMr.asset.statusId,
+            newStatusId: activeStatus.id,
+            reason: `Maintenance marked as ${data.status}`,
+            changedById: session.user.id
+          }
+        });
+      }
+    }
 
     if (data.notes || data.status) {
       await prisma.maintenanceUpdate.create({
