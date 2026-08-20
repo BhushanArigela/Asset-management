@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { headers } from "next/headers";
 
 interface AuditLogParams {
   userId?: string | null;
@@ -22,6 +23,20 @@ interface AuditLogParams {
  */
 export async function createAuditLog(params: AuditLogParams): Promise<void> {
   try {
+    let ip = params.ipAddress;
+    let agent = params.userAgent;
+
+    // Try to automatically get IP and UserAgent if not provided
+    if (!ip || !agent) {
+      try {
+        const headersList = await headers();
+        if (!ip) ip = headersList.get("x-forwarded-for") || headersList.get("x-real-ip") || "127.0.0.1";
+        if (!agent) agent = headersList.get("user-agent");
+      } catch (e) {
+        // Ignored if headers() is called outside of request context
+      }
+    }
+
     await prisma.auditLog.create({
       data: {
         userId: params.userId ?? null,
@@ -31,8 +46,8 @@ export async function createAuditLog(params: AuditLogParams): Promise<void> {
         action: params.action,
         previousValue: params.previousValue ? (params.previousValue as any) : params.oldData ? (params.oldData as any) : undefined,
         newValue: params.newValue ? (params.newValue as any) : params.details ? (params.details as any) : params.newData ? (params.newData as any) : undefined,
-        ipAddress: params.ipAddress ?? null,
-        userAgent: params.userAgent ?? null,
+        ipAddress: ip ?? null,
+        userAgent: agent ?? null,
         remarks: params.remarks ?? null,
       },
     });
