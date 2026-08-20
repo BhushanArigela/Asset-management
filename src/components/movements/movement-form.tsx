@@ -129,7 +129,7 @@ export function MovementForm() {
                       <SelectTrigger><SelectValue placeholder="Select Asset" /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {assets.map(a => <SelectItem key={a.id} value={a.id}>{a.code} - {a.name}</SelectItem>)}
+                      {assets.map(a => <SelectItem key={a.id} value={a.id}>{a.assetCode} - {a.name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <FormMessage />
