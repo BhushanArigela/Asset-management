@@ -57,10 +57,10 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{audit.name}</h2>
-          <div className="flex items-center gap-2 mt-2 text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-2 mt-2 text-muted-foreground text-sm">
             <Badge variant="outline">{audit.status}</Badge>
             <span>•</span>
             <span>{format(new Date(audit.auditDate), "PP")}</span>
@@ -68,7 +68,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
             <span>Auditor: {audit.auditor?.name || "Unknown"}</span>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 w-full md:w-auto">
           {audit.status === "PLANNED" && (
             <Button onClick={() => handleAction("start")} className="bg-blue-600">
               <Play className="w-4 h-4 mr-2" /> Start Audit
