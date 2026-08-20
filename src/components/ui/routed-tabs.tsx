@@ -2,9 +2,9 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs } from "./tabs";
-import React from "react";
+import React, { Suspense } from "react";
 
-export function RoutedTabs({ defaultValue, children, className }: { defaultValue: string; children: React.ReactNode; className?: string }) {
+function RoutedTabsInner({ defaultValue, children, className }: { defaultValue: string; children: React.ReactNode; className?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentTab = searchParams.get("tab") || defaultValue;
@@ -21,5 +21,13 @@ export function RoutedTabs({ defaultValue, children, className }: { defaultValue
     >
       {children}
     </Tabs>
+  );
+}
+
+export function RoutedTabs(props: { defaultValue: string; children: React.ReactNode; className?: string }) {
+  return (
+    <Suspense fallback={<Tabs defaultValue={props.defaultValue} className={props.className}>{props.children}</Tabs>}>
+      <RoutedTabsInner {...props} />
+    </Suspense>
   );
 }
