@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { authConfig } from "./auth.config";
+import { createAuditLog, AUDIT_ACTIONS, AUDIT_MODULES } from "./audit-logger";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -57,6 +58,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           user.passwordHash
         );
         if (!passwordsMatch) return null;
+
+        // Log successful login
+        await createAuditLog({
+          userId: user.id,
+          module: AUDIT_MODULES.AUTH,
+          action: AUDIT_ACTIONS.LOGIN,
+          entityType: "User",
+          entityId: user.id,
+          details: `User login successful`,
+        });
 
         return {
           id: user.id,
