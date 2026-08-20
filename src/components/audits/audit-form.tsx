@@ -79,6 +79,13 @@ export function AuditForm({ userId }: { userId: string }) {
     }
   };
 
+  const buildingsByCompany = buildings.reduce((acc: any, b: any) => {
+    const companyName = b.company?.name || "Unknown Company";
+    if (!acc[companyName]) acc[companyName] = [];
+    acc[companyName].push(b);
+    return acc;
+  }, {});
+
   const roomsByBuilding = rooms.reduce((acc: any, r: any) => {
     const buildingName = r.floor?.building?.name || "Unknown Building";
     if (!acc[buildingName]) acc[buildingName] = [];
@@ -124,8 +131,15 @@ export function AuditForm({ userId }: { userId: string }) {
                 <Select value={formData.scopeId} onValueChange={(v) => setFormData({...formData, scopeId: v})}>
                   <SelectTrigger><SelectValue placeholder="Select Building" /></SelectTrigger>
                   <SelectContent>
-                    {buildings.map((b: any) => (
-                      <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                    {Object.entries(buildingsByCompany).map(([companyName, companyBuildings]: [string, any]) => (
+                      <SelectGroup key={companyName}>
+                        <SelectLabel className="text-primary font-bold">{companyName}</SelectLabel>
+                        {companyBuildings.map((b: any) => (
+                          <SelectItem key={b.id} value={b.id} className="ml-2">
+                            {b.name} ({b.code})
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
                     ))}
                   </SelectContent>
                 </Select>
