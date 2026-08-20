@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Trash, Printer } from "lucide-react";
+import { Trash, Printer, QrCode } from "lucide-react";
 
 export function AssetAccessoriesTab({ assetId, accessories }: { assetId: string; accessories: any[] }) {
   const [open, setOpen] = useState(false);
@@ -55,6 +55,21 @@ export function AssetAccessoriesTab({ assetId, accessories }: { assetId: string;
       queryClient.invalidateQueries({ queryKey: ["asset", assetId] });
     } catch (error) {
       toast.error("Failed to delete accessory");
+    }
+  };
+
+  const handleGenerateQR = async (accessoryId: string) => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/assets/${assetId}/accessories/${accessoryId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ generateQr: true }),
+      });
+      if (!res.ok) throw new Error("Failed to generate QR");
+      toast.success("QR Code generated");
+      queryClient.invalidateQueries({ queryKey: ["asset", assetId] });
+    } catch (error) {
+      toast.error("Failed to generate QR code");
     }
   };
 
@@ -134,9 +149,13 @@ export function AssetAccessoriesTab({ assetId, accessories }: { assetId: string;
                   <TableCell>{acc.serialNumber || "N/A"}</TableCell>
                   <TableCell>{new Date(acc.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell className="text-right space-x-2">
-                    {acc.qrCode && (
+                    {acc.qrCode ? (
                       <Button variant="outline" size="sm" onClick={() => handlePrintQR(acc.qrCode, acc.name)}>
                         <Printer className="w-4 h-4 mr-1" /> QR
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm" onClick={() => handleGenerateQR(acc.id)}>
+                        <QrCode className="w-4 h-4 mr-1" /> Generate QR
                       </Button>
                     )}
                     <Button variant="destructive" size="icon" onClick={() => handleDelete(acc.id)}>
