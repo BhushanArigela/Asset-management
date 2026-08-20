@@ -5,12 +5,12 @@ import { auth } from "@/lib/auth";
 import { z } from "zod";
 import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
-
 const updateMrSchema = z.object({
   status: z.string().optional(),
   resolutionDetails: z.string().optional(),
   cost: z.number().optional(),
   assignedToId: z.string().optional(),
+  notes: z.string().optional(),
 });
 
 export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
@@ -21,7 +21,14 @@ export async function GET(req: NextRequest, props: { params: Promise<{ id: strin
       include: {
         asset: true,
         createdBy: true,
-        
+        updates: {
+          include: {
+            createdBy: true
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        }
       },
     });
     if (!mr) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -42,8 +49,10 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ id: strin
     const data = updateMrSchema.parse(body);
 
     const updateData: any = { ...data };
-    if (data.status === "Completed") {
-      updateData.completedDate = new Date();
+    delete updateData.notes;
+
+    if (data.status === "COMPLETED") {
+      updateData.resolution = data.resolutionDetails;
     }
 
     const mr = await prisma.maintenanceRequest.update({
@@ -51,8 +60,20 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ id: strin
       data: updateData,
     });
 
+    if (data.notes || data.status) {
+      await prisma.maintenanceUpdate.create({
+        data: {
+          maintenanceId: params.id,
+          notes: data.notes || `Status changed to ${data.status}`,
+          statusChangedTo: data.status,
+          createdById: session.user.id,
+        }
+      });
+    }
+
     return NextResponse.json(mr);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

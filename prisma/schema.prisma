@@ -23,7 +23,7 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  role         Role     @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Restrict)
 
   // Relations
   assetsCreated           Asset[]                @relation("AssetCreator")
@@ -33,6 +33,7 @@ model User {
   conditionChanges        AssetConditionChange[] @relation("ConditionChanger")
   maintenanceCreated      MaintenanceRequest[]   @relation("MaintenanceCreator")
   maintenanceDocsUploaded MaintenanceDocument[]  @relation("MaintenanceDocUploader")
+  maintenanceUpdates      MaintenanceUpdate[]    @relation("MaintenanceUpdater")
   disposals               AssetDisposal[]        @relation("Disposer")
   disposalDocsUploaded    DisposalDocument[]     @relation("DisposalDocUploader")
   auditSessionsCreated    AuditSession[]         @relation("SessionCreator")
@@ -255,9 +256,9 @@ model AssetCondition {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  assets                    Asset[]
-  assetConditionChangesOld  AssetConditionChange[] @relation("ConditionChangeOld")
-  assetConditionChangesNew  AssetConditionChange[] @relation("ConditionChangeNew")
+  assets                   Asset[]
+  assetConditionChangesOld AssetConditionChange[] @relation("ConditionChangeOld")
+  assetConditionChangesNew AssetConditionChange[] @relation("ConditionChangeNew")
 
   @@map("asset_conditions")
 }
@@ -369,18 +370,18 @@ model Asset {
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt          DateTime  @updatedAt @map("updated_at")
 
-  category      AssetCategory     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  subCategory   AssetSubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: Restrict)
-  brand         Brand?            @relation(fields: [brandId], references: [id], onDelete: Restrict)
-  vendor        Vendor?           @relation("AssetSupplier", fields: [vendorId], references: [id], onDelete: Restrict)
-  company       Company           @relation(fields: [companyId], references: [id], onDelete: Restrict)
-  building      Building?         @relation(fields: [buildingId], references: [id], onDelete: Restrict)
-  floor         Floor?            @relation(fields: [floorId], references: [id], onDelete: Restrict)
-  room          Room?             @relation(fields: [roomId], references: [id], onDelete: Restrict)
-  department    Department?       @relation(fields: [departmentId], references: [id], onDelete: Restrict)
-  status        AssetStatus       @relation(fields: [statusId], references: [id], onDelete: Restrict)
-  condition     AssetCondition    @relation(fields: [conditionId], references: [id], onDelete: Restrict)
-  createdBy     User              @relation("AssetCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  category    AssetCategory     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  subCategory AssetSubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: Restrict)
+  brand       Brand?            @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  vendor      Vendor?           @relation("AssetSupplier", fields: [vendorId], references: [id], onDelete: Restrict)
+  company     Company           @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  building    Building?         @relation(fields: [buildingId], references: [id], onDelete: Restrict)
+  floor       Floor?            @relation(fields: [floorId], references: [id], onDelete: Restrict)
+  room        Room?             @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  department  Department?       @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  status      AssetStatus       @relation(fields: [statusId], references: [id], onDelete: Restrict)
+  condition   AssetCondition    @relation(fields: [conditionId], references: [id], onDelete: Restrict)
+  createdBy   User              @relation("AssetCreator", fields: [createdById], references: [id], onDelete: Restrict)
 
   assetDocuments        AssetDocument[]
   assetWarranties       AssetWarranty[]
@@ -494,18 +495,18 @@ model AssetMovement {
   remarks               String?  @map("remarks") @db.Text
   createdAt             DateTime @default(now()) @map("created_at")
 
-  asset           Asset       @relation(fields: [assetId], references: [id], onDelete: Restrict)
-  fromCompany     Company?    @relation("CompanyFrom", fields: [fromCompanyId], references: [id], onDelete: SetNull)
-  toCompany       Company?    @relation("CompanyTo", fields: [toCompanyId], references: [id], onDelete: SetNull)
-  fromBuilding    Building?   @relation("BuildingFrom", fields: [fromBuildingId], references: [id], onDelete: SetNull)
-  toBuilding      Building?   @relation("BuildingTo", fields: [toBuildingId], references: [id], onDelete: SetNull)
-  fromFloor       Floor?      @relation("FloorFrom", fields: [fromFloorId], references: [id], onDelete: SetNull)
-  toFloor         Floor?      @relation("FloorTo", fields: [toFloorId], references: [id], onDelete: SetNull)
-  fromRoom        Room?       @relation("RoomFrom", fields: [fromRoomId], references: [id], onDelete: SetNull)
-  toRoom          Room?       @relation("RoomTo", fields: [toRoomId], references: [id], onDelete: SetNull)
-  fromDepartment  Department? @relation("DepartmentFrom", fields: [fromDepartmentId], references: [id], onDelete: SetNull)
-  toDepartment    Department? @relation("DepartmentTo", fields: [toDepartmentId], references: [id], onDelete: SetNull)
-  transferredBy   User        @relation("MovementTransferrer", fields: [transferredById], references: [id], onDelete: Restrict)
+  asset          Asset       @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  fromCompany    Company?    @relation("CompanyFrom", fields: [fromCompanyId], references: [id], onDelete: SetNull)
+  toCompany      Company?    @relation("CompanyTo", fields: [toCompanyId], references: [id], onDelete: SetNull)
+  fromBuilding   Building?   @relation("BuildingFrom", fields: [fromBuildingId], references: [id], onDelete: SetNull)
+  toBuilding     Building?   @relation("BuildingTo", fields: [toBuildingId], references: [id], onDelete: SetNull)
+  fromFloor      Floor?      @relation("FloorFrom", fields: [fromFloorId], references: [id], onDelete: SetNull)
+  toFloor        Floor?      @relation("FloorTo", fields: [toFloorId], references: [id], onDelete: SetNull)
+  fromRoom       Room?       @relation("RoomFrom", fields: [fromRoomId], references: [id], onDelete: SetNull)
+  toRoom         Room?       @relation("RoomTo", fields: [toRoomId], references: [id], onDelete: SetNull)
+  fromDepartment Department? @relation("DepartmentFrom", fields: [fromDepartmentId], references: [id], onDelete: SetNull)
+  toDepartment   Department? @relation("DepartmentTo", fields: [toDepartmentId], references: [id], onDelete: SetNull)
+  transferredBy  User        @relation("MovementTransferrer", fields: [transferredById], references: [id], onDelete: Restrict)
 
   @@index([assetId])
   @@index([transferDate])
@@ -575,10 +576,11 @@ model MaintenanceRequest {
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
-  asset       Asset                 @relation(fields: [assetId], references: [id], onDelete: Restrict)
-  vendor      Vendor?               @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-  createdBy   User                  @relation("MaintenanceCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  asset                Asset                 @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  createdBy            User                  @relation("MaintenanceCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  vendor               Vendor?               @relation(fields: [vendorId], references: [id], onDelete: Restrict)
   maintenanceDocuments MaintenanceDocument[]
+  updates              MaintenanceUpdate[]
 
   @@index([assetId])
   @@index([status])
@@ -606,6 +608,22 @@ model MaintenanceDocument {
   @@map("maintenance_documents")
 }
 
+model MaintenanceUpdate {
+  id              String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  maintenanceId   String   @map("maintenance_id") @db.VarChar(36)
+  notes           String   @map("notes") @db.Text
+  statusChangedTo String?  @map("status_changed_to")
+  createdById     String   @map("created_by_id") @db.VarChar(36)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  maintenance MaintenanceRequest @relation(fields: [maintenanceId], references: [id], onDelete: Cascade)
+  createdBy   User               @relation("MaintenanceUpdater", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@index([maintenanceId])
+  @@index([createdById])
+  @@map("maintenance_updates")
+}
+
 // ==========================================
 // Asset Disposal
 // ==========================================
@@ -622,8 +640,8 @@ model AssetDisposal {
   remarks      String?  @map("remarks") @db.Text
   createdAt    DateTime @default(now()) @map("created_at")
 
-  asset        Asset              @relation(fields: [assetId], references: [id], onDelete: Cascade)
-  disposedBy   User               @relation("Disposer", fields: [disposedById], references: [id], onDelete: Restrict)
+  asset             Asset              @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  disposedBy        User               @relation("Disposer", fields: [disposedById], references: [id], onDelete: Restrict)
   disposalDocuments DisposalDocument[]
 
   @@index([disposedById])
@@ -688,9 +706,9 @@ model AuditSession {
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt          DateTime  @updatedAt @map("updated_at")
 
-  auditor   User?  @relation("SessionAuditor", fields: [auditorId], references: [id], onDelete: SetNull)
-  createdBy User   @relation("SessionCreator", fields: [createdById], references: [id], onDelete: Restrict)
-  
+  auditor   User? @relation("SessionAuditor", fields: [auditorId], references: [id], onDelete: SetNull)
+  createdBy User  @relation("SessionCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
   auditExpectedAssets AuditExpectedAsset[]
   auditResults        AuditResult[]
 
