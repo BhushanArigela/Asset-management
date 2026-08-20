@@ -23,7 +23,8 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
         },
         auditResults: {
           include: {
-            asset: { select: { id: true, name: true, assetCode: true } },
+            asset: { select: { id: true, name: true, assetCode: true, condition: { select: { name: true } } } },
+            newCondition: { select: { name: true } },
             scannedBy: { select: { id: true, name: true } }
           }
         }

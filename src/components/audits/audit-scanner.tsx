@@ -42,7 +42,27 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
       return data.data || [];
     },
   });
-
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/audits/${auditId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.auditResults) {
+          const sortedResults = [...data.auditResults].sort((a: any, b: any) => new Date(b.scannedAt).getTime() - new Date(a.scannedAt).getTime());
+          const formattedScans = sortedResults.slice(0, 5).map((r: any) => ({
+            assetCode: r.assetCode,
+            classification: r.classification,
+            time: new Date(r.scannedAt),
+            previousCondition: r.asset?.condition?.name || "Unknown",
+            proposedCondition: r.newCondition?.name || "No Change",
+            newConditionId: r.newConditionId || "none",
+            newStatusId: r.newStatusId || "none",
+            remarks: r.remarks || "",
+          }));
+          setRecentScans(formattedScans);
+        }
+      })
+      .catch(console.error);
+  }, [auditId]);
   useEffect(() => {
     let html5QrCode: Html5Qrcode | null = null;
     let timeout: NodeJS.Timeout;
