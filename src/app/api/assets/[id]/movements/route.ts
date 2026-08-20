@@ -73,7 +73,8 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
           toResponsiblePerson: data.toResponsiblePerson === "" ? null : data.toResponsiblePerson,
           reason: data.reason,
           remarks: data.remarks,
-          createdById: session.user.id,
+          transferredById: session.user.id,
+          transferDate: new Date(),
         },
       });
 
