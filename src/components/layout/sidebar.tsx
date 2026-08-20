@@ -120,7 +120,7 @@ export function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0 bg-background border-r">
+      <div className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0 bg-slate-50 border-r">
         <SidebarContent />
       </div>
 
@@ -133,7 +133,7 @@ export function Sidebar() {
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0">
+          <SheetContent side="left" className="w-64 p-0 bg-slate-50">
             <SidebarContent />
           </SheetContent>
         </Sheet>
