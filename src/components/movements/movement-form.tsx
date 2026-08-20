@@ -19,7 +19,7 @@ const formSchema = z.object({
   toCompanyId: z.string().min(1, "Company is required"),
   toBuildingId: z.string().min(1, "Building is required"),
   toFloorId: z.string().min(1, "Floor is required"),
-  toRoomId: z.string().optional(),
+  toRoomId: z.string().min(1, "Room is required"),
   toDepartmentId: z.string().optional(),
   toResponsiblePerson: z.string().optional(),
   reason: z.string().min(1, "Reason is required"),
@@ -195,7 +195,7 @@ export function MovementForm() {
               )} />
               <FormField control={form.control} name="toRoomId" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>To Room (Optional)</FormLabel>
+                  <FormLabel>To Room</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedFloorId}>
                     <FormControl>
                       <SelectTrigger><SelectValue placeholder="Select Room" /></SelectTrigger>

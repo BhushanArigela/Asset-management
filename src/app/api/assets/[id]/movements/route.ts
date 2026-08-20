@@ -10,7 +10,7 @@ const movementSchema = z.object({
   toCompanyId: z.string().min(1),
   toBuildingId: z.string().min(1),
   toFloorId: z.string().min(1),
-  toRoomId: z.string().optional(),
+  toRoomId: z.string().min(1),
   toDepartmentId: z.string().optional(),
   toResponsiblePerson: z.string().optional(),
   reason: z.string().min(1),
