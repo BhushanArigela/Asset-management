@@ -16,14 +16,16 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
       where: { id: auditId },
       include: {
         auditor: { select: { id: true, name: true } },
+        building: { select: { name: true } },
+        room: { select: { name: true } },
         auditExpectedAssets: {
           include: {
-            asset: { select: { id: true, name: true, assetCode: true, status: true, condition: true } }
+            asset: { select: { id: true, name: true, assetCode: true, status: true, condition: true, building: { select: { name: true } }, room: { select: { name: true } } } }
           }
         },
         auditResults: {
           include: {
-            asset: { select: { id: true, name: true, assetCode: true, condition: { select: { name: true } } } },
+            asset: { select: { id: true, name: true, assetCode: true, condition: { select: { name: true } }, building: { select: { name: true } }, room: { select: { name: true } } } },
             newStatus: { select: { name: true } },
             newCondition: { select: { name: true } },
             scannedBy: { select: { id: true, name: true } }

@@ -50,7 +50,8 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
   if (loading) return <div className="p-8">Loading audit details...</div>;
   if (!audit) return <div className="p-8">Audit not found</div>;
 
-  const progressPercent = audit.totalExpected > 0 ? (audit.totalVerified / audit.totalExpected) * 100 : 0;
+  const totalScannedExpected = audit.totalVerified + audit.totalDamaged;
+  const progressPercent = audit.totalExpected > 0 ? (totalScannedExpected / audit.totalExpected) * 100 : 0;
   
   const discrepancies = audit.auditResults?.filter((r: any) => r.classification !== "VERIFIED") || [];
 
@@ -97,7 +98,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
             <CardTitle className="text-sm font-medium text-muted-foreground">Overall Progress</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold mb-2">{audit.totalVerified} / {audit.totalExpected} Verified</div>
+            <div className="text-2xl font-bold mb-2">{audit.totalVerified + audit.totalDamaged} / {audit.totalExpected} Scanned</div>
             <Progress value={progressPercent} className="h-2" />
           </CardContent>
         </Card>
@@ -194,15 +195,23 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                     <TableRow>
                       <TableHead>Asset Code</TableHead>
                       <TableHead>Issue</TableHead>
+                      <TableHead>System Location</TableHead>
+                      <TableHead>Found Location</TableHead>
                       <TableHead>Remarks</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {discrepancies.map((r: any) => (
                       <TableRow key={r.id}>
-                        <TableCell>{r.assetCode}</TableCell>
+                        <TableCell>{r.assetCode || r.asset?.assetCode}</TableCell>
                         <TableCell>
-                          <span className="text-red-600 font-medium">{r.classification}</span>
+                          <span className="text-red-600 font-medium">{r.classification.replace("_", " ")}</span>
+                        </TableCell>
+                        <TableCell>
+                          {r.asset ? `${r.asset.building?.name || 'Unknown'} / ${r.asset.room?.name || 'Unknown'}` : 'Unknown'}
+                        </TableCell>
+                        <TableCell>
+                          {r.classification === "MISSING" ? "N/A (Missing)" : `${audit.building?.name || 'Unknown'} / ${audit.room?.name || 'Unknown'}`}
                         </TableCell>
                         <TableCell>{r.remarks || "No remarks"}</TableCell>
                       </TableRow>
