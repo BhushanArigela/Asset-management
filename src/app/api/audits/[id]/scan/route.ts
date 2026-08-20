@@ -33,8 +33,14 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
       }
     });
 
-    // Determine final classification if unexpected
-    const finalClassification = isExpected ? classification : "UNEXPECTED";
+    // Determine final classification
+    let finalClassification = isExpected ? classification : "WRONG_LOCATION";
+    if (finalClassification === "VERIFIED" && newConditionId && newConditionId !== "none") {
+      const condition = await prisma.assetCondition.findUnique({ where: { id: newConditionId } });
+      if (condition && condition.name.toLowerCase().includes("damage")) {
+        finalClassification = "DAMAGED";
+      }
+    }
 
     // Record the scan result
     const result = await prisma.$transaction(async (tx) => {
