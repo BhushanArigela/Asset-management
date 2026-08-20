@@ -69,11 +69,11 @@ export function Sidebar() {
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-primary">
-      <div className="flex h-16 shrink-0 items-center justify-center bg-white border-b px-6 py-3">
+      <div className="flex h-16 shrink-0 items-center justify-center bg-white border-b px-6">
         <img 
           src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo-inner.png`} 
           alt="Sheraton Logo" 
-          className="h-full object-contain"
+          className="h-full w-full object-contain scale-[1.75]"
         />
       </div>
       <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
