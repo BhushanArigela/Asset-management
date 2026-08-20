@@ -40,6 +40,10 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
   try {
     const session = await auth();
     if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    
+    console.log("DEBUG MOVEMENTS_CREATE:", PERMISSIONS.MOVEMENTS_CREATE);
+    console.log("DEBUG USER PERMS:", session.user.permissions);
+    
     if (!hasPermission(session.user.permissions, [PERMISSIONS.MOVEMENTS_CREATE] as any)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     const body = await req.json();
