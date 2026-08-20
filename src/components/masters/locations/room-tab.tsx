@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Plus, Edit } from "lucide-react";
+import { Plus, Edit, Box } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RoomFormDialog } from "./room-form-dialog";
+import { RoomAssetsModal } from "./room-assets-modal";
 import { QrCode, Printer } from "lucide-react";
 
 export function RoomTab() {
@@ -15,6 +16,7 @@ export function RoomTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [qrRoom, setQrRoom] = useState<any>(null);
+  const [assetsModalRoom, setAssetsModalRoom] = useState<any>(null);
   
   const fetchRooms = () => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/rooms`).then(r => r.json()).then(d => setData(d.data || []));
@@ -38,6 +40,9 @@ export function RoomTab() {
       id: "actions",
       cell: ({ row }) => (
         <div className="flex gap-2">
+          <Button variant="ghost" size="icon" onClick={() => setAssetsModalRoom(row.original)} title="View Assets">
+            <Box className="h-4 w-4" />
+          </Button>
           {row.original.qrCode && (
             <Button variant="ghost" size="icon" onClick={() => setQrRoom(row.original)} title="View QR">
               <QrCode className="h-4 w-4" />
@@ -135,6 +140,14 @@ export function RoomTab() {
             </Button>
           </DialogContent>
         </Dialog>
+      )}
+
+      {assetsModalRoom && (
+        <RoomAssetsModal 
+          room={assetsModalRoom} 
+          open={!!assetsModalRoom} 
+          onOpenChange={(o) => !o && setAssetsModalRoom(null)} 
+        />
       )}
     </div>
   );
