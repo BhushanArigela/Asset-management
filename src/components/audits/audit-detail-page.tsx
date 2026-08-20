@@ -145,7 +145,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                       <TableRow key={ea.id}>
                         <TableCell className="font-medium">{ea.asset.assetCode}</TableCell>
                         <TableCell>{ea.asset.name}</TableCell>
-                        <TableCell>{ea.asset.status}</TableCell>
+                        <TableCell>{ea.asset.status?.name || "N/A"}</TableCell>
                         <TableCell>
                           <Badge variant={result ? "default" : "secondary"}>
                             {result ? result.classification : "PENDING"}
