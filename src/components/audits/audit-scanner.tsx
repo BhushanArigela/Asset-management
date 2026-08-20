@@ -44,30 +44,52 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
   });
 
   useEffect(() => {
-    let scanner: Html5QrcodeScanner | null = null;
+    let html5QrCode: Html5Qrcode | null = null;
+    let timeout: NodeJS.Timeout;
+    let isMounted = true;
     
     if (scanning) {
-      scanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        false
-      );
-
-      scanner.render(
-        (decodedText) => {
-          setAssetCode(decodedText);
-          setScanning(false);
-          scanner?.clear();
-          toast.success("QR Code Scanned successfully!");
-        },
-        (err) => {
-          // Ignore frequent scanning errors
+      timeout = setTimeout(() => {
+        try {
+          if (!isMounted) return;
+          html5QrCode = new Html5Qrcode("reader");
+          
+          html5QrCode.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            (decodedText) => {
+              let val = decodedText;
+              // Extract code if it's a URL
+              if (val.includes('/assets/')) {
+                val = val.split('/assets/').pop() || val;
+              } else if (val.includes('roomCode=')) {
+                val = val.split('roomCode=')[1].split('&')[0] || val;
+              }
+              
+              setAssetCode(val);
+              setScanning(false);
+              toast.success("QR Code Scanned successfully!");
+            },
+            (errorMessage) => {
+              // ignore background scan errors
+            }
+          ).catch((err) => {
+            console.error("Camera start failed", err);
+          });
+        } catch (e) {
+          console.error("Scanner init failed", e);
         }
-      );
+      }, 150);
     }
 
     return () => {
-      if (scanner) scanner.clear();
+      isMounted = false;
+      clearTimeout(timeout);
+      if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().catch(() => {}).then(() => {
+          html5QrCode?.clear();
+        });
+      }
     };
   }, [scanning]);
 
