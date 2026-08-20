@@ -3,7 +3,8 @@ import { BuildingTab } from "@/components/masters/locations/building-tab";
 import { FloorTab } from "@/components/masters/locations/floor-tab";
 import { RoomTab } from "@/components/masters/locations/room-tab";
 import { DepartmentTab } from "@/components/masters/locations/department-tab";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RoutedTabs } from "@/components/ui/routed-tabs";
 
 export const metadata = {
   title: "Locations Master - Sheraton Asset Management",
@@ -15,7 +16,7 @@ export default function LocationsPage() {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight text-[#1B2A4A]">Locations Master</h2>
       </div>
-      <Tabs defaultValue="companies" className="space-y-4 w-full">
+      <RoutedTabs defaultValue="companies" className="space-y-4 w-full">
         <div className="w-full overflow-x-auto pb-2">
           <TabsList className="inline-flex w-max min-w-full justify-start">
             <TabsTrigger value="companies">Companies</TabsTrigger>
@@ -40,7 +41,7 @@ export default function LocationsPage() {
         <TabsContent value="departments" className="space-y-4">
           <DepartmentTab />
         </TabsContent>
-      </Tabs>
+      </RoutedTabs>
     </div>
   );
 }

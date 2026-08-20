@@ -1,4 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RoutedTabs } from "@/components/ui/routed-tabs";
 import { CategoryTab } from "@/components/masters/classifications/category-tab";
 import { SubCategoryTab } from "@/components/masters/classifications/sub-category-tab";
 import { BrandTab } from "@/components/masters/classifications/brand-tab";
@@ -15,7 +16,7 @@ export default function ClassificationsPage() {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight text-[#1B2A4A]">Classifications Master</h2>
       </div>
-      <Tabs defaultValue="categories" className="space-y-4 w-full">
+      <RoutedTabs defaultValue="categories" className="space-y-4 w-full">
         <div className="w-full overflow-x-auto pb-2">
           <TabsList className="inline-flex w-max min-w-full justify-start">
             <TabsTrigger value="categories">Categories</TabsTrigger>
@@ -40,7 +41,7 @@ export default function ClassificationsPage() {
         <TabsContent value="statuses" className="space-y-4">
           <StatusTab />
         </TabsContent>
-      </Tabs>
+      </RoutedTabs>
     </div>
   );
 }
