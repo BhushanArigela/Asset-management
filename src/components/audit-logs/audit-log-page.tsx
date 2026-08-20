@@ -168,12 +168,32 @@ export function AuditLogPage() {
                         </TableCell>
                         <TableCell>{
                           (() => {
-                            const payload = log.newValue || log.previousValue || {};
-                            const identifier = payload.name || payload.code || payload.email || payload.title || payload.roleName || null;
-                            let type = log.entityType !== "System" ? log.entityType : log.module;
+                            const payload = log.newValue || log.previousValue;
+                            
+                            if (typeof payload === 'string') {
+                              // Try to parse "Created department DPT-01" or "Updated brand B1"
+                              const parts = payload.split(" ");
+                              if (parts.length >= 3 && ["Created", "Updated", "Deleted", "Disposed", "Activated", "Deactivated"].includes(parts[0])) {
+                                const type = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
+                                const code = parts.slice(2).join(" ");
+                                return `${type} (${code})`;
+                              }
+                              return payload;
+                            }
+                            
+                            const obj = payload || {};
+                            const name = obj.name || obj.title || obj.roleName || null;
+                            const code = obj.code || null;
+                            const email = obj.email || null;
+                            
+                            let type = log.entityType && log.entityType !== "System" ? log.entityType : log.module;
                             type = type ? type.charAt(0).toUpperCase() + type.slice(1) : "Record";
                             
-                            if (identifier) return `${type}: ${identifier}`;
+                            if (name && code) return `${type}: ${name} (${code})`;
+                            if (name) return `${type}: ${name}`;
+                            if (code) return `${type} (${code})`;
+                            if (email) return `${type}: ${email}`;
+                            
                             return log.entityId ? `${type} (${log.entityId.substring(0, 8)})` : type;
                           })()
                         }</TableCell>
