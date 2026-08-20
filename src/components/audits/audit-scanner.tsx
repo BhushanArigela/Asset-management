@@ -134,6 +134,17 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
     }
   };
 
+  const { data: scannedAsset, isFetching: isFetchingAsset } = useQuery({
+    queryKey: ["asset", assetCode],
+    queryFn: async () => {
+      if (!assetCode) return null;
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/assets?search=${encodeURIComponent(assetCode)}`);
+      const data = await res.json();
+      return data.data?.find((a: any) => a.assetCode.toLowerCase() === assetCode.toLowerCase()) || null;
+    },
+    enabled: !!assetCode && !scanning,
+  });
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <Card>
@@ -178,6 +189,25 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
           <CardTitle>Record Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          
+          {assetCode && (
+            <div className="p-3 bg-muted rounded-md mb-4 text-sm">
+              {isFetchingAsset ? (
+                <p className="text-muted-foreground">Loading asset details...</p>
+              ) : scannedAsset ? (
+                <div className="space-y-1">
+                  <p><span className="font-medium">Name:</span> {scannedAsset.name}</p>
+                  <p><span className="font-medium">Category:</span> {scannedAsset.category?.name}</p>
+                  <p><span className="font-medium">Location:</span> {scannedAsset.building?.name} / {scannedAsset.room?.name}</p>
+                  <p><span className="font-medium">Current Status:</span> {scannedAsset.status?.name}</p>
+                  <p><span className="font-medium">Current Condition:</span> {scannedAsset.condition?.name}</p>
+                </div>
+              ) : (
+                <p className="text-yellow-600 font-medium">Asset not found in the system</p>
+              )}
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label>Classification</Label>
             <Select value={classification} onValueChange={setClassification}>
