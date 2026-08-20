@@ -42,27 +42,34 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
       return data.data || [];
     },
   });
+  const { data: audit, refetch: refetchAudit } = useQuery({
+    queryKey: ["audit", auditId],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/audits/${auditId}`);
+      if (!res.ok) throw new Error("Failed to fetch audit");
+      return res.json();
+    }
+  });
+
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/audits/${auditId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.auditResults) {
-          const sortedResults = [...data.auditResults].sort((a: any, b: any) => new Date(b.scannedAt).getTime() - new Date(a.scannedAt).getTime());
-          const formattedScans = sortedResults.slice(0, 5).map((r: any) => ({
-            assetCode: r.assetCode,
-            classification: r.classification,
-            time: new Date(r.scannedAt),
-            previousCondition: r.asset?.condition?.name || "Unknown",
-            proposedCondition: r.newCondition?.name || "No Change",
-            newConditionId: r.newConditionId || "none",
-            newStatusId: r.newStatusId || "none",
-            remarks: r.remarks || "",
-          }));
-          setRecentScans(formattedScans);
-        }
-      })
-      .catch(console.error);
-  }, [auditId]);
+    if (audit?.auditResults) {
+      const sortedResults = [...audit.auditResults].sort((a: any, b: any) => new Date(b.scannedAt).getTime() - new Date(a.scannedAt).getTime());
+      const formattedScans = sortedResults.slice(0, 5).map((r: any) => ({
+        assetCode: r.assetCode,
+        classification: r.classification,
+        time: new Date(r.scannedAt),
+        previousCondition: r.asset?.condition?.name || "Unknown",
+        proposedCondition: r.newCondition?.name || "No Change",
+        newConditionId: r.newConditionId || "none",
+        newStatusId: r.newStatusId || "none",
+        remarks: r.remarks || "",
+      }));
+      setRecentScans(formattedScans);
+    }
+  }, [audit]);
+
+  const scannedAssetIds = new Set(audit?.auditResults?.map((r: any) => r.assetId) || []);
+  const pendingAssets = audit?.auditExpectedAssets?.filter((ea: any) => !scannedAssetIds.has(ea.assetId)) || [];
   useEffect(() => {
     let html5QrCode: Html5Qrcode | null = null;
     let timeout: NodeJS.Timeout;
@@ -113,6 +120,28 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
     };
   }, [scanning]);
 
+  const handleMarkMissing = async (code: string) => {
+    try {
+      const payload: any = {
+        assetCode: code,
+        classification: "MISSING",
+      };
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/audits/${auditId}/scan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Failed to record scan");
+      toast.success(`${code} marked as missing`);
+      await refetchAudit();
+    } catch (error) {
+      toast.error(`Error marking ${code} as missing`);
+      console.error(error);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!assetCode) {
       toast.error("Asset code is required");
@@ -139,23 +168,10 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
 
       toast.success("Asset recorded successfully");
       
-      const proposedConditionObj = conditions.find((c: any) => c.id === newConditionId);
-      const proposedConditionName = proposedConditionObj?.name || "No Change";
-
-      setRecentScans(prev => {
-        const newScan = {
-          assetCode,
-          classification,
-          time: new Date(),
-          previousCondition: scannedAsset?.condition?.name || "Unknown",
-          proposedCondition: proposedConditionName,
-          newConditionId,
-          newStatusId,
-          remarks,
-        };
-        const filtered = prev.filter(s => s.assetCode !== assetCode);
-        return [newScan, ...filtered].slice(0, 5);
-      });
+      // Refresh audit data to update recent scans and pending list
+      await refetchAudit();
+      
+      // Reset form fields
       setAssetCode("");
       setRemarks("");
       setClassification("VERIFIED");
@@ -254,6 +270,7 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
                 <SelectItem value="VERIFIED">Verified (Correct Location)</SelectItem>
                 <SelectItem value="WRONG_LOCATION">Wrong Location</SelectItem>
                 <SelectItem value="DAMAGED">Damaged</SelectItem>
+                <SelectItem value="MISSING">Missing</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -349,6 +366,33 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
                       <Edit className="w-4 h-4 mr-1" /> Edit
                     </Button>
                   </div>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
+      {pendingAssets.length > 0 && (
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle>Pending Assets ({pendingAssets.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              {pendingAssets.map((ea: any, i: number) => (
+                <li key={i} className="flex justify-between items-center p-3 bg-slate-50 rounded border">
+                  <div>
+                    <div className="font-medium text-base">{ea.asset.assetCode}</div>
+                    <div className="text-sm text-muted-foreground">{ea.asset.name}</div>
+                  </div>
+                  <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    onClick={() => handleMarkMissing(ea.asset.assetCode)}
+                  >
+                    Report Missing
+                  </Button>
                 </li>
               ))}
             </ul>

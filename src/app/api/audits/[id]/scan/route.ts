@@ -54,6 +54,7 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
           scan.classification === "VERIFIED" ? "totalVerified" :
           scan.classification === "WRONG_LOCATION" ? "totalWrongLocation" :
           scan.classification === "DAMAGED" ? "totalDamaged" :
+          scan.classification === "MISSING" ? "totalMissing" :
           "totalUnexpected";
 
         await tx.auditSession.update({
@@ -99,6 +100,7 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
         finalClassification === "VERIFIED" ? "totalVerified" :
         finalClassification === "WRONG_LOCATION" ? "totalWrongLocation" :
         finalClassification === "DAMAGED" ? "totalDamaged" :
+        finalClassification === "MISSING" ? "totalMissing" :
         "totalUnexpected";
 
       await tx.auditSession.update({
