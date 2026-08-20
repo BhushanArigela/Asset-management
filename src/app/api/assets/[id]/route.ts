@@ -119,6 +119,12 @@ export async function GET(
           orderBy: { createdAt: "desc" },
         },
         maintenanceRequests: {
+          include: {
+            updates: {
+              include: { createdBy: true },
+              orderBy: { createdAt: 'desc' }
+            }
+          },
           orderBy: { createdAt: "desc" },
         },
         assetDisposal: true,

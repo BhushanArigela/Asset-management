@@ -553,15 +553,66 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             <CardHeader><CardTitle>Maintenance Requests</CardTitle></CardHeader>
             <CardContent>
               {asset.maintenanceRequests?.length ? (
-                <ul className="space-y-4">
+                <div className="space-y-6">
                   {asset.maintenanceRequests.map((mr: any) => (
-                    <li key={mr.id} className="border p-4 rounded">
-                      <div className="font-semibold">{mr.requestNumber} - {mr.problemDescription}</div>
-                      <div>Status: <Badge>{mr.status}</Badge> | Priority: {mr.priority}</div>
-                    </li>
+                    <div key={mr.id} className="border rounded-lg overflow-hidden relative">
+                      <div className="bg-slate-50 p-4 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                          <div className="font-semibold text-lg">{mr.requestNumber}</div>
+                          <div className="text-sm text-slate-500 mt-1">{mr.description}</div>
+                        </div>
+                        <div className="text-left sm:text-right flex flex-row sm:flex-col items-center sm:items-end gap-3 sm:gap-0">
+                          <div><Badge>{mr.status}</Badge></div>
+                          <div className="text-xs text-slate-500 sm:mt-2">Priority: {mr.priority}</div>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="mt-2 sm:mt-2 h-7 text-xs hidden sm:flex"
+                            onClick={() => router.push(`/maintenance/${mr.id}`)}
+                          >
+                            Update & Details
+                          </Button>
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="sm:hidden absolute top-4 right-4 h-8"
+                          onClick={() => router.push(`/maintenance/${mr.id}`)}
+                        >
+                          Update
+                        </Button>
+                      </div>
+                      <div className="p-4 bg-white">
+                        <h4 className="text-sm font-semibold text-slate-700 mb-3">Updates History</h4>
+                        {mr.updates && mr.updates.length > 0 ? (
+                          <div className="space-y-3 pl-2 border-l-2 border-slate-100 ml-2">
+                            {mr.updates.map((update: any) => (
+                              <div key={update.id} className="relative pl-4">
+                                <div className="absolute w-2 h-2 bg-slate-300 rounded-full -left-[5px] top-2"></div>
+                                <div className="flex justify-between items-start mb-1">
+                                  <div className="font-medium text-sm text-slate-700">{update.createdBy?.name || "System"}</div>
+                                  <div className="text-xs text-slate-400">{formatDateTime(update.createdAt)}</div>
+                                </div>
+                                {update.statusChangedTo && (
+                                  <div className="mb-1"><Badge variant="outline" className="text-[10px]">{update.statusChangedTo}</Badge></div>
+                                )}
+                                <div className="text-sm text-slate-600">{update.notes}</div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-slate-500 italic ml-2">No updates recorded yet.</div>
+                        )}
+                      </div>
+                    </div>
                   ))}
-                </ul>
-              ) : <p>No maintenance requests.</p>}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-40 text-muted-foreground">
+                  <Wrench className="h-8 w-8 mb-2 opacity-20" />
+                  <p>No maintenance requests recorded.</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
