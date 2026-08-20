@@ -531,7 +531,8 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                     <li key={m.id} className="relative pl-6 pb-4 border-b">
                       <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-2"></div>
                       <div className="font-semibold">Moved on {formatDateTime(m.transferDate)}</div>
-                      <div className="text-sm">From: {m.fromBuilding?.name} To: {m.toBuilding?.name}</div>
+                      <div className="text-sm">From: {[m.fromBuilding?.name, m.fromFloor?.name, m.fromRoom?.name].filter(Boolean).join(" -> ") || "N/A"}</div>
+                      <div className="text-sm">To: {[m.toBuilding?.name, m.toFloor?.name, m.toRoom?.name].filter(Boolean).join(" -> ") || "N/A"}</div>
                       <div className="text-sm text-gray-500">Reason: {m.reason}</div>
                     </li>
                   ))}

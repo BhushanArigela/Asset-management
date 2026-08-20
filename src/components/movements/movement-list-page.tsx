@@ -35,8 +35,8 @@ export function MovementListPage() {
               <TableRow>
                 <TableHead>Date</TableHead>
                 <TableHead>Asset</TableHead>
-                <TableHead>From Building</TableHead>
-                <TableHead>To Building</TableHead>
+                <TableHead>From Location</TableHead>
+                <TableHead>To Location</TableHead>
                 <TableHead>Processed By</TableHead>
               </TableRow>
             </TableHeader>
@@ -50,8 +50,12 @@ export function MovementListPage() {
                   <TableRow key={m.id}>
                     <TableCell>{formatDateTime(m.transferDate)}</TableCell>
                     <TableCell>{m.asset?.name} ({m.asset?.assetCode})</TableCell>
-                    <TableCell>{m.fromBuilding?.name || "N/A"}</TableCell>
-                    <TableCell>{m.toBuilding?.name}</TableCell>
+                    <TableCell>
+                      {[m.fromBuilding?.name, m.fromFloor?.name, m.fromRoom?.name].filter(Boolean).join(" -> ") || "N/A"}
+                    </TableCell>
+                    <TableCell>
+                      {[m.toBuilding?.name, m.toFloor?.name, m.toRoom?.name].filter(Boolean).join(" -> ") || "N/A"}
+                    </TableCell>
                     <TableCell>{m.transferredBy?.name}</TableCell>
                   </TableRow>
                 ))

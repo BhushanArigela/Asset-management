@@ -25,6 +25,10 @@ export async function GET(req: NextRequest, props: { params: Promise<{ id: strin
       include: {
         fromBuilding: true,
         toBuilding: true,
+        fromFloor: true,
+        toFloor: true,
+        fromRoom: true,
+        toRoom: true,
         transferredBy: true,
       },
       orderBy: { transferDate: "desc" },
