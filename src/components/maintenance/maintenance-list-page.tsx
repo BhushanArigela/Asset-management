@@ -15,8 +15,11 @@ import { formatDateTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Eye, Plus } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 export function MaintenanceListPage() {
+  const { data: session } = useSession();
   const router = useRouter();
   const { data: requests, isLoading } = useQuery({
     queryKey: ["maintenance"],
@@ -27,11 +30,15 @@ export function MaintenanceListPage() {
     },
   });
 
+  const canCreate = hasPermission(session?.user?.permissions, [PERMISSIONS.CREATE_MAINTENANCE] as any);
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-bold tracking-tight">Maintenance Requests</h2>
-        <Button onClick={() => router.push("/maintenance/new")}><Plus className="h-4 w-4 mr-2" /> Raise Request</Button>
+        {canCreate && (
+          <Button onClick={() => router.push("/maintenance/new")}><Plus className="h-4 w-4 mr-2" /> Raise Request</Button>
+        )}
       </div>
       <Card>
         <CardHeader><CardTitle>Requests</CardTitle></CardHeader>

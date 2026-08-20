@@ -29,6 +29,8 @@ import {
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { QrCodeModal } from "./qr-modal";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 interface Asset {
   id: string;
@@ -45,12 +47,15 @@ interface Asset {
 }
 
 export function AssetListPage() {
+  const { data: session } = useSession();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const [qrModalAssetId, setQrModalAssetId] = useState<string | null>(null);
+
+  const canCreateMaintenance = hasPermission(session?.user?.permissions, [PERMISSIONS.CREATE_MAINTENANCE] as any);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchTerm), 500);
@@ -201,9 +206,11 @@ export function AssetListPage() {
                           <DropdownMenuItem onClick={() => router.push(`/movements/new?assetId=${asset.id}`)}>
                             <ArrowRightLeft className="mr-2 h-4 w-4" /> Transfer
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push(`/maintenance/new?assetId=${asset.id}`)}>
-                            <Wrench className="mr-2 h-4 w-4" /> Maintenance
-                          </DropdownMenuItem>
+                          {canCreateMaintenance && (
+                            <DropdownMenuItem onClick={() => router.push(`/maintenance/new?assetId=${asset.id}`)}>
+                              <Wrench className="mr-2 h-4 w-4" /> Maintenance
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem onClick={() => setQrModalAssetId(asset.id)}>
                             <QrCode className="mr-2 h-4 w-4" /> Print QR
                           </DropdownMenuItem>
