@@ -31,6 +31,7 @@ export function MovementForm() {
   const defaultAssetId = searchParams.get("assetId") || "";
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [assets, setAssets] = useState<any[]>([]);
   const [companies, setCompanies] = useState<any[]>([]);
   const [buildings, setBuildings] = useState<any[]>([]);
   const [floors, setFloors] = useState<any[]>([]);
@@ -39,12 +40,14 @@ export function MovementForm() {
 
   useEffect(() => {
     Promise.all([
+      fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/assets`).then(r => r.json()),
       fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/companies`).then(r => r.json()),
       fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/buildings`).then(r => r.json()),
       fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/floors`).then(r => r.json()),
       fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/rooms`).then(r => r.json()),
       fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/departments`).then(r => r.json()),
-    ]).then(([comp, bldg, flr, rm, dept]) => {
+    ]).then(([ast, comp, bldg, flr, rm, dept]) => {
+      setAssets(ast.data || ast || []);
       setCompanies(comp.data || []);
       setBuildings(bldg.data || []);
       setFloors(flr.data || []);
@@ -67,6 +70,30 @@ export function MovementForm() {
       remarks: "",
     },
   });
+
+  const selectedCompanyId = form.watch("toCompanyId");
+  const selectedBuildingId = form.watch("toBuildingId");
+  const selectedFloorId = form.watch("toFloorId");
+
+  const filteredBuildings = selectedCompanyId ? buildings.filter(b => b.companyId === selectedCompanyId) : buildings;
+  const filteredFloors = selectedBuildingId ? floors.filter(f => f.buildingId === selectedBuildingId) : floors;
+  const filteredRooms = selectedFloorId ? rooms.filter(r => r.floorId === selectedFloorId) : rooms;
+
+  // Auto-clear downstream fields when parent changes
+  useEffect(() => {
+    form.setValue("toBuildingId", "");
+    form.setValue("toFloorId", "");
+    form.setValue("toRoomId", "");
+  }, [selectedCompanyId, form]);
+
+  useEffect(() => {
+    form.setValue("toFloorId", "");
+    form.setValue("toRoomId", "");
+  }, [selectedBuildingId, form]);
+
+  useEffect(() => {
+    form.setValue("toRoomId", "");
+  }, [selectedFloorId, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
@@ -95,12 +122,23 @@ export function MovementForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField control={form.control} name="assetId" render={({ field }) => (
-                <FormItem><FormLabel>Asset ID</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                  <FormLabel>Asset</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger><SelectValue placeholder="Select Asset" /></SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {assets.map(a => <SelectItem key={a.id} value={a.id}>{a.code} - {a.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
               )} />
               <FormField control={form.control} name="toCompanyId" render={({ field }) => (
                 <FormItem>
                   <FormLabel>To Company</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                     <FormControl>
                       <SelectTrigger><SelectValue placeholder="Select Company" /></SelectTrigger>
                     </FormControl>
@@ -114,12 +152,12 @@ export function MovementForm() {
               <FormField control={form.control} name="toBuildingId" render={({ field }) => (
                 <FormItem>
                   <FormLabel>To Building</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedCompanyId}>
                     <FormControl>
                       <SelectTrigger><SelectValue placeholder="Select Building" /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {buildings.map(b => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
+                      {filteredBuildings.map(b => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -128,12 +166,12 @@ export function MovementForm() {
               <FormField control={form.control} name="toFloorId" render={({ field }) => (
                 <FormItem>
                   <FormLabel>To Floor</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedBuildingId}>
                     <FormControl>
                       <SelectTrigger><SelectValue placeholder="Select Floor" /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {floors.map(f => <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>)}
+                      {filteredFloors.map(f => <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -142,12 +180,12 @@ export function MovementForm() {
               <FormField control={form.control} name="toRoomId" render={({ field }) => (
                 <FormItem>
                   <FormLabel>To Room (Optional)</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedFloorId}>
                     <FormControl>
                       <SelectTrigger><SelectValue placeholder="Select Room" /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {rooms.map(r => <SelectItem key={r.id} value={r.id}>{r.name} ({r.code})</SelectItem>)}
+                      {filteredRooms.map(r => <SelectItem key={r.id} value={r.id}>{r.name} ({r.code})</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -156,7 +194,7 @@ export function MovementForm() {
               <FormField control={form.control} name="toDepartmentId" render={({ field }) => (
                 <FormItem>
                   <FormLabel>To Department (Optional)</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                     <FormControl>
                       <SelectTrigger><SelectValue placeholder="Select Department" /></SelectTrigger>
                     </FormControl>
