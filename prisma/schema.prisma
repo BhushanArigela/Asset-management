@@ -259,6 +259,7 @@ model AssetCondition {
   assets                   Asset[]
   assetConditionChangesOld AssetConditionChange[] @relation("ConditionChangeOld")
   assetConditionChangesNew AssetConditionChange[] @relation("ConditionChangeNew")
+  auditResultsNewCondition AuditResult[]          @relation("AuditResultNewCondition")
 
   @@map("asset_conditions")
 }
@@ -276,6 +277,7 @@ model AssetStatus {
   assets                Asset[]
   assetStatusChangesOld AssetStatusChange[] @relation("StatusChangeOld")
   assetStatusChangesNew AssetStatusChange[] @relation("StatusChangeNew")
+  auditResultsNewStatus AuditResult[]       @relation("AuditResultNewStatus")
 
   @@map("asset_statuses")
 }
@@ -739,20 +741,26 @@ model AuditResult {
   assetCode         String?  @map("asset_code") @db.VarChar(50)
   classification    String   @map("classification") // VERIFIED, NOT_VERIFIED, MISSING, WRONG_LOCATION, DAMAGED, UNEXPECTED
   physicalCondition String?  @map("physical_condition") @db.VarChar(255)
+  newStatusId       String?  @map("new_status_id") @db.VarChar(36)
+  newConditionId    String?  @map("new_condition_id") @db.VarChar(36)
   remarks           String?  @map("remarks") @db.Text
   photoPath         String?  @map("photo_path") @db.VarChar(500)
   scannedById       String   @map("scanned_by_id") @db.VarChar(36)
   scannedAt         DateTime @map("scanned_at")
   createdAt         DateTime @default(now()) @map("created_at")
 
-  session   AuditSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  asset     Asset?       @relation(fields: [assetId], references: [id], onDelete: Restrict)
-  scannedBy User         @relation("ResultScanner", fields: [scannedById], references: [id], onDelete: Restrict)
+  session      AuditSession    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  asset        Asset?          @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  scannedBy    User            @relation("ResultScanner", fields: [scannedById], references: [id], onDelete: Restrict)
+  newStatus    AssetStatus?    @relation("AuditResultNewStatus", fields: [newStatusId], references: [id], onDelete: Restrict)
+  newCondition AssetCondition? @relation("AuditResultNewCondition", fields: [newConditionId], references: [id], onDelete: Restrict)
 
   @@index([sessionId])
   @@index([classification])
   @@index([assetId])
   @@index([scannedById])
+  @@index([newStatusId])
+  @@index([newConditionId])
   @@map("audit_results")
 }
 

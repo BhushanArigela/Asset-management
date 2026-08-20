@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Camera, Check, X } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 interface AuditScannerProps {
   auditId: string;
@@ -18,10 +19,27 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
   const [assetCode, setAssetCode] = useState("");
   const [scanning, setScanning] = useState(false);
   const [classification, setClassification] = useState("VERIFIED");
-  const [condition, setCondition] = useState("Good");
+  const [newStatusId, setNewStatusId] = useState("none");
+  const [newConditionId, setNewConditionId] = useState("none");
   const [remarks, setRemarks] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [recentScans, setRecentScans] = useState<any[]>([]);
+
+  const { data: statuses = [] } = useQuery({
+    queryKey: ["statuses"],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/statuses`);
+      return res.json();
+    },
+  });
+
+  const { data: conditions = [] } = useQuery({
+    queryKey: ["conditions"],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/conditions`);
+      return res.json();
+    },
+  });
 
   useEffect(() => {
     let scanner: Html5QrcodeScanner | null = null;
@@ -59,15 +77,18 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
 
     setSubmitting(true);
     try {
+      const payload: any = {
+        assetCode,
+        classification,
+        remarks,
+        newStatusId: newStatusId !== "none" ? newStatusId : undefined,
+        newConditionId: newConditionId !== "none" ? newConditionId : undefined,
+      };
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/audits/${auditId}/scan`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          assetCode,
-          classification,
-          physicalCondition: condition,
-          remarks
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) throw new Error("Failed to record scan");
@@ -78,6 +99,8 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
       setAssetCode("");
       setRemarks("");
       setClassification("VERIFIED");
+      setNewStatusId("none");
+      setNewConditionId("none");
       
     } catch (error) {
       toast.error("Error recording asset scan");
@@ -146,17 +169,31 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>Physical Condition</Label>
-            <Select value={condition} onValueChange={setCondition}>
+            <Label>Proposed Status (Leave 'No Change' if fine)</Label>
+            <Select value={newStatusId} onValueChange={setNewStatusId}>
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="No Change" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Excellent">Excellent</SelectItem>
-                <SelectItem value="Good">Good</SelectItem>
-                <SelectItem value="Fair">Fair</SelectItem>
-                <SelectItem value="Poor">Poor</SelectItem>
-                <SelectItem value="Damaged">Damaged</SelectItem>
+                <SelectItem value="none">No Change</SelectItem>
+                {statuses.map((s: any) => (
+                  <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Proposed Condition (Leave 'No Change' if fine)</Label>
+            <Select value={newConditionId} onValueChange={setNewConditionId}>
+              <SelectTrigger>
+                <SelectValue placeholder="No Change" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No Change</SelectItem>
+                {conditions.map((c: any) => (
+                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

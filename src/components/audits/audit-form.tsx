@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
 export function AuditForm({ userId }: { userId: string }) {
   const router = useRouter();
@@ -17,9 +18,39 @@ export function AuditForm({ userId }: { userId: string }) {
     name: "",
     scopeType: "Company",
     scopeId: "all",
-    auditorId: userId, // Defaulting to current user for demo
+    auditorId: userId,
     auditDate: new Date().toISOString().split("T")[0],
     notes: ""
+  });
+
+  const { data: users = [] } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/users?limit=1000`);
+      if (!res.ok) throw new Error("Failed to fetch users");
+      const data = await res.json();
+      return data.users || [];
+    },
+  });
+
+  const { data: buildings = [] } = useQuery({
+    queryKey: ["buildings"],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/buildings`);
+      if (!res.ok) throw new Error("Failed to fetch");
+      return res.json();
+    },
+    enabled: formData.scopeType === "Building",
+  });
+
+  const { data: rooms = [] } = useQuery({
+    queryKey: ["rooms"],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/masters/rooms`);
+      if (!res.ok) throw new Error("Failed to fetch");
+      return res.json();
+    },
+    enabled: formData.scopeType === "Room",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,11 +95,12 @@ export function AuditForm({ userId }: { userId: string }) {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Scope Type</Label>
-              <Select value={formData.scopeType} onValueChange={(v) => setFormData({...formData, scopeType: v})}>
+              <Select value={formData.scopeType} onValueChange={(v) => setFormData({...formData, scopeType: v, scopeId: v === "Company" ? "all" : ""})}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Company">Company-wide</SelectItem>
                   <SelectItem value="Building">Specific Building</SelectItem>
+                  <SelectItem value="Room">Specific Room</SelectItem>
                   <SelectItem value="Department">Specific Department</SelectItem>
                   <SelectItem value="Category">Specific Category</SelectItem>
                 </SelectContent>
@@ -76,26 +108,49 @@ export function AuditForm({ userId }: { userId: string }) {
             </div>
             
             <div className="space-y-2">
-              <Label>Scope Value (ID)</Label>
-              <Input 
-                id="scopeId" 
-                placeholder="all"
-                disabled={formData.scopeType === "Company"}
-                value={formData.scopeId}
-                onChange={(e) => setFormData({...formData, scopeId: e.target.value})}
-              />
+              <Label>Scope Value</Label>
+              {formData.scopeType === "Company" ? (
+                <Input value="all" disabled />
+              ) : formData.scopeType === "Building" ? (
+                <Select value={formData.scopeId} onValueChange={(v) => setFormData({...formData, scopeId: v})}>
+                  <SelectTrigger><SelectValue placeholder="Select Building" /></SelectTrigger>
+                  <SelectContent>
+                    {buildings.map((b: any) => (
+                      <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : formData.scopeType === "Room" ? (
+                <Select value={formData.scopeId} onValueChange={(v) => setFormData({...formData, scopeId: v})}>
+                  <SelectTrigger><SelectValue placeholder="Select Room" /></SelectTrigger>
+                  <SelectContent>
+                    {rooms.map((r: any) => (
+                      <SelectItem key={r.id} value={r.id}>{r.name} ({r.code})</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input 
+                  id="scopeId" 
+                  placeholder={`Enter ${formData.scopeType} ID`}
+                  value={formData.scopeId}
+                  onChange={(e) => setFormData({...formData, scopeId: e.target.value})}
+                />
+              )}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="auditorId">Auditor ID</Label>
-              <Input 
-                id="auditorId" 
-                required 
-                value={formData.auditorId}
-                onChange={(e) => setFormData({...formData, auditorId: e.target.value})}
-              />
+              <Label htmlFor="auditorId">Auditor</Label>
+              <Select value={formData.auditorId} onValueChange={(v) => setFormData({...formData, auditorId: v})}>
+                <SelectTrigger><SelectValue placeholder="Select Auditor" /></SelectTrigger>
+                <SelectContent>
+                  {users.map((u: any) => (
+                    <SelectItem key={u.id} value={u.id}>{u.name} ({u.email})</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

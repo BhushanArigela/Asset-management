@@ -47,11 +47,14 @@ export async function POST(req: Request) {
     }
 
     // Step 1: Query expected assets based on scope
-    const assetWhereClause: any = { status: { notIn: ["Disposed", "Sold"] } };
+    const assetWhereClause: any = { isDisposed: false };
     
     switch(scopeType) {
       case "Building":
         assetWhereClause.buildingId = scopeId;
+        break;
+      case "Room":
+        assetWhereClause.roomId = scopeId;
         break;
       case "Department":
         assetWhereClause.departmentId = scopeId;

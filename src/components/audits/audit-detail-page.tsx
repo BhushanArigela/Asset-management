@@ -164,7 +164,9 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                   <TableRow>
                     <TableHead>Asset Code</TableHead>
                     <TableHead>Classification</TableHead>
-                    <TableHead>Condition</TableHead>
+                    <TableHead>Condition (Physical)</TableHead>
+                    <TableHead>Proposed Status</TableHead>
+                    <TableHead>Proposed Condition</TableHead>
                     <TableHead>Scanned By</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -174,6 +176,8 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                       <TableCell>{r.assetCode}</TableCell>
                       <TableCell><Badge>{r.classification}</Badge></TableCell>
                       <TableCell>{r.physicalCondition || "N/A"}</TableCell>
+                      <TableCell>{r.newStatus ? r.newStatus.name : "No Change"}</TableCell>
+                      <TableCell>{r.newCondition ? r.newCondition.name : "No Change"}</TableCell>
                       <TableCell>{r.scannedBy?.name || "Unknown"}</TableCell>
                     </TableRow>
                   ))}

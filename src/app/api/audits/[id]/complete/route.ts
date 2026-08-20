@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -16,14 +16,16 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
       where: { id: auditId },
       include: {
         auditExpectedAssets: true,
-        auditResults: { select: { assetId: true } }
+        auditResults: { 
+          include: { asset: true }
+        }
       }
     });
     
     if (!audit) return new NextResponse("Audit not found", { status: 404 });
     if (audit.status !== "IN_PROGRESS") return new NextResponse("Audit is not in progress", { status: 400 });
 
-    const scannedAssetIds = new Set(audit.auditResults?.map(r => r.assetId));
+    const scannedAssetIds = new Set(audit.auditResults?.map(r => r.assetId).filter(Boolean));
     
     const missingAssetIds = audit.auditExpectedAssets
       .filter(ea => !scannedAssetIds.has(ea.assetId))
@@ -41,6 +43,46 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
         }));
 
         await tx.auditResult.createMany({ data: missingResults });
+      }
+
+      // Apply new status and conditions
+      for (const result of audit.auditResults) {
+        if (!result.assetId || !result.asset) continue;
+
+        const updateData: any = {};
+        
+        if (result.newStatusId && result.newStatusId !== result.asset.statusId) {
+          updateData.statusId = result.newStatusId;
+          await tx.assetStatusChange.create({
+            data: {
+              assetId: result.assetId,
+              oldStatusId: result.asset.statusId,
+              newStatusId: result.newStatusId,
+              changedById: session.user.id,
+              remarks: "Updated via Audit " + audit.name
+            }
+          });
+        }
+        
+        if (result.newConditionId && result.newConditionId !== result.asset.conditionId) {
+          updateData.conditionId = result.newConditionId;
+          await tx.assetConditionChange.create({
+            data: {
+              assetId: result.assetId,
+              oldConditionId: result.asset.conditionId,
+              newConditionId: result.newConditionId,
+              changedById: session.user.id,
+              remarks: "Updated via Audit " + audit.name
+            }
+          });
+        }
+        
+        if (Object.keys(updateData).length > 0) {
+          await tx.asset.update({
+            where: { id: result.assetId },
+            data: updateData
+          });
+        }
       }
 
       // Complete session

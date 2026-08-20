@@ -12,7 +12,7 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
 
     const auditId = params.id;
     const body = await req.json();
-    const { assetCode, classification, physicalCondition, remarks, photoPath } = body;
+    const { assetCode, classification, physicalCondition, remarks, photoPath, newStatusId, newConditionId } = body;
 
     if (!assetCode || !classification) {
       return new NextResponse("Missing required fields", { status: 400 });
@@ -45,10 +45,12 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
           assetCode: asset.assetCode,
           classification: finalClassification,
           physicalCondition,
+          newStatusId,
+          newConditionId,
           remarks,
           photoPath,
           scannedById: session.user.id,
-        scannedAt: new Date(),
+          scannedAt: new Date(),
         }
       });
 
