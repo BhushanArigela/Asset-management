@@ -52,7 +52,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
 
   const progressPercent = audit.totalExpected > 0 ? (audit.totalVerified / audit.totalExpected) * 100 : 0;
   
-  const discrepancies = audit.results?.filter((r: any) => r.classification !== "VERIFIED") || [];
+  const discrepancies = audit.auditResults?.filter((r: any) => r.classification !== "VERIFIED") || [];
 
   return (
     <div className="space-y-6">
@@ -123,8 +123,8 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
         <CardContent className="p-6">
           <Tabs defaultValue="expected">
             <TabsList className="mb-4">
-              <TabsTrigger value="expected">Expected Assets ({audit.expectedAssets?.length || 0})</TabsTrigger>
-              <TabsTrigger value="results">Scan Results ({audit.results?.length || 0})</TabsTrigger>
+              <TabsTrigger value="expected">Expected Assets ({audit.auditExpectedAssets?.length || 0})</TabsTrigger>
+              <TabsTrigger value="results">Scan Results ({audit.auditResults?.length || 0})</TabsTrigger>
               <TabsTrigger value="discrepancies">Discrepancies ({discrepancies.length})</TabsTrigger>
             </TabsList>
             
@@ -139,11 +139,11 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {audit.expectedAssets?.map((ea: any) => {
-                    const result = audit.results?.find((r: any) => r.assetId === ea.assetId);
+                  {audit.auditExpectedAssets?.map((ea: any) => {
+                    const result = audit.auditResults?.find((r: any) => r.assetId === ea.assetId);
                     return (
                       <TableRow key={ea.id}>
-                        <TableCell>{ea.asset.assetCode}</TableCell>
+                        <TableCell className="font-medium">{ea.asset.assetCode}</TableCell>
                         <TableCell>{ea.asset.name}</TableCell>
                         <TableCell>{ea.asset.status}</TableCell>
                         <TableCell>
@@ -171,9 +171,9 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {audit.results?.map((r: any) => (
+                  {audit.auditResults?.map((r: any) => (
                     <TableRow key={r.id}>
-                      <TableCell>{r.assetCode}</TableCell>
+                      <TableCell>{r.assetCode || r.asset?.assetCode}</TableCell>
                       <TableCell><Badge>{r.classification}</Badge></TableCell>
                       <TableCell>{r.physicalCondition || "N/A"}</TableCell>
                       <TableCell>{r.newStatus ? r.newStatus.name : "No Change"}</TableCell>
