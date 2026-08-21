@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Plus, Download, Upload, Search, MoreHorizontal, 
-  Eye, Edit, ArrowRightLeft, Wrench, QrCode 
+  Eye, Edit, ArrowRightLeft, Wrench, QrCode, Trash2 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { QrCodeModal } from "./qr-modal";
 import { useSession } from "next-auth/react";
 import { hasPermission, PERMISSIONS } from "@/lib/permissions";
@@ -44,11 +44,13 @@ interface Asset {
   status: { name: string; colorCode?: string };
   condition: { name: string; colorCode?: string };
   assetDocuments?: { filePath: string }[];
+  imageUrl?: string;
 }
 
 export function AssetListPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -56,6 +58,7 @@ export function AssetListPage() {
   const [qrModalAssetId, setQrModalAssetId] = useState<string | null>(null);
 
   const canCreateMaintenance = hasPermission(session?.user?.permissions, [PERMISSIONS.CREATE_MAINTENANCE] as any);
+  const canDeleteAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_DELETE] as any);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchTerm), 500);
@@ -77,6 +80,28 @@ export function AssetListPage() {
   const handleExport = () => {
     toast.success("Export started");
     window.open(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/assets/export?search=${debouncedSearch}`, "_blank");
+  };
+
+  const handleDelete = async (assetId: string) => {
+    if (!window.confirm("Are you sure you want to permanently delete this asset? This will also remove its entire history (movements, audits, etc.) and cannot be undone.")) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/api/assets/${assetId}`, {
+        method: "DELETE",
+      });
+      const resData = await res.json();
+      
+      if (res.ok) {
+        toast.success("Asset deleted successfully");
+        queryClient.invalidateQueries({ queryKey: ["assets"] });
+      } else {
+        toast.error(resData.error || "Failed to delete asset");
+      }
+    } catch (error) {
+      toast.error("An error occurred while deleting the asset");
+    }
   };
 
   return (
@@ -206,6 +231,17 @@ export function AssetListPage() {
                           <DropdownMenuItem onClick={() => setQrModalAssetId(asset.id)}>
                             <QrCode className="mr-2 h-4 w-4" /> Print QR
                           </DropdownMenuItem>
+                          {canDeleteAsset && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem 
+                                onClick={() => handleDelete(asset.id)}
+                                className="text-red-600 focus:text-red-600"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" /> Delete Asset
+                              </DropdownMenuItem>
+                            </>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

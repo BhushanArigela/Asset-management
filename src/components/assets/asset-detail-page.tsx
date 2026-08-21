@@ -125,6 +125,30 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to permanently delete this asset? This will also remove its entire history (movements, audits, etc.) and cannot be undone.")) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/api/assets/${asset.id}`, {
+        method: "DELETE",
+      });
+      const resData = await res.json();
+      
+      if (res.ok) {
+        toast.success("Asset deleted successfully");
+        router.push("/assets");
+      } else {
+        toast.error(resData.error || "Failed to delete asset");
+      }
+    } catch (error) {
+      toast.error("An error occurred while deleting the asset");
+    }
+  };
+
+  const canDeleteAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_DELETE] as any);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
@@ -133,6 +157,11 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
           {asset.isDisposed && <Badge variant="destructive" className="text-sm w-fit">Disposed</Badge>}
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+          {canDeleteAsset && (
+            <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700" onClick={handleDelete}>
+              <Trash2 className="mr-2 h-4 w-4" /> Delete
+            </Button>
+          )}
           {!asset.isDisposed && (
             <>
               <Button variant="outline" onClick={() => router.push(`/assets/${asset.id}/edit`)}>

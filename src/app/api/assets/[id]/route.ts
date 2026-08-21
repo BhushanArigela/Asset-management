@@ -267,10 +267,33 @@ export async function DELETE(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    return NextResponse.json(
-      { error: "Direct deletion is not allowed. Please use the disposal process to mark an asset as disposed." },
-      { status: 400 }
-    );
+    const assetId = params.id;
+
+    const existingAsset = await prisma.asset.findUnique({
+      where: { id: assetId },
+      select: { assetCode: true, name: true }
+    });
+
+    if (!existingAsset) {
+      return NextResponse.json({ error: "Asset not found" }, { status: 404 });
+    }
+
+    await prisma.$transaction([
+      prisma.assetMovement.deleteMany({ where: { assetId } }),
+      prisma.auditResult.deleteMany({ where: { assetId } }),
+      prisma.auditSessionItem.deleteMany({ where: { assetId } }),
+      prisma.asset.delete({ where: { id: assetId } })
+    ]);
+
+    await createAuditLog({
+      action: AUDIT_ACTIONS.DELETE,
+      module: AUDIT_MODULES.ASSETS,
+      entityId: assetId,
+      userId: session.user.id,
+      details: `Asset permanently deleted (${existingAsset.assetCode} - ${existingAsset.name})`,
+    });
+
+    return NextResponse.json({ message: "Asset deleted successfully" });
   } catch (error) {
     console.error("Error in asset deletion:", error);
     return NextResponse.json(
