@@ -70,16 +70,11 @@ export function MaintenanceListPage() {
           <Button onClick={() => router.push("/maintenance/new")}><Plus className="h-4 w-4 mr-2" /> Raise Request</Button>
         )}
       </div>
-      <Card>
-
-        <CardContent className="pt-6">
-          {isLoading ? (
-            <div className="text-center py-4">Loading...</div>
-          ) : (
-            <DataTable columns={columns} data={requests || []} />
-          )}
-        </CardContent>
-      </Card>
+      {isLoading ? (
+        <div className="text-center py-4">Loading...</div>
+      ) : (
+        <DataTable columns={columns} data={requests || []} />
+      )}
     </div>
   );
 }

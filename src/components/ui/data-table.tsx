@@ -21,6 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
@@ -48,8 +49,9 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <div className="flex items-center py-4">
+    <Card>
+      <CardContent className="p-6">
+        <div className="flex items-center pb-4">
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -127,6 +129,7 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </CardContent>
+  </Card>
+);
 }
