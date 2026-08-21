@@ -31,6 +31,7 @@ export function DepartmentTab() {
     )},
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => (
         <Button variant="ghost" size="icon" onClick={() => {
           setSelectedDepartment(row.original);

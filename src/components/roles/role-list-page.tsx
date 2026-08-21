@@ -66,6 +66,7 @@ export function RoleListPage() {
     },
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => {
         const role = row.original;
         return (

@@ -103,6 +103,7 @@ export function UserListPage() {
     },
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => {
         const user = row.original;
         return (

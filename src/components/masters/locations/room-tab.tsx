@@ -38,6 +38,7 @@ export function RoomTab() {
     )},
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => (
         <div className="flex gap-2">
           <Button variant="ghost" size="icon" onClick={() => setAssetsModalRoom(row.original)} title="View Assets">

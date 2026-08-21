@@ -27,6 +27,7 @@ export function ConditionTab() {
     { accessorKey: "isActive", header: "Status", cell: ({ row }) => (<Badge variant={row.original.isActive ? "default" : "destructive"}>{row.original.isActive ? "Active" : "Inactive"}</Badge>) },
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => (
         <Button variant="ghost" size="icon" onClick={() => {
           setSelectedItem(row.original);

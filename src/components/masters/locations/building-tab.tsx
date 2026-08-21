@@ -32,6 +32,7 @@ export function BuildingTab() {
     )},
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => (
         <Button variant="ghost" size="icon" onClick={() => {
           setSelectedBuilding(row.original);

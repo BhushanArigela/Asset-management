@@ -31,6 +31,7 @@ export function CompanyTab() {
     )},
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => (
         <Button variant="ghost" size="icon" onClick={() => {
           setSelectedCompany(row.original);

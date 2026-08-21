@@ -32,6 +32,7 @@ export function FloorTab() {
     )},
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => (
         <Button variant="ghost" size="icon" onClick={() => {
           setSelectedFloor(row.original);
