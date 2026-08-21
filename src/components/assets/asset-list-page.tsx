@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  Plus, Download, Upload, Search, Filter, MoreHorizontal, 
+  Plus, Download, Upload, Search, MoreHorizontal, 
   Eye, Edit, ArrowRightLeft, Wrench, QrCode 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,7 @@ export function AssetListPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [showFilters, setShowFilters] = useState(false);
+
   const [qrModalAssetId, setQrModalAssetId] = useState<string | null>(null);
 
   const canCreateMaintenance = hasPermission(session?.user?.permissions, [PERMISSIONS.CREATE_MAINTENANCE] as any);
@@ -111,14 +111,6 @@ export function AssetListPage() {
                   className="pl-8"
                 />
               </div>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setShowFilters(!showFilters)}
-                className={showFilters ? "bg-accent" : ""}
-              >
-                <Filter className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </CardHeader>
