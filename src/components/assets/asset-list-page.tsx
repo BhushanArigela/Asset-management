@@ -115,7 +115,7 @@ export function AssetListPage() {
           </div>
         </CardHeader>
 
-        <CardContent className="p-0">
+        <CardContent>
           <Table>
             <TableHeader>
               <TableRow>

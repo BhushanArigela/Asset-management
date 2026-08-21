@@ -71,7 +71,7 @@ export function AuditListPage() {
       </div>
 
       <Card>
-        <CardContent className="p-0">
+        <CardContent>
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
