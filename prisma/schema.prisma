@@ -41,6 +41,7 @@ model User {
   auditResultsScanned     AuditResult[]          @relation("ResultScanner")
   auditLogs               AuditLog[]             @relation("LogUser")
   importLogs              ImportLog[]            @relation("ImportInitiator")
+  passwordResetTokens     PasswordResetToken[]
 
   @@index([roleId])
   @@map("users")
@@ -812,4 +813,36 @@ model ImportLog {
 
   @@index([initiatedById])
   @@map("import_logs")
+}
+
+// ==========================================
+// System Settings & Auth Features
+// ==========================================
+
+model PasswordResetToken {
+  id        String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  token     String   @unique @map("token")
+  userId    String   @map("user_id") @db.VarChar(36)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+model SmtpConfig {
+  id        String   @id @default(cuid()) @map("id") @db.VarChar(36)
+  host      String   @map("host")
+  port      Int      @map("port")
+  secure    Boolean  @default(false) @map("secure")
+  user      String   @map("user")
+  password  String   @map("password")
+  fromEmail String   @map("from_email")
+  fromName  String   @map("from_name")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("smtp_configs")
 }

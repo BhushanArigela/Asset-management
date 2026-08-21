@@ -17,7 +17,8 @@ import {
   Users,
   Lock,
   Building2,
-  Menu
+  Menu,
+  Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -60,6 +61,7 @@ const navigation = [
     items: [
       { title: "Users", href: "/users", icon: Users },
       { title: "Roles", href: "/roles", icon: Lock },
+      { title: "Settings", href: "/settings", icon: Settings },
     ],
   },
 ];
