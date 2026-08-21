@@ -198,45 +198,47 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
   });
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      <Card>
-        <CardHeader>
-          <CardTitle>Scan QR Code</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {scanning ? (
-            <div id="reader" className="w-full rounded-md border overflow-hidden"></div>
-          ) : (
-            <Button 
-              className="w-full h-32 flex flex-col gap-2 bg-[#1B2A4A] hover:bg-[#1B2A4A]/90 text-white" 
-              onClick={() => setScanning(true)}
-            >
-              <Camera className="w-8 h-8" />
-              <span>Start Camera Scanner</span>
-            </Button>
-          )}
+    <div className="grid gap-6 lg:grid-cols-3">
+      <div className="lg:col-span-2 space-y-6">
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Scan QR Code</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {scanning ? (
+                <div id="reader" className="w-full rounded-md border overflow-hidden"></div>
+              ) : (
+                <Button 
+                  className="w-full h-32 flex flex-col gap-2 bg-[#1B2A4A] hover:bg-[#1B2A4A]/90 text-white" 
+                  onClick={() => setScanning(true)}
+                >
+                  <Camera className="w-8 h-8" />
+                  <span>Start Camera Scanner</span>
+                </Button>
+              )}
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or manual entry</span>
-            </div>
-          </div>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">Or manual entry</span>
+                </div>
+              </div>
 
-          <div className="space-y-2">
-            <Label>Asset Code</Label>
-            <Input 
-              placeholder="Enter asset code manually" 
-              value={assetCode} 
-              onChange={(e) => setAssetCode(e.target.value)} 
-            />
-          </div>
-        </CardContent>
-      </Card>
+              <div className="space-y-2">
+                <Label>Asset Code</Label>
+                <Input 
+                  placeholder="Enter asset code manually" 
+                  value={assetCode} 
+                  onChange={(e) => setAssetCode(e.target.value)} 
+                />
+              </div>
+            </CardContent>
+          </Card>
 
-      <Card>
+          <Card>
         <CardHeader>
           <CardTitle>Record Details</CardTitle>
         </CardHeader>
@@ -322,63 +324,66 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
             Submit Scan
           </Button>
         </CardContent>
-      </Card>
-      
-      {recentScans.length > 0 && (
-        <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle>Recent Scans</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {recentScans.map((scan, i) => (
-                <li key={i} className="flex justify-between items-center p-3 bg-slate-50 rounded border">
-                  <div>
+          </Card>
+        </div>
+        
+        {recentScans.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Scans</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                {recentScans.map((scan, i) => (
+                  <li key={i} className="flex justify-between items-center p-3 bg-slate-50 rounded border">
                     <div>
-                      <span className="font-medium text-base">{scan.assetCode}</span>
-                      <span className="text-xs text-muted-foreground ml-2">
-                        {scan.time.toLocaleTimeString()}
-                      </span>
+                      <div>
+                        <span className="font-medium text-base">{scan.assetCode}</span>
+                        <span className="text-xs text-muted-foreground ml-2">
+                          {scan.time.toLocaleTimeString()}
+                        </span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        <span className="font-medium text-slate-700">Previous:</span> {scan.previousCondition} 
+                        <span className="mx-2">|</span> 
+                        <span className="font-medium text-slate-700">Selected:</span> {scan.proposedCondition}
+                      </div>
                     </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      <span className="font-medium text-slate-700">Previous:</span> {scan.previousCondition} 
-                      <span className="mx-2">|</span> 
-                      <span className="font-medium text-slate-700">Selected:</span> {scan.proposedCondition}
+                    <div className="flex items-center gap-4">
+                      {scan.classification === "VERIFIED" ? 
+                        <span className="text-green-600 flex items-center text-sm font-medium"><Check className="w-4 h-4 mr-1" /> Verified</span> :
+                        <span className="text-red-600 flex items-center text-sm font-medium"><X className="w-4 h-4 mr-1" /> {scan.classification.replace("_", " ")}</span>
+                      }
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => {
+                          setAssetCode(scan.assetCode);
+                          setClassification(scan.classification);
+                          setNewConditionId(scan.newConditionId || "none");
+                          setNewStatusId(scan.newStatusId || "none");
+                          setRemarks(scan.remarks || "");
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                      >
+                        <Edit className="w-4 h-4 mr-1" /> Edit
+                      </Button>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    {scan.classification === "VERIFIED" ? 
-                      <span className="text-green-600 flex items-center text-sm font-medium"><Check className="w-4 h-4 mr-1" /> Verified</span> :
-                      <span className="text-red-600 flex items-center text-sm font-medium"><X className="w-4 h-4 mr-1" /> {scan.classification.replace("_", " ")}</span>
-                    }
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => {
-                        setAssetCode(scan.assetCode);
-                        setClassification(scan.classification);
-                        setNewConditionId(scan.newConditionId || "none");
-                        setNewStatusId(scan.newStatusId || "none");
-                        setRemarks(scan.remarks || "");
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                    >
-                      <Edit className="w-4 h-4 mr-1" /> Edit
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-      )}
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
-      {pendingAssets.length > 0 && (
-        <Card className="md:col-span-2">
-          <CardHeader>
+      <div className="lg:col-span-1">
+        {pendingAssets.length > 0 && (
+          <Card className="h-full max-h-[calc(100vh-12rem)] flex flex-col">
+            <CardHeader>
             <CardTitle>Pending Assets ({pendingAssets.length})</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 overflow-y-auto p-4 pt-0">
             <ul className="space-y-2">
               {pendingAssets.map((ea: any, i: number) => (
                 <li key={i} className="flex justify-between items-center p-3 bg-slate-50 rounded border">
@@ -399,6 +404,7 @@ export function AuditScanner({ auditId }: AuditScannerProps) {
           </CardContent>
         </Card>
       )}
+      </div>
     </div>
   );
 }
