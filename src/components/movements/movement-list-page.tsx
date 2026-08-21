@@ -1,14 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { DataTable } from "@/components/ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDateTime } from "@/lib/utils";
 
@@ -22,6 +16,34 @@ export function MovementListPage() {
     },
   });
 
+  const columns: ColumnDef<any>[] = [
+    {
+      accessorKey: "transferDate",
+      header: "Date",
+      cell: ({ row }) => formatDateTime(row.original.transferDate),
+    },
+    {
+      id: "asset",
+      header: "Asset",
+      accessorFn: (row) => `${row.asset?.name || ''} (${row.asset?.assetCode || ''})`,
+    },
+    {
+      id: "fromLocation",
+      header: "From Location",
+      accessorFn: (row) => [row.fromBuilding?.name, row.fromFloor?.name, row.fromRoom?.name].filter(Boolean).join(" -> ") || "N/A",
+    },
+    {
+      id: "toLocation",
+      header: "To Location",
+      accessorFn: (row) => [row.toBuilding?.name, row.toFloor?.name, row.toRoom?.name].filter(Boolean).join(" -> ") || "N/A",
+    },
+    {
+      id: "processedBy",
+      header: "Processed By",
+      accessorFn: (row) => row.transferredBy?.name || '',
+    },
+  ];
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <h2 className="text-3xl font-bold tracking-tight">Movement History</h2>
@@ -30,38 +52,11 @@ export function MovementListPage() {
           <CardTitle>All Transfers</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Asset</TableHead>
-                <TableHead>From Location</TableHead>
-                <TableHead>To Location</TableHead>
-                <TableHead>Processed By</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow><TableCell colSpan={5} className="text-center">Loading...</TableCell></TableRow>
-              ) : !movements?.length ? (
-                <TableRow><TableCell colSpan={5} className="text-center">No movements found.</TableCell></TableRow>
-              ) : (
-                movements.map((m: any) => (
-                  <TableRow key={m.id}>
-                    <TableCell>{formatDateTime(m.transferDate)}</TableCell>
-                    <TableCell>{m.asset?.name} ({m.asset?.assetCode})</TableCell>
-                    <TableCell>
-                      {[m.fromBuilding?.name, m.fromFloor?.name, m.fromRoom?.name].filter(Boolean).join(" -> ") || "N/A"}
-                    </TableCell>
-                    <TableCell>
-                      {[m.toBuilding?.name, m.toFloor?.name, m.toRoom?.name].filter(Boolean).join(" -> ") || "N/A"}
-                    </TableCell>
-                    <TableCell>{m.transferredBy?.name}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+          {isLoading ? (
+            <div className="text-center py-4">Loading...</div>
+          ) : (
+            <DataTable columns={columns} data={movements || []} />
+          )}
         </CardContent>
       </Card>
     </div>

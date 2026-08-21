@@ -1,14 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { DataTable } from "@/components/ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDateTime } from "@/lib/utils";
@@ -32,6 +26,42 @@ export function MaintenanceListPage() {
 
   const canCreate = hasPermission(session?.user?.permissions, [PERMISSIONS.CREATE_MAINTENANCE] as any);
 
+  const columns: ColumnDef<any>[] = [
+    {
+      accessorKey: "requestNumber",
+      header: "Number",
+    },
+    {
+      id: "asset",
+      header: "Asset",
+      accessorFn: (row) => `${row.asset?.name || ''} (${row.asset?.assetCode || ''})`,
+    },
+    {
+      accessorKey: "priority",
+      header: "Priority",
+      cell: ({ row }) => <Badge variant="outline">{row.original.priority}</Badge>,
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => <Badge>{row.original.status}</Badge>,
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Created",
+      cell: ({ row }) => formatDateTime(row.original.createdAt),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Button variant="ghost" size="sm" onClick={() => router.push(`/maintenance/${row.original.id}`)}>
+          <Eye className="h-4 w-4" />
+        </Button>
+      ),
+    },
+  ];
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex justify-between items-center">
@@ -43,40 +73,11 @@ export function MaintenanceListPage() {
       <Card>
         <CardHeader><CardTitle>Requests</CardTitle></CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Number</TableHead>
-                <TableHead>Asset</TableHead>
-                <TableHead>Priority</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow><TableCell colSpan={6} className="text-center">Loading...</TableCell></TableRow>
-              ) : !requests?.length ? (
-                <TableRow><TableCell colSpan={6} className="text-center">No requests found.</TableCell></TableRow>
-              ) : (
-                requests.map((r: any) => (
-                  <TableRow key={r.id}>
-                    <TableCell>{r.requestNumber}</TableCell>
-                    <TableCell>{r.asset?.name} ({r.asset?.assetCode})</TableCell>
-                    <TableCell><Badge variant="outline">{r.priority}</Badge></TableCell>
-                    <TableCell><Badge>{r.status}</Badge></TableCell>
-                    <TableCell>{formatDateTime(r.createdAt)}</TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="sm" onClick={() => router.push(`/maintenance/${r.id}`)}>
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+          {isLoading ? (
+            <div className="text-center py-4">Loading...</div>
+          ) : (
+            <DataTable columns={columns} data={requests || []} />
+          )}
         </CardContent>
       </Card>
     </div>
