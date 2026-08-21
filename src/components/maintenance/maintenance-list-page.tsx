@@ -71,8 +71,8 @@ export function MaintenanceListPage() {
         )}
       </div>
       <Card>
-        <CardHeader><CardTitle>Requests</CardTitle></CardHeader>
-        <CardContent>
+
+        <CardContent className="pt-6">
           {isLoading ? (
             <div className="text-center py-4">Loading...</div>
           ) : (

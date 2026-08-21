@@ -48,10 +48,8 @@ export function MovementListPage() {
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <h2 className="text-3xl font-bold tracking-tight">Movement History</h2>
       <Card>
-        <CardHeader>
-          <CardTitle>All Transfers</CardTitle>
-        </CardHeader>
-        <CardContent>
+
+        <CardContent className="pt-6">
           {isLoading ? (
             <div className="text-center py-4">Loading...</div>
           ) : (
