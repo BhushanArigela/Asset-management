@@ -1,24 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { Plus, Search, Edit, Trash, CheckCircle, XCircle } from "lucide-react";
+import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { UserFormDialog } from "./user-form-dialog";
@@ -149,12 +137,7 @@ export function UserListPage() {
     },
   ];
 
-  const table = useReactTable({
-    data: users,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
+  
 
   return (
     <div className="space-y-4">
@@ -179,7 +162,7 @@ export function UserListPage() {
         </Button>
       </div>
 
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={users} />
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"

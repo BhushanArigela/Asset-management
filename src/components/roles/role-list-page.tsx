@@ -1,22 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { Plus, Edit } from "lucide-react";
+import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { RoleFormDialog } from "./role-form-dialog";
@@ -91,11 +80,7 @@ export function RoleListPage() {
     },
   ];
 
-  const table = useReactTable({
-    data: roles,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  
 
   return (
     <div className="space-y-4">
@@ -113,7 +98,7 @@ export function RoleListPage() {
         </Button>
       </div>
 
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={roles} />
 
       {isDialogOpen && (
         <RoleFormDialog
