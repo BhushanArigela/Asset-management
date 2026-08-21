@@ -66,17 +66,17 @@ export default function LoginPage() {
     <div className="flex min-h-screen">
       {/* Left Side - Hero Section */}
       <div 
-        className="hidden md:flex flex-1 flex-col items-start justify-start relative bg-cover bg-center p-12 lg:p-24 pt-32 lg:pt-40" 
+        className="hidden md:flex flex-1 flex-col items-start justify-start relative bg-cover bg-center p-8 lg:p-24 pt-24 lg:pt-40" 
         style={{ backgroundImage: `url('${process.env.NEXT_PUBLIC_BASE_PATH || ""}/login-bg-left.jpg')` }}
       >
         <div className="z-10 max-w-lg relative">
-          <h1 className="text-4xl lg:text-5xl font-bold text-white mb-2">Enterprise</h1>
-          <h2 className="text-3xl lg:text-[34px] font-semibold text-[#c6ebf9] mb-6">Asset Management System</h2>
-          <div className="h-[2px] w-12 bg-[#1e96f6] mb-8"></div>
-          <p className="text-[#c6ebf9] text-base lg:text-[17px] leading-[1.6]">
-            Monitor. Manage. Maximize.<br />
-            A unified platform to track, manage and<br />
-            optimize your enterprise assets efficiently<br />
+          <h1 className="text-3xl lg:text-5xl font-bold text-white mb-2">Enterprise</h1>
+          <h2 className="text-2xl lg:text-[34px] font-semibold text-[#c6ebf9] mb-4 lg:mb-6 leading-tight">Asset Management System</h2>
+          <div className="h-[2px] w-12 bg-[#1e96f6] mb-6 lg:mb-8"></div>
+          <p className="text-[#c6ebf9] text-sm lg:text-[17px] leading-[1.6]">
+            Monitor. Manage. Maximize. <br className="hidden lg:block" />
+            A unified platform to track, manage and <br className="hidden lg:block" />
+            optimize your enterprise assets efficiently <br className="hidden lg:block" />
             and securely.
           </p>
         </div>
