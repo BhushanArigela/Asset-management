@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, X, FileText, Upload } from "lucide-react";
+import { Loader2, X, FileText, Upload, Tags, MapPin, ShieldCheck, ShoppingCart, AlignLeft, Paperclip, Calendar, Shield, Users } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -289,17 +289,28 @@ export function AssetForm({ initialData }: { initialData?: any }) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{initialData ? "Edit Asset" : "Register New Asset"}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            
-            <div className="bg-slate-50 p-4 rounded-lg space-y-4">
-              <h3 className="font-semibold text-lg text-slate-800">Basic Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-[24px] font-bold text-[#1B2A4A] tracking-tight">
+          {initialData ? "Edit Asset" : "Register New Asset"}
+        </h1>
+        <p className="text-[14px] text-gray-500 mt-1">
+          {initialData ? "Update the asset details below" : "Add a new asset to your organization"}
+        </p>
+      </div>
+      
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          
+          <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <FileText className="w-4 h-4 text-blue-600" />
+              </div>
+              <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Basic Information</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <FormField
                   control={form.control}
                   name="name"
@@ -334,24 +345,54 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                   )}
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                <FormItem>
-                  <FormLabel>Asset Image (Optional)</FormLabel>
-                  <FormControl>
-                    <Input 
+              <div>
+                <FormLabel className="mb-2 block">Asset Image (Optional)</FormLabel>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Upload Box */}
+                  <div className="border-2 border-dashed border-blue-200 rounded-xl bg-blue-50/30 flex flex-col items-center justify-center py-8 relative hover:bg-blue-50/50 transition-colors cursor-pointer group">
+                    <input 
                       type="file" 
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                       accept="image/*" 
                       onChange={(e) => setImageFile(e.target.files?.[0] || null)} 
                     />
-                  </FormControl>
-                  <p className="text-[0.8rem] text-muted-foreground">Upload a photo to display on the asset details page.</p>
-                </FormItem>
+                    <Upload className="w-6 h-6 text-blue-500 mb-3 group-hover:scale-110 transition-transform" />
+                    <p className="text-sm text-gray-600 mb-1">
+                      <span className="text-blue-600 font-semibold">Click to upload</span> or drag & drop
+                    </p>
+                    <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider">JPG, PNG up to 2MB</p>
+                  </div>
+                  {/* Preview Box */}
+                  <div className="flex items-center gap-6">
+                    <div className="w-[120px] h-[90px] rounded-lg border border-gray-100 bg-gray-50 flex flex-col items-center justify-center shrink-0 overflow-hidden relative shadow-sm">
+                      {imageFile ? (
+                        <img src={URL.createObjectURL(imageFile)} alt="Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="flex flex-col items-center text-gray-300">
+                          <FileText className="w-6 h-6 mb-1 opacity-50" />
+                          <span className="text-[10px] uppercase font-bold tracking-wider">No Image</span>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-800 mb-1">Preview</h4>
+                      <p className="text-xs text-gray-500 leading-relaxed max-w-[200px]">Image will appear in asset details page</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="bg-slate-50 p-4 rounded-lg space-y-4">
-              <h3 className="font-semibold text-lg text-slate-800">Classification</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <Tags className="w-4 h-4 text-blue-600" />
+              </div>
+              <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Classification</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <FormField
                   control={form.control}
                   name="categoryId"
@@ -401,11 +442,18 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                   )}
                 />
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="bg-slate-50 p-4 rounded-lg space-y-4">
-              <h3 className="font-semibold text-lg text-slate-800">Location & Assignment</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <MapPin className="w-4 h-4 text-blue-600" />
+              </div>
+              <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Location & Assignment</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <FormField
                   control={form.control}
                   name="companyId"
@@ -492,17 +540,29 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Responsible Person</FormLabel>
-                      <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                      <FormControl>
+                        <div className="relative">
+                          <Users className="w-4 h-4 text-blue-500 absolute left-3 top-3" />
+                          <Input placeholder="John Doe" className="pl-9" {...field} />
+                        </div>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="bg-slate-50 p-4 rounded-lg space-y-4">
-              <h3 className="font-semibold text-lg text-slate-800">Status & Condition</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <ShieldCheck className="w-4 h-4 text-blue-600" />
+              </div>
+              <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Status & Condition</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
                   name="statusId"
@@ -536,11 +596,18 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                   )}
                 />
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="bg-slate-50 p-4 rounded-lg space-y-4">
-              <h3 className="font-semibold text-lg text-slate-800">Purchase & Vendor Details</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <ShoppingCart className="w-4 h-4 text-blue-600" />
+              </div>
+              <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Purchase & Vendor Details</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
                   name="vendorId"
@@ -602,17 +669,22 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                   )}
                 />
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-slate-50 p-4 rounded-lg space-y-4 border">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden border">
+              <CardContent className="p-4 space-y-4">
                 <FormField
                   control={form.control}
                   name="warrantyApplicable"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 bg-white shadow-sm">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base font-bold">Warranty Applicable</FormLabel>
+                    <FormItem className="flex flex-row items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                          <Shield className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <FormLabel className="text-sm font-bold text-[#1B2A4A] cursor-pointer m-0">Warranty Applicable</FormLabel>
                       </div>
                       <FormControl>
                         <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -651,16 +723,21 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                     )} />
                   </div>
                 )}
-              </div>
+              </CardContent>
+            </Card>
 
-              <div className="bg-slate-50 p-4 rounded-lg space-y-4 border">
+            <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden border">
+              <CardContent className="p-4 space-y-4">
                 <FormField
                   control={form.control}
                   name="amcApplicable"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 bg-white shadow-sm">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base font-bold">AMC Applicable</FormLabel>
+                    <FormItem className="flex flex-row items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                          <Calendar className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <FormLabel className="text-sm font-bold text-[#1B2A4A] cursor-pointer m-0">AMC Applicable</FormLabel>
                       </div>
                       <FormControl>
                         <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -704,30 +781,46 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                     )} />
                   </div>
                 )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
+          </div>
 
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Additional Description & Notes</FormLabel>
-                  <FormControl>
-                    <Textarea className="h-24" placeholder="Any other details about the asset..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="bg-slate-50 p-4 rounded-lg space-y-4 border">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base font-bold">Attach Documents</FormLabel>
-                <p className="text-sm text-muted-foreground">Upload invoices, manuals, or certificates. They will be saved when you submit the form.</p>
+          <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+              <div className="w-8 h-8 rounded-lg bg-pink-50 flex items-center justify-center">
+                <AlignLeft className="w-4 h-4 text-pink-500" />
               </div>
-              <div className="flex items-end gap-4 bg-white p-4 border rounded-md shadow-sm">
-                <div className="space-y-2 flex-1">
+              <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Additional Description & Notes</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea className="min-h-[100px] border-gray-200 resize-y" placeholder="Any other details about the asset..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <Paperclip className="w-4 h-4 text-blue-600" />
+              </div>
+              <div className="space-y-1 !mt-0">
+                <CardTitle className="text-base font-bold text-[#1B2A4A]">Attach Documents</CardTitle>
+                <p className="text-xs text-gray-500">Upload invoices, manuals, or certificates. They will be saved when you submit the form.</p>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex flex-col md:flex-row items-end gap-4">
+                <div className="space-y-2 flex-1 w-full">
                   <FormLabel>Document Type</FormLabel>
                   <Select value={docType} onValueChange={setDocType}>
                     <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
@@ -765,9 +858,9 @@ export function AssetForm({ initialData }: { initialData?: any }) {
               </div>
               
               {pendingDocs.length > 0 && (
-                <ul className="space-y-2 pt-2">
+                <ul className="space-y-2 mt-4">
                   {pendingDocs.map((doc) => (
-                    <li key={doc.id} className="flex justify-between items-center border p-3 rounded-lg bg-white">
+                    <li key={doc.id} className="flex justify-between items-center border p-3 rounded-lg bg-gray-50/50">
                       <div className="flex items-center space-x-3">
                         <FileText className="h-5 w-5 text-muted-foreground" />
                         <div>
@@ -776,23 +869,23 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                         </div>
                       </div>
                       <Button variant="ghost" size="icon" type="button" onClick={() => setPendingDocs(pendingDocs.filter(d => d.id !== doc.id))}>
-                        <X className="h-4 w-4 text-destructive" />
+                        <X className="h-4 w-4 text-red-500" />
                       </Button>
                     </li>
                   ))}
                 </ul>
               )}
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="flex justify-end border-t pt-6">
-              <Button type="button" variant="outline" className="mr-4" onClick={() => router.back()}>Cancel</Button>
-              <Button type="submit" disabled={isSubmitting} className="w-40">
-                {isSubmitting ? "Saving..." : (initialData ? "Save Changes" : "Register Asset")}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          <div className="flex justify-end items-center gap-4 pt-4 pb-12">
+            <Button type="button" variant="outline" className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50 px-6 font-semibold" onClick={() => router.back()}>Cancel</Button>
+            <Button type="submit" disabled={isSubmitting} className="bg-[#1d4ed8] hover:bg-blue-700 text-white px-8 font-semibold shadow-sm">
+              {isSubmitting ? "Saving..." : (initialData ? "Save Changes" : "Register Asset")}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }
