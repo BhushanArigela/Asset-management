@@ -104,10 +104,10 @@ export async function GET(req: Request) {
         _sum: { purchaseCost: true },
       }),
       // Quick Overview Stats
-      prisma.location.count(),
+      prisma.building.count(),
       prisma.vendor.count(),
       prisma.user.count({ where: { isActive: true } }),
-      prisma.auditSession.count({ where: { status: "PENDING" } }), // or similar status
+      prisma.auditSession.count({ where: { status: { in: ["PLANNED", "IN_PROGRESS"] } } }),
       prisma.auditLog.count(),
       prisma.maintenanceRequest.count({ where: { status: { in: ["OPEN", "IN_PROGRESS"] }, maintenanceDate: { lt: new Date() } } })
     ]);
