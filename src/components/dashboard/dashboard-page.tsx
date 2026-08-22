@@ -328,46 +328,49 @@ export function DashboardPage() {
             <CardTitle className="text-lg font-bold text-[#1B2A4A]">Assets by Status</CardTitle>
           </CardHeader>
           <CardContent className="px-6 pb-6">
-            <div className="h-[250px] relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={data.assetsByStatus}
-                    cx="45%"
-                    cy="50%"
-                    innerRadius={75}
-                    outerRadius={105}
-                    paddingAngle={2}
-                    dataKey="value"
-                    stroke="none"
-                  >
-                    {data.assetsByStatus.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                    itemStyle={{ color: '#1B2A4A', fontWeight: 600 }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-              {/* Inner Text */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style={{ left: '-5%' }}>
-                <span className="text-4xl font-extrabold text-[#1B2A4A]">{data.totalAssets}</span>
-                <span className="text-sm font-medium text-gray-500">Total</span>
+            <div className="h-[250px] flex items-center w-full">
+              {/* Left side: Pie Chart */}
+              <div className="flex-1 h-full relative">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={data.assetsByStatus}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={75}
+                      outerRadius={105}
+                      paddingAngle={2}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {data.assetsByStatus.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                      itemStyle={{ color: '#1B2A4A', fontWeight: 600 }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+                {/* Inner Text - Perfectly centered within the left flex child */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span className="text-4xl font-extrabold text-[#1B2A4A] leading-none">{data.totalAssets}</span>
+                  <span className="text-sm font-medium text-gray-500 mt-1">Total</span>
+                </div>
               </div>
               
-              {/* Custom Legend */}
-              <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex flex-col gap-2.5">
+              {/* Right side: Custom Legend */}
+              <div className="w-[160px] shrink-0 flex flex-col gap-3 justify-center pl-2">
                 {data.assetsByStatus.map((entry, index) => {
                   const percentage = ((entry.value / data.totalAssets) * 100).toFixed(1);
                   return (
-                    <div key={entry.name} className="flex items-center justify-between w-[150px] text-[13px]">
+                    <div key={entry.name} className="flex items-center justify-between text-[13px]">
                       <div className="flex items-center gap-2">
-                        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                        <span className="font-medium text-gray-700 truncate max-w-[80px]">{entry.name}</span>
+                        <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                        <span className="font-medium text-gray-700 truncate max-w-[80px]" title={entry.name}>{entry.name}</span>
                       </div>
-                      <span className="text-gray-500">{entry.value} ({percentage}%)</span>
+                      <span className="text-gray-500 whitespace-nowrap ml-1">{entry.value} ({percentage}%)</span>
                     </div>
                   );
                 })}
