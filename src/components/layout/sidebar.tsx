@@ -78,7 +78,7 @@ export function Sidebar() {
           className="h-full w-full object-contain scale-[1.75]"
         />
       </div>
-      <div className="flex flex-1 flex-col overflow-y-auto pr-4 py-6">
+      <div className="flex flex-1 flex-col overflow-y-auto pr-4 py-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <nav className="flex-1 space-y-8">
           {navigation.map((group) => (
             <div key={group.title} className="space-y-2">
