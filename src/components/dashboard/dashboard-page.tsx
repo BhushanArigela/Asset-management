@@ -115,12 +115,6 @@ export function DashboardPage() {
             <span className="text-[#1B2A4A] font-semibold">Dashboard</span>
           </div>
         </div>
-        
-        <div className="flex items-center bg-white px-4 py-2.5 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:bg-gray-50 transition-colors text-sm font-semibold text-[#1B2A4A] gap-2">
-          <CalendarIcon className="w-4 h-4 text-gray-500" />
-          {dateFormatted}
-          <ChevronRight className="w-4 h-4 text-gray-400 rotate-90 ml-1" />
-        </div>
       </div>
 
       {/* Top Cards Row 1 */}
