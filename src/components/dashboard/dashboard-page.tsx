@@ -361,12 +361,12 @@ export function DashboardPage() {
               </div>
               
               {/* Right side: Custom Legend */}
-              <div className="flex-1 flex flex-col gap-3 justify-center pl-6">
+              <div className="flex-1 flex flex-col gap-3 justify-center pl-10">
                 {data.assetsByStatus.map((entry, index) => {
                   const percentage = ((entry.value / data.totalAssets) * 100).toFixed(1);
                   return (
                     <div key={entry.name} className="flex items-center justify-between text-[13px]">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
                         <span className="font-medium text-gray-700 truncate max-w-[140px]" title={entry.name}>{entry.name}</span>
                       </div>
