@@ -78,14 +78,14 @@ export function Sidebar() {
           className="h-full w-full object-contain scale-[1.75]"
         />
       </div>
-      <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
-        <nav className="flex-1 space-y-6">
+      <div className="flex flex-1 flex-col overflow-y-auto py-6">
+        <nav className="flex-1 space-y-8">
           {navigation.map((group) => (
             <div key={group.title} className="space-y-2">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/60 px-2">
+              <h4 className="text-[11px] font-bold uppercase tracking-wider text-[#8A99BA] px-6">
                 {group.title}
               </h4>
-              <ul className="space-y-1">
+              <ul className="space-y-0.5">
                 {group.items.map((item) => {
                   const isActive = pathname === item.href;
                   return (
@@ -93,16 +93,16 @@ export function Sidebar() {
                       <Link
                         href={item.href}
                         className={cn(
-                          "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-white/10 hover:text-white",
+                          "group flex items-center gap-4 px-6 py-2.5 text-[14px] font-medium transition-colors hover:bg-white/10 hover:text-white",
                           isActive
-                            ? "bg-accent text-accent-foreground shadow-sm"
-                            : "text-primary-foreground/80"
+                            ? "bg-accent text-accent-foreground"
+                            : "text-[#D1D5DB]"
                         )}
                       >
                         <item.icon
                           className={cn(
-                            "h-4 w-4 shrink-0",
-                            isActive ? "text-accent-foreground" : "text-primary-foreground/60 group-hover:text-white"
+                            "h-[18px] w-[18px] shrink-0",
+                            isActive ? "text-accent-foreground" : "text-[#8A99BA] group-hover:text-white"
                           )}
                           aria-hidden="true"
                         />
