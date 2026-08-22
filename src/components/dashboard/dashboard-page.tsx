@@ -99,21 +99,15 @@ export function DashboardPage() {
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto bg-[#F4F7FE] min-h-screen">
+    <div className="p-4 lg:p-6 pt-4 lg:pt-4 space-y-6 max-w-[1600px] mx-auto bg-[#F4F7FE] min-h-screen">
       
       {/* Header Area */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
         <div>
           <h1 className="text-[28px] font-bold text-[#1B2A4A] tracking-tight">
             Welcome back, {userName}! 👋
           </h1>
           <p className="text-[15px] text-gray-500 mt-1">Here's what's happening with your assets today.</p>
-          
-          <div className="flex items-center gap-2 mt-4 text-sm text-gray-500 font-medium">
-            <Home className="w-4 h-4" />
-            <ChevronRight className="w-4 h-4 text-gray-400" />
-            <span className="text-[#1B2A4A] font-semibold">Dashboard</span>
-          </div>
         </div>
       </div>
 

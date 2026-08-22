@@ -4,7 +4,7 @@ import { signOut } from "next-auth/react";
 import { Breadcrumbs } from "./breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -49,6 +49,13 @@ export function Header({ user }: HeaderProps) {
           <Search className="h-4 w-4" />
           <span className="hidden sm:inline">Search</span>
         </Button>
+        
+        {/* Notification Bell */}
+        <button className="relative p-2 text-gray-500 hover:text-[#1B2A4A] transition-colors rounded-full hover:bg-gray-100">
+          <Bell className="w-5 h-5" />
+          <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+        </button>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
