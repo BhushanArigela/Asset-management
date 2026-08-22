@@ -22,7 +22,13 @@ export async function GET(req: Request) {
       categoryCounts,
       buildingCounts,
       departmentCounts,
-      totalValueRaw
+      totalValueRaw,
+      totalLocations,
+      totalVendors,
+      activeUsers,
+      pendingAudits,
+      totalAuditLogs,
+      overdueTasks
     ] = await Promise.all([
       prisma.asset.count({ where: { isDisposed: false } }),
       prisma.asset.count({ where: { status: { name: "Under Maintenance" }, isDisposed: false } }),
@@ -96,7 +102,14 @@ export async function GET(req: Request) {
       prisma.asset.aggregate({
         where: { isDisposed: false },
         _sum: { purchaseCost: true },
-      })
+      }),
+      // Quick Overview Stats
+      prisma.location.count(),
+      prisma.vendor.count(),
+      prisma.user.count({ where: { isActive: true } }),
+      prisma.auditSession.count({ where: { status: "PENDING" } }), // or similar status
+      prisma.auditLog.count(),
+      prisma.maintenanceRequest.count({ where: { status: { in: ["OPEN", "IN_PROGRESS"] }, maintenanceDate: { lt: new Date() } } })
     ]);
 
     // Format the group by results with names
@@ -150,6 +163,13 @@ export async function GET(req: Request) {
       assetsByCategory: formattedCategoryCounts,
       assetsByBuilding: formattedBuildingCounts,
       assetsByDepartment: formattedDepartmentCounts,
+      // Overview stats
+      totalLocations,
+      totalVendors,
+      activeUsers,
+      pendingAudits,
+      totalAuditLogs,
+      overdueTasks,
     };
 
     return NextResponse.json(data);
