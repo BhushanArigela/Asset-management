@@ -367,6 +367,8 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                     <div className="w-[120px] h-[90px] rounded-lg border border-gray-100 bg-gray-50 flex flex-col items-center justify-center shrink-0 overflow-hidden relative shadow-sm">
                       {imageFile ? (
                         <img src={URL.createObjectURL(imageFile)} alt="Preview" className="w-full h-full object-cover" />
+                      ) : initialData?.imageUrl ? (
+                        <img src={initialData.imageUrl} alt="Asset Preview" className="w-full h-full object-cover" />
                       ) : (
                         <div className="flex flex-col items-center text-gray-300">
                           <FileText className="w-6 h-6 mb-1 opacity-50" />
