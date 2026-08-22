@@ -330,7 +330,7 @@ export function DashboardPage() {
           <CardContent className="px-6 pb-6">
             <div className="h-[250px] flex items-center w-full">
               {/* Left side: Pie Chart */}
-              <div className="flex-1 h-full relative">
+              <div className="w-[220px] shrink-0 h-full relative">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -353,7 +353,7 @@ export function DashboardPage() {
                     />
                   </PieChart>
                 </ResponsiveContainer>
-                {/* Inner Text - Perfectly centered within the left flex child */}
+                {/* Inner Text - Perfectly centered within the left fixed child */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                   <span className="text-4xl font-extrabold text-[#1B2A4A] leading-none">{data.totalAssets}</span>
                   <span className="text-sm font-medium text-gray-500 mt-1">Total</span>
@@ -361,16 +361,16 @@ export function DashboardPage() {
               </div>
               
               {/* Right side: Custom Legend */}
-              <div className="w-[160px] shrink-0 flex flex-col gap-3 justify-center pl-2">
+              <div className="flex-1 flex flex-col gap-3 justify-center pl-6">
                 {data.assetsByStatus.map((entry, index) => {
                   const percentage = ((entry.value / data.totalAssets) * 100).toFixed(1);
                   return (
                     <div key={entry.name} className="flex items-center justify-between text-[13px]">
                       <div className="flex items-center gap-2">
                         <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                        <span className="font-medium text-gray-700 truncate max-w-[80px]" title={entry.name}>{entry.name}</span>
+                        <span className="font-medium text-gray-700 truncate max-w-[140px]" title={entry.name}>{entry.name}</span>
                       </div>
-                      <span className="text-gray-500 whitespace-nowrap ml-1">{entry.value} ({percentage}%)</span>
+                      <span className="text-gray-500 whitespace-nowrap ml-2">{entry.value} ({percentage}%)</span>
                     </div>
                   );
                 })}
