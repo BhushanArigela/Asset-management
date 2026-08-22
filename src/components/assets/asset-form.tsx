@@ -368,7 +368,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                       {imageFile ? (
                         <img src={URL.createObjectURL(imageFile)} alt="Preview" className="w-full h-full object-cover" />
                       ) : initialData?.imageUrl ? (
-                        <img src={initialData.imageUrl} alt="Asset Preview" className="w-full h-full object-cover" />
+                        <img src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}${initialData.imageUrl}`} alt="Asset Preview" className="w-full h-full object-cover" />
                       ) : (
                         <div className="flex flex-col items-center text-gray-300">
                           <FileText className="w-6 h-6 mb-1 opacity-50" />
