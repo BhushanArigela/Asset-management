@@ -78,14 +78,14 @@ export function Sidebar() {
           className="h-full w-full object-contain scale-[1.75]"
         />
       </div>
-      <div className="flex flex-1 flex-col overflow-y-auto py-6">
+      <div className="flex flex-1 flex-col overflow-y-auto pr-4 py-6">
         <nav className="flex-1 space-y-8">
           {navigation.map((group) => (
             <div key={group.title} className="space-y-2">
               <h4 className="text-[11px] font-bold uppercase tracking-wider text-[#8A99BA] px-6">
                 {group.title}
               </h4>
-              <ul className="space-y-0.5">
+              <ul className="space-y-1">
                 {group.items.map((item) => {
                   const isActive = pathname === item.href;
                   return (
@@ -93,9 +93,9 @@ export function Sidebar() {
                       <Link
                         href={item.href}
                         className={cn(
-                          "group flex items-center gap-4 px-6 py-2.5 text-[14px] font-medium transition-colors hover:bg-white/10 hover:text-white",
+                          "group flex items-center gap-4 rounded-r-lg px-6 py-2.5 text-[14px] font-medium transition-colors hover:bg-white/10 hover:text-white",
                           isActive
-                            ? "bg-accent text-accent-foreground"
+                            ? "bg-accent text-accent-foreground shadow-sm"
                             : "text-[#D1D5DB]"
                         )}
                       >
