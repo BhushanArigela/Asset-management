@@ -70,7 +70,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const SidebarContent = () => (
-    <div className="flex h-full flex-col bg-primary">
+    <div className="flex h-full flex-col bg-[#1c2d4a]">
       <div className="flex h-16 shrink-0 items-center justify-center bg-white border-b px-6">
         <img 
           src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo-inner.png`} 
