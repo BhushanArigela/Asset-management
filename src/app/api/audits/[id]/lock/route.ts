@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -8,6 +9,10 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
     const session = await auth();
     if (!session?.user) {
       return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    if (!hasPermission(session.user.permissions, [PERMISSIONS.AUDITS_COMPLETE] as any)) {
+      return new NextResponse("Forbidden", { status: 403 });
     }
 
     const auditId = params.id;

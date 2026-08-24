@@ -11,9 +11,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 export function AuditDetailPage({ auditId }: { auditId: string }) {
   const router = useRouter();
+  const { data: session } = useSession();
+  
+  const canExecuteAudit = hasPermission(session?.user?.permissions, [PERMISSIONS.AUDITS_EXECUTE] as any);
+  const canCompleteAudit = hasPermission(session?.user?.permissions, [PERMISSIONS.AUDITS_COMPLETE] as any);
+
   const [audit, setAudit] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -69,22 +76,26 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
           </div>
         </div>
         <div className="flex flex-wrap gap-2 w-full md:w-auto">
-          {audit.status === "PLANNED" && (
+          {canExecuteAudit && audit.status === "PLANNED" && (
             <Button onClick={() => handleAction("start")} className="bg-blue-600">
               <Play className="w-4 h-4 mr-2" /> Start Audit
             </Button>
           )}
           {audit.status === "IN_PROGRESS" && (
             <>
-              <Button variant="outline" onClick={() => router.push(`/audits/${auditId}/scan`)}>
-                <Camera className="w-4 h-4 mr-2" /> Scan Asset
-              </Button>
-              <Button onClick={() => handleAction("complete")} className="bg-green-600">
-                <CheckCircle className="w-4 h-4 mr-2" /> Complete
-              </Button>
+              {canExecuteAudit && (
+                <Button variant="outline" onClick={() => router.push(`/audits/${auditId}/scan`)}>
+                  <Camera className="w-4 h-4 mr-2" /> Scan Asset
+                </Button>
+              )}
+              {canCompleteAudit && (
+                <Button onClick={() => handleAction("complete")} className="bg-green-600">
+                  <CheckCircle className="w-4 h-4 mr-2" /> Complete
+                </Button>
+              )}
             </>
           )}
-          {audit.status === "COMPLETED" && (
+          {canCompleteAudit && audit.status === "COMPLETED" && (
             <Button onClick={() => handleAction("lock")} variant="secondary">
               <Lock className="w-4 h-4 mr-2" /> Lock Audit
             </Button>
