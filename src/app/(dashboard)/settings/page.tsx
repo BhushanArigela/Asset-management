@@ -1,4 +1,6 @@
 "use client";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -39,6 +41,9 @@ const smtpFormSchema = z.object({
 });
 
 export default function SettingsPage() {
+  const { data: session } = useSession();
+  const canEditSettings = hasPermission(session?.user?.permissions, [PERMISSIONS.SETTINGS_EDIT] as any);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
@@ -249,7 +254,7 @@ export default function SettingsPage() {
                       )}
                     />
 
-                    <Button type="submit" disabled={isLoading} className="w-full md:w-auto">
+                    {canEditSettings && (<Button type="submit" disabled={isLoading} className="w-full md:w-auto">
                       {isLoading ? (
                         "Saving..."
                       ) : (
@@ -258,7 +263,7 @@ export default function SettingsPage() {
                           Save Settings
                         </>
                       )}
-                    </Button>
+                    </Button>)}
                   </form>
                 </Form>
               )}
