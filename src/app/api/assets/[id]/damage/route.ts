@@ -78,8 +78,11 @@ export async function POST(
       });
     }
 
-    // Perform the status change within a transaction
-    const [statusChange, updatedAsset] = await prisma.$transaction([
+    const datePrefix = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, "0");
+    const requestNumber = `MR-${datePrefix}-${randomSuffix}`;
+
+    const [statusChange, updatedAsset, maintenanceRequest] = await prisma.$transaction([
       prisma.assetStatusChange.create({
         data: {
           assetId: params.id,
@@ -92,15 +95,42 @@ export async function POST(
       prisma.asset.update({
         where: { id: params.id },
         data: { statusId: damagedStatus.id }
+      }),
+      prisma.maintenanceRequest.create({
+        data: {
+          requestNumber,
+          assetId: params.id,
+          description: `DAMAGE REPORT: ${description}`,
+          priority: "HIGH",
+          status: "OPEN",
+          createdById: session.user.id,
+        }
       })
     ]);
+
+    if (fileUrl && file) {
+      // Re-extract filename from the URL since we know it exists
+      const savedFileName = fileUrl.split('/').pop() || file.name;
+      
+      await prisma.maintenanceDocument.create({
+        data: {
+          maintenanceId: maintenanceRequest.id,
+          originalName: file.name,
+          fileName: savedFileName,
+          filePath: fileUrl,
+          fileSize: file.size,
+          mimeType: file.type,
+          uploadedById: session.user.id,
+        }
+      });
+    }
 
     await createAuditLog({
       action: AUDIT_ACTIONS.UPDATE,
       module: AUDIT_MODULES.ASSETS,
       entityId: params.id,
       userId: session.user.id,
-      details: `Asset reported as damaged`,
+      details: `Asset reported as damaged. Auto-generated Maintenance Request: ${requestNumber}`,
       newData: updatedAsset,
     });
 
