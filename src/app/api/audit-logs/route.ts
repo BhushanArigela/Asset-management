@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import ExcelJS from "exceljs";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 export async function GET(req: Request) {
   try {
@@ -11,6 +12,18 @@ export async function GET(req: Request) {
     }
 
     const { searchParams } = new URL(req.url);
+    const isExcel = searchParams.get("format") === "excel";
+
+    if (isExcel) {
+      if (!hasPermission(session.user.permissions, [PERMISSIONS.AUDIT_LOGS_EXPORT] as any)) {
+        return new NextResponse("Forbidden", { status: 403 });
+      }
+    } else {
+      if (!hasPermission(session.user.permissions, [PERMISSIONS.AUDIT_LOGS_VIEW] as any)) {
+        return new NextResponse("Forbidden", { status: 403 });
+      }
+    }
+
     const userId = searchParams.get("userId");
     const module = searchParams.get("module");
     const action = searchParams.get("action");
@@ -39,7 +52,6 @@ export async function GET(req: Request) {
       take: 200, // Limit for performance on typical views
     });
 
-    const isExcel = searchParams.get("format") === "excel";
     if (isExcel) {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet("System Logs");

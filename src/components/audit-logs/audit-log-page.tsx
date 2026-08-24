@@ -17,8 +17,13 @@ import {
 } from "@/components/ui/table";
 import { Download, Search, Activity, ChevronDown, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 export function AuditLogPage() {
+  const { data: session } = useSession();
+  const canExportLogs = hasPermission(session?.user?.permissions, [PERMISSIONS.AUDIT_LOGS_EXPORT] as any);
+
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
@@ -103,9 +108,11 @@ export function AuditLogPage() {
             </div>
             <div className="flex gap-2 md:col-span-2 justify-end">
               <Button onClick={fetchLogs} variant="outline">Refresh</Button>
-              <Button onClick={exportLogs} className="bg-[#1B2A4A]">
-                <Download className="w-4 h-4 mr-2" /> Export Logs
-              </Button>
+              {canExportLogs && (
+                <Button onClick={exportLogs} className="bg-[#1B2A4A]">
+                  <Download className="w-4 h-4 mr-2" /> Export Logs
+                </Button>
+              )}
             </div>
           </div>
         </CardContent>
