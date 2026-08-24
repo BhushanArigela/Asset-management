@@ -24,6 +24,22 @@ export function CompanyTab() {
   const columns: ColumnDef<any>[] = [
     { accessorKey: "name", header: "Name" },
     { accessorKey: "code", header: "Code" },
+    { accessorKey: "address", header: "Address", cell: ({ row }) => row.original.address || "-" },
+    { 
+      id: "contact", 
+      header: "Contact Details", 
+      cell: ({ row }) => {
+        const c = row.original;
+        if (!c.contactPerson && !c.phone && !c.email) return "-";
+        return (
+          <div className="flex flex-col">
+            {c.contactPerson && <span className="font-medium">{c.contactPerson}</span>}
+            {c.phone && <span className="text-xs text-gray-500">{c.phone}</span>}
+            {c.email && <span className="text-xs text-gray-500">{c.email}</span>}
+          </div>
+        );
+      }
+    },
     { accessorKey: "isActive", header: "Status", cell: ({ row }) => (
       <Badge variant={row.original.isActive ? "default" : "destructive"}>
         {row.original.isActive ? "Active" : "Inactive"}
