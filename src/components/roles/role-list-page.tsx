@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Plus, Edit, Trash } from "lucide-react";
+import { Plus, Edit, Trash, MoreHorizontal } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 
@@ -11,6 +11,14 @@ import { toast } from "sonner";
 import { RoleFormDialog } from "./role-form-dialog";
 import { useSession } from "next-auth/react";
 import { hasPermission, PERMISSIONS } from "@/lib/permissions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function RoleListPage() {
   const { data: session } = useSession();
@@ -86,35 +94,48 @@ export function RoleListPage() {
         );
       },
     },
-      {
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => {
-          const role = row.original;
-          
-          if (!canEditRole && !canDeleteRole) {
-            return null;
-          }
+        {
+          id: "actions",
+          header: "Actions",
+          cell: ({ row }) => {
+            const role = row.original;
+            
+            if (!canEditRole && !canDeleteRole) {
+              return null;
+            }
 
-          return (
-            <div className="flex gap-2">
-              {canEditRole && (
-                <Button variant="ghost" className="h-8 w-8 p-0" onClick={() => {
-                  setSelectedRole(role);
-                  setIsDialogOpen(true);
-                }} title="Edit Role">
-                  <Edit className="h-4 w-4" />
-                </Button>
-              )}
-              {canDeleteRole && role.isActive && (
-                <Button variant="ghost" className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(role.id)} title="Deactivate Role">
-                  <Trash className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          );
+            return (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {canEditRole && (
+                    <DropdownMenuItem onClick={() => {
+                      setSelectedRole(role);
+                      setIsDialogOpen(true);
+                    }}>
+                      Edit
+                    </DropdownMenuItem>
+                  )}
+                  {canDeleteRole && role.isActive && (
+                    <DropdownMenuItem 
+                      className="text-red-600"
+                      onClick={() => handleDelete(role.id)}
+                    >
+                      Deactivate
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            );
+          },
         },
-      },
   ];
 
   
