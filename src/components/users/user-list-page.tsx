@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { UserFormDialog } from "./user-form-dialog";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +34,11 @@ interface User {
 }
 
 export function UserListPage() {
+  const { data: session } = useSession();
+  const canCreateUser = hasPermission(session?.user?.permissions, [PERMISSIONS.USERS_CREATE] as any);
+  const canEditUser = hasPermission(session?.user?.permissions, [PERMISSIONS.USERS_EDIT] as any);
+  const canDeleteUser = hasPermission(session?.user?.permissions, [PERMISSIONS.USERS_DELETE] as any);
+
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -117,13 +124,15 @@ export function UserListPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => {
-                setSelectedUser(user);
-                setIsDialogOpen(true);
-              }}>
-                Edit
-              </DropdownMenuItem>
-              {user.isActive && (
+              {canEditUser && (
+                <DropdownMenuItem onClick={() => {
+                  setSelectedUser(user);
+                  setIsDialogOpen(true);
+                }}>
+                  Edit
+                </DropdownMenuItem>
+              )}
+              {canDeleteUser && user.isActive && (
                 <DropdownMenuItem 
                   className="text-red-600"
                   onClick={() => handleDelete(user.id)}
@@ -142,25 +151,27 @@ export function UserListPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex flex-1 items-center space-x-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search users..."
+            className="pl-8"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-[150px] lg:w-[250px]"
           />
         </div>
-        <Button 
-          className="bg-[#1B2A4A] hover:bg-[#1B2A4A]/90 text-white"
-          onClick={() => {
-            setSelectedUser(null);
-            setIsDialogOpen(true);
-          }}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add User
-        </Button>
+        {canCreateUser && (
+          <Button 
+            className="bg-[#1B2A4A] text-white w-full sm:w-auto"
+            onClick={() => {
+              setSelectedUser(null);
+              setIsDialogOpen(true);
+            }}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Add User
+          </Button>
+        )}
       </div>
 
       <DataTable columns={columns} data={users} />
