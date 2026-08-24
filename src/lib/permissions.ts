@@ -6,7 +6,6 @@ export const MODULES = {
   ASSETS: "assets",
   MAINTENANCE: "maintenance",
   MOVEMENTS: "movements",
-  WARRANTY: "warranty",
   REPORTS: "reports",
   AUDITS: "audits",
   AUDIT_LOGS: "audit_logs",
@@ -67,10 +66,6 @@ export const PERMISSIONS = {
   MOVEMENTS_VIEW: `${MODULES.MOVEMENTS}.${ACTIONS.VIEW}`,
   MOVEMENTS_CREATE: `${MODULES.MOVEMENTS}.${ACTIONS.CREATE}`,
 
-  // Warranty
-  WARRANTY_VIEW: `${MODULES.WARRANTY}.${ACTIONS.VIEW}`,
-  WARRANTY_EDIT: `${MODULES.WARRANTY}.${ACTIONS.EDIT}`,
-
   // Reports
   REPORTS_VIEW: `${MODULES.REPORTS}.${ACTIONS.VIEW}`,
   REPORTS_EXPORT: `${MODULES.REPORTS}.${ACTIONS.EXPORT}`,
@@ -128,10 +123,6 @@ export const ALL_PERMISSIONS: Array<{
   // Movements
   { module: MODULES.MOVEMENTS, action: ACTIONS.VIEW, description: "View asset movements" },
   { module: MODULES.MOVEMENTS, action: ACTIONS.CREATE, description: "Create asset transfers" },
-
-  // Warranty
-  { module: MODULES.WARRANTY, action: ACTIONS.VIEW, description: "View warranty information" },
-  { module: MODULES.WARRANTY, action: ACTIONS.EDIT, description: "Manage warranty records" },
 
   // Reports
   { module: MODULES.REPORTS, action: ACTIONS.VIEW, description: "View reports" },
@@ -195,7 +186,6 @@ export function getModuleLabel(module: string): string {
     assets: "Asset Management",
     maintenance: "Maintenance",
     movements: "Asset Movements",
-    warranty: "Warranty",
     reports: "Reports",
     audits: "Asset Audits",
     audit_logs: "Audit Logs",
