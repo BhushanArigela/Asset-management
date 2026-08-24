@@ -12,10 +12,12 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnLogin = nextUrl.pathname === "/login";
-      const isPublicRoute = nextUrl.pathname === "/api/qr/scan" || nextUrl.pathname.startsWith("/api/auth");
+      const isOnLogin = nextUrl.pathname.endsWith("/login");
+      const isForgotPassword = nextUrl.pathname.endsWith("/forgot-password");
+      const isResetPassword = nextUrl.pathname.endsWith("/reset-password");
+      const isPublicRoute = nextUrl.pathname.endsWith("/api/qr/scan") || nextUrl.pathname.includes("/api/auth");
 
-      if (isPublicRoute) return true;
+      if (isPublicRoute || isForgotPassword || isResetPassword) return true;
 
       if (isOnLogin) {
         if (isLoggedIn) {
