@@ -148,6 +148,11 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
   };
 
   const canDeleteAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_DELETE] as any);
+  const canEditAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_EDIT] as any);
+  const canTransferAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.MOVEMENTS_CREATE] as any);
+  const canMaintainAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.MAINTENANCE_CREATE] as any);
+  const canDamageAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_DAMAGE] as any);
+  const canDisposeAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_DISPOSE] as any);
 
   return (
     <div className="space-y-6">
@@ -164,98 +169,106 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
           )}
           {!asset.isDisposed && (
             <>
-              <Button variant="outline" onClick={() => router.push(`/assets/${asset.id}/edit`)}>
-                <Edit className="mr-2 h-4 w-4" /> Edit
-              </Button>
-              <Button variant="outline" onClick={() => router.push(`/movements/new?assetId=${asset.id}`)}>
-                <ArrowRightLeft className="mr-2 h-4 w-4" /> Transfer
-              </Button>
-              <Button variant="outline" onClick={() => router.push(`/maintenance/new?assetId=${asset.id}`)}>
-                <Wrench className="mr-2 h-4 w-4" /> Maintenance
-              </Button>
+              {canEditAsset && (
+                <Button variant="outline" onClick={() => router.push(`/assets/${asset.id}/edit`)}>
+                  <Edit className="mr-2 h-4 w-4" /> Edit
+                </Button>
+              )}
+              {canTransferAsset && (
+                <Button variant="outline" onClick={() => router.push(`/movements/new?assetId=${asset.id}`)}>
+                  <ArrowRightLeft className="mr-2 h-4 w-4" /> Transfer
+                </Button>
+              )}
+              {canMaintainAsset && (
+                <Button variant="outline" onClick={() => router.push(`/maintenance/new?assetId=${asset.id}`)}>
+                  <Wrench className="mr-2 h-4 w-4" /> Maintenance
+                </Button>
+              )}
               <Button variant="outline" onClick={() => setQrModalOpen(true)}>
                 <QrCode className="mr-2 h-4 w-4" /> Print QR
               </Button>
-              {asset.status?.name !== "Damaged" && (
+              {canDamageAsset && asset.status?.name !== "Damaged" && (
                 <Button variant="outline" className="text-orange-600 border-orange-200 hover:bg-orange-50 hover:text-orange-700" onClick={() => setDamageOpen(true)}>
                   <AlertTriangle className="mr-2 h-4 w-4" /> Report Damage
                 </Button>
               )}
-              <Dialog open={disposeOpen} onOpenChange={setDisposeOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="destructive">
-                    <Trash2 className="mr-2 h-4 w-4" /> Dispose
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Dispose Asset</DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleDispose} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label>Disposal Date *</Label>
-                      <Input 
-                        type="date" 
-                        required
-                        value={disposeData.disposalDate}
-                        onChange={(e) => setDisposeData({...disposeData, disposalDate: e.target.value})}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Method *</Label>
-                      <Select 
-                        value={disposeData.method} 
-                        onValueChange={(val) => setDisposeData({...disposeData, method: val})}
-                      >
-                        <SelectTrigger><SelectValue placeholder="Select method" /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Sale">Sale</SelectItem>
-                          <SelectItem value="Recycle">Recycle</SelectItem>
-                          <SelectItem value="Scrap">Scrap</SelectItem>
-                          <SelectItem value="Donate">Donate</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Reason *</Label>
-                      <Input 
-                        required
-                        value={disposeData.reason}
-                        onChange={(e) => setDisposeData({...disposeData, reason: e.target.value})}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
+              {canDisposeAsset && (
+                <Dialog open={disposeOpen} onOpenChange={setDisposeOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="destructive">
+                      <Trash2 className="mr-2 h-4 w-4" /> Dispose
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Dispose Asset</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleDispose} className="space-y-4">
                       <div className="space-y-2">
-                        <Label>Value (Optional)</Label>
+                        <Label>Disposal Date *</Label>
                         <Input 
-                          type="number" 
-                          step="0.01"
-                          value={disposeData.value}
-                          onChange={(e) => setDisposeData({...disposeData, value: e.target.value})}
+                          type="date" 
+                          required
+                          value={disposeData.disposalDate}
+                          onChange={(e) => setDisposeData({...disposeData, disposalDate: e.target.value})}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Approval Ref</Label>
+                        <Label>Method *</Label>
+                        <Select 
+                          value={disposeData.method} 
+                          onValueChange={(val) => setDisposeData({...disposeData, method: val})}
+                        >
+                          <SelectTrigger><SelectValue placeholder="Select method" /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Sale">Sale</SelectItem>
+                            <SelectItem value="Recycle">Recycle</SelectItem>
+                            <SelectItem value="Scrap">Scrap</SelectItem>
+                            <SelectItem value="Donate">Donate</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Reason *</Label>
                         <Input 
-                          value={disposeData.approvalRef}
-                          onChange={(e) => setDisposeData({...disposeData, approvalRef: e.target.value})}
+                          required
+                          value={disposeData.reason}
+                          onChange={(e) => setDisposeData({...disposeData, reason: e.target.value})}
                         />
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Supporting Document</Label>
-                      <Input type="file" onChange={(e) => setDisposeFile(e.target.files?.[0] || null)} />
-                    </div>
-                    <div className="flex justify-end pt-4 space-x-2">
-                      <Button type="button" variant="outline" onClick={() => setDisposeOpen(false)}>Cancel</Button>
-                      <Button type="submit" variant="destructive" disabled={isDisposing}>
-                        {isDisposing ? "Processing..." : "Confirm Disposal"}
-                      </Button>
-                    </div>
-                  </form>
-                </DialogContent>
-              </Dialog>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Value (Optional)</Label>
+                          <Input 
+                            type="number" 
+                            step="0.01"
+                            value={disposeData.value}
+                            onChange={(e) => setDisposeData({...disposeData, value: e.target.value})}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Approval Ref</Label>
+                          <Input 
+                            value={disposeData.approvalRef}
+                            onChange={(e) => setDisposeData({...disposeData, approvalRef: e.target.value})}
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Supporting Document</Label>
+                        <Input type="file" onChange={(e) => setDisposeFile(e.target.files?.[0] || null)} />
+                      </div>
+                      <div className="flex justify-end pt-4 space-x-2">
+                        <Button type="button" variant="outline" onClick={() => setDisposeOpen(false)}>Cancel</Button>
+                        <Button type="submit" variant="destructive" disabled={isDisposing}>
+                          {isDisposing ? "Processing..." : "Confirm Disposal"}
+                        </Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              )}
             </>
           )}
         </div>
