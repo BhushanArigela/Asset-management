@@ -1,4 +1,6 @@
 "use client";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 import { useState, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
@@ -12,6 +14,10 @@ import { RoomAssetsModal } from "./room-assets-modal";
 import { QrCode, Printer } from "lucide-react";
 
 export function RoomTab() {
+  const { data: session } = useSession();
+  const canCreateMaster = hasPermission(session?.user?.permissions, [PERMISSIONS.MASTERS_CREATE] as any);
+  const canEditMaster = hasPermission(session?.user?.permissions, [PERMISSIONS.MASTERS_EDIT] as any);
+
   const [data, setData] = useState<any[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
@@ -49,12 +55,12 @@ export function RoomTab() {
               <QrCode className="h-4 w-4" />
             </Button>
           )}
-          <Button variant="ghost" size="icon" onClick={() => {
+          {canEditMaster && (<Button variant="ghost" size="icon" onClick={() => {
             setSelectedRoom(row.original);
             setIsDialogOpen(true);
           }}>
             <Edit className="h-4 w-4" />
-          </Button>
+          </Button>)}
         </div>
       )
     }

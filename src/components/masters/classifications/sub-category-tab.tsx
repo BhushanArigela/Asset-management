@@ -1,4 +1,6 @@
 "use client";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 import { useState, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Plus, Edit } from "lucide-react";
@@ -8,6 +10,10 @@ import { Badge } from "@/components/ui/badge";
 import { SubCategoryFormDialog } from "./sub-category-form-dialog";
 
 export function SubCategoryTab() {
+  const { data: session } = useSession();
+  const canCreateMaster = hasPermission(session?.user?.permissions, [PERMISSIONS.MASTERS_CREATE] as any);
+  const canEditMaster = hasPermission(session?.user?.permissions, [PERMISSIONS.MASTERS_EDIT] as any);
+
   const [data, setData] = useState<any[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -28,14 +34,12 @@ export function SubCategoryTab() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => (
-        <Button variant="ghost" size="icon" onClick={() => {
+      cell: ({ row }) => (<>{canEditMaster && (<Button variant="ghost" size="icon" onClick={() => {
           setSelectedItem(row.original);
           setIsDialogOpen(true);
         }}>
           <Edit className="h-4 w-4" />
-        </Button>
-      )
+        </Button>)}</>)
     }
   ];
 
