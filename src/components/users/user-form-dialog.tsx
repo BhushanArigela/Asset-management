@@ -64,6 +64,7 @@ export function UserFormDialog({ open, onOpenChange, user, onSuccess }: UserForm
   const form = useForm({
     resolver: zodResolver(userSchema),
     defaultValues: {
+      id: user?.id || "",
       name: user?.name || "",
       email: user?.email || "",
       password: "",
