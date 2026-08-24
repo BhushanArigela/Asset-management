@@ -114,8 +114,8 @@ export default function ProfilePage() {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight text-[#1B2A4A]">My Profile</h2>
       </div>
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="col-span-1 lg:col-span-2">
+      <div className="w-full">
+        <Card className="w-full border-none shadow-sm">
           <CardHeader className="bg-[#1B2A4A] text-white rounded-t-lg mb-6 py-4">
             <CardTitle className="flex items-center gap-2 text-lg">
               <User className="h-5 w-5" />
