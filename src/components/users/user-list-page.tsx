@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Plus, Search, Edit, Trash, CheckCircle, XCircle } from "lucide-react";
+import { Plus, Search, Edit, Trash, CheckCircle, XCircle, MoreHorizontal } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -123,7 +123,7 @@ export function UserListPage() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
-                <Edit className="h-4 w-4" />
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
