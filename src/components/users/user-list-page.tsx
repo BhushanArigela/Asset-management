@@ -113,6 +113,11 @@ export function UserListPage() {
       header: "Actions",
       cell: ({ row }) => {
         const user = row.original;
+        
+        if (!canEditUser && !canDeleteUser) {
+          return null;
+        }
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
