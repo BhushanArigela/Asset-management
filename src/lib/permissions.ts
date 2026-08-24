@@ -9,6 +9,7 @@ export const MODULES = {
   REPORTS: "reports",
   AUDITS: "audits",
   AUDIT_LOGS: "audit_logs",
+  SETTINGS: "settings",
 } as const;
 
 // Permission action constants
@@ -21,6 +22,8 @@ export const ACTIONS = {
   EXPORT: "export",
   EXECUTE: "execute",
   COMPLETE: "complete",
+  DISPOSE: "dispose",
+  DAMAGE: "damage",
 } as const;
 
 // All permission definitions
@@ -51,6 +54,8 @@ export const PERMISSIONS = {
   ASSETS_DELETE: `${MODULES.ASSETS}.${ACTIONS.DELETE}`,
   ASSETS_IMPORT: `${MODULES.ASSETS}.${ACTIONS.IMPORT}`,
   ASSETS_EXPORT: `${MODULES.ASSETS}.${ACTIONS.EXPORT}`,
+  ASSETS_DISPOSE: `${MODULES.ASSETS}.${ACTIONS.DISPOSE}`,
+  ASSETS_DAMAGE: `${MODULES.ASSETS}.${ACTIONS.DAMAGE}`,
   VIEW_ASSET: `${MODULES.ASSETS}.${ACTIONS.VIEW}`,
   CREATE_ASSET: `${MODULES.ASSETS}.${ACTIONS.CREATE}`,
   EDIT_ASSET: `${MODULES.ASSETS}.${ACTIONS.EDIT}`,
@@ -79,6 +84,10 @@ export const PERMISSIONS = {
   // Audit Logs
   AUDIT_LOGS_VIEW: `${MODULES.AUDIT_LOGS}.${ACTIONS.VIEW}`,
   AUDIT_LOGS_EXPORT: `${MODULES.AUDIT_LOGS}.${ACTIONS.EXPORT}`,
+
+  // Settings
+  SETTINGS_VIEW: `${MODULES.SETTINGS}.${ACTIONS.VIEW}`,
+  SETTINGS_EDIT: `${MODULES.SETTINGS}.${ACTIONS.EDIT}`,
 } as const;
 
 export type PermissionCode = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
@@ -114,6 +123,8 @@ export const ALL_PERMISSIONS: Array<{
   { module: MODULES.ASSETS, action: ACTIONS.DELETE, description: "Delete assets" },
   { module: MODULES.ASSETS, action: ACTIONS.IMPORT, description: "Import assets from Excel" },
   { module: MODULES.ASSETS, action: ACTIONS.EXPORT, description: "Export assets to Excel" },
+  { module: MODULES.ASSETS, action: ACTIONS.DISPOSE, description: "Dispose assets" },
+  { module: MODULES.ASSETS, action: ACTIONS.DAMAGE, description: "Report asset damage" },
 
   // Maintenance
   { module: MODULES.MAINTENANCE, action: ACTIONS.VIEW, description: "View maintenance requests" },
@@ -137,6 +148,10 @@ export const ALL_PERMISSIONS: Array<{
   // Audit Logs
   { module: MODULES.AUDIT_LOGS, action: ACTIONS.VIEW, description: "View system audit logs" },
   { module: MODULES.AUDIT_LOGS, action: ACTIONS.EXPORT, description: "Export audit logs" },
+
+  // Settings
+  { module: MODULES.SETTINGS, action: ACTIONS.VIEW, description: "View system settings" },
+  { module: MODULES.SETTINGS, action: ACTIONS.EDIT, description: "Manage system settings" },
 ];
 
 /**
@@ -189,6 +204,7 @@ export function getModuleLabel(module: string): string {
     reports: "Reports",
     audits: "Asset Audits",
     audit_logs: "Audit Logs",
+    settings: "Settings",
   };
   return labels[module] || module;
 }
@@ -206,6 +222,8 @@ export function getActionLabel(action: string): string {
     export: "Export",
     execute: "Execute",
     complete: "Complete",
+    dispose: "Dispose",
+    damage: "Report Damage",
   };
   return labels[action] || action;
 }

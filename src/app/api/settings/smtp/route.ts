@@ -2,11 +2,17 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
+
 export async function GET(request: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!hasPermission(session.user.permissions, [PERMISSIONS.SETTINGS_VIEW] as any)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const config = await prisma.smtpConfig.findFirst();
@@ -30,6 +36,10 @@ export async function POST(request: Request) {
     const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!hasPermission(session.user.permissions, [PERMISSIONS.SETTINGS_EDIT] as any)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const data = await request.json();

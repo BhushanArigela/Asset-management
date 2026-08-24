@@ -17,7 +17,7 @@ export async function POST(
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (!hasPermission(session.user.permissions, [PERMISSIONS.ASSETS_EDIT] as any)) {
+    if (!hasPermission(session.user.permissions, [PERMISSIONS.ASSETS_DAMAGE] as any)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

@@ -23,6 +23,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 const navigation = [
   {
@@ -32,42 +34,50 @@ const navigation = [
   {
     title: "Asset Management",
     items: [
-      { title: "Assets", href: "/assets", icon: Package },
-      { title: "Maintenance", href: "/maintenance", icon: Wrench },
-      { title: "Movements", href: "/movements", icon: ArrowLeftRight },
+      { title: "Assets", href: "/assets", icon: Package, permission: PERMISSIONS.ASSETS_VIEW },
+      { title: "Maintenance", href: "/maintenance", icon: Wrench, permission: PERMISSIONS.MAINTENANCE_VIEW },
+      { title: "Movements", href: "/movements", icon: ArrowLeftRight, permission: PERMISSIONS.MOVEMENTS_VIEW },
     ],
   },
   {
     title: "Masters",
     items: [
-      { title: "Locations", href: "/masters/locations", icon: MapPin },
-      { title: "Classifications", href: "/masters/classifications", icon: Tags },
-      { title: "Vendors", href: "/masters/vendors", icon: Store },
+      { title: "Locations", href: "/masters/locations", icon: MapPin, permission: PERMISSIONS.MASTERS_VIEW },
+      { title: "Classifications", href: "/masters/classifications", icon: Tags, permission: PERMISSIONS.MASTERS_VIEW },
+      { title: "Vendors", href: "/masters/vendors", icon: Store, permission: PERMISSIONS.MASTERS_VIEW },
     ],
   },
   {
     title: "Reports",
-    items: [{ title: "Reports", href: "/reports", icon: BarChart3 }],
+    items: [{ title: "Reports", href: "/reports", icon: BarChart3, permission: PERMISSIONS.REPORTS_VIEW }],
   },
   {
     title: "Audits",
     items: [
-      { title: "Asset Audits", href: "/audits", icon: ClipboardCheck },
-      { title: "Audit Logs", href: "/audit-logs", icon: ScrollText },
+      { title: "Asset Audits", href: "/audits", icon: ClipboardCheck, permission: PERMISSIONS.AUDITS_VIEW },
+      { title: "Audit Logs", href: "/audit-logs", icon: ScrollText, permission: PERMISSIONS.AUDIT_LOGS_VIEW },
     ],
   },
   {
     title: "Administration",
     items: [
-      { title: "Users", href: "/users", icon: Users },
-      { title: "Roles", href: "/roles", icon: Lock },
-      { title: "Settings", href: "/settings", icon: Settings },
+      { title: "Users", href: "/users", icon: Users, permission: PERMISSIONS.USERS_VIEW },
+      { title: "Roles", href: "/roles", icon: Lock, permission: PERMISSIONS.ROLES_VIEW },
+      { title: "Settings", href: "/settings", icon: Settings, permission: PERMISSIONS.SETTINGS_VIEW },
     ],
   },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const userPermissions = session?.user?.permissions;
+
+  // Filter navigation based on permissions
+  const filteredNavigation = navigation.map(group => ({
+    ...group,
+    items: group.items.filter(item => !item.permission || hasPermission(userPermissions, item.permission))
+  })).filter(group => group.items.length > 0);
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-[#1c2d4a]">
@@ -80,7 +90,7 @@ export function Sidebar() {
       </div>
       <div className="flex flex-1 flex-col overflow-y-auto px-4 py-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <nav className="flex-1 space-y-8">
-          {navigation.map((group) => (
+          {filteredNavigation.map((group) => (
             <div key={group.title} className="space-y-2">
               <h4 className="text-[11px] font-bold uppercase tracking-wider text-[#8A99BA] px-4">
                 {group.title}
