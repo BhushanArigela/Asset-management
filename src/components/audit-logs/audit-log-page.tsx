@@ -15,7 +15,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Download, Search, Activity, ChevronDown, ChevronRight } from "lucide-react";
+import { Upload, Search, Activity, ChevronDown, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { hasPermission, PERMISSIONS } from "@/lib/permissions";
@@ -110,7 +110,7 @@ export function AuditLogPage() {
               <Button onClick={fetchLogs} variant="outline">Refresh</Button>
               {canExportLogs && (
                 <Button onClick={exportLogs} className="bg-[#1B2A4A]">
-                  <Download className="w-4 h-4 mr-2" /> Export Logs
+                  <Upload className="w-4 h-4 mr-2" /> Export Logs
                 </Button>
               )}
             </div>
