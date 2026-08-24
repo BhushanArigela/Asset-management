@@ -58,7 +58,7 @@ export default function SettingsPage() {
   useEffect(() => {
     async function loadSettings() {
       try {
-        const res = await fetch("/api/settings/smtp");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/settings/smtp`);
         if (res.ok) {
           const data = await res.json();
           if (data) {
@@ -86,7 +86,7 @@ export default function SettingsPage() {
   async function onSubmit(values: z.infer<typeof smtpFormSchema>) {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/settings/smtp", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/settings/smtp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
