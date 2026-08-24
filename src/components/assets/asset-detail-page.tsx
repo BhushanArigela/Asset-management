@@ -263,9 +263,10 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
 
       <Tabs defaultValue="overview" className="space-y-4 w-full">
         <div className="w-full overflow-x-auto pb-2">
-          <TabsList className="inline-flex w-max min-w-full justify-start">
+          <TabsList className="w-full flex justify-start overflow-x-auto pb-2 -mb-2 no-scrollbar bg-white p-1 rounded-md border shadow-sm">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="status-history">Status History</TabsTrigger>
             <TabsTrigger value="warranty">Warranty</TabsTrigger>
             <TabsTrigger value="amc">AMC</TabsTrigger>
             <TabsTrigger value="movements">Movement History</TabsTrigger>
@@ -420,6 +421,30 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                   ))}
                 </ul>
               ) : <p className="text-muted-foreground text-sm">No documents uploaded yet.</p>}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="status-history">
+          <Card>
+            <CardHeader><CardTitle>Status History</CardTitle></CardHeader>
+            <CardContent>
+              {asset.assetStatusChanges?.length ? (
+                <ul className="space-y-4 border-l-2 ml-4">
+                  {asset.assetStatusChanges.map((m: any) => (
+                    <li key={m.id} className="relative pl-6 pb-4 border-b last:border-0">
+                      <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-2"></div>
+                      <div className="font-semibold text-[#1B2A4A]">Changed on {formatDateTime(m.createdAt)} by {m.changedBy?.name || "System"}</div>
+                      <div className="text-sm mt-1 flex items-center">
+                        <Badge variant="outline" className="text-gray-500 line-through mr-2">{m.oldStatus?.name || "None"}</Badge>
+                        <ArrowRightLeft className="w-3 h-3 text-gray-400 mr-2" />
+                        <Badge>{m.newStatus?.name}</Badge>
+                      </div>
+                      {m.remarks && <div className="text-sm text-gray-600 mt-2 bg-gray-50 p-2 rounded-md italic">"{m.remarks}"</div>}
+                    </li>
+                  ))}
+                </ul>
+              ) : <p className="text-gray-500 italic text-sm">No status changes recorded.</p>}
             </CardContent>
           </Card>
         </TabsContent>
