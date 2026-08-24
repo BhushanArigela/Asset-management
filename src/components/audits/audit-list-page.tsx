@@ -10,8 +10,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useSession } from "next-auth/react";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 export function AuditListPage() {
+  const { data: session } = useSession();
+  const canCreateAudit = hasPermission(session?.user?.permissions, [PERMISSIONS.AUDITS_CREATE] as any);
+
   const [audits, setAudits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
@@ -63,11 +68,13 @@ export function AuditListPage() {
             </SelectContent>
           </Select>
         </div>
-        <Link href="/audits/new">
-          <Button className="bg-[#1B2A4A]">
-            <Plus className="w-4 h-4 mr-2" /> New Audit
-          </Button>
-        </Link>
+        {canCreateAudit && (
+          <Link href="/audits/new">
+            <Button className="bg-[#1B2A4A]">
+              <Plus className="w-4 h-4 mr-2" /> New Audit
+            </Button>
+          </Link>
+        )}
       </div>
 
       <Card>
