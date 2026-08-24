@@ -59,6 +59,12 @@ export function AssetListPage() {
 
   const canCreateMaintenance = hasPermission(session?.user?.permissions, [PERMISSIONS.CREATE_MAINTENANCE] as any);
   const canDeleteAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_DELETE] as any);
+  const canCreateAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_CREATE] as any);
+  const canEditAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_EDIT] as any);
+  const canImportAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_IMPORT] as any);
+  const canExportAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_EXPORT] as any);
+  const canTransferAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.MOVEMENTS_CREATE] as any);
+  const canMaintainAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.MAINTENANCE_CREATE] as any);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchTerm), 500);
@@ -109,17 +115,23 @@ export function AssetListPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-3xl font-bold tracking-tight">Assets</h2>
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <Button variant="outline" onClick={() => router.push("/assets/import")} className="flex-1 sm:flex-none">
-            <Download className="mr-2 h-4 w-4" />
-            Import
-          </Button>
-          <Button variant="outline" onClick={handleExport} className="flex-1 sm:flex-none">
-            <Upload className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-          <Button onClick={() => router.push("/assets/new")} className="w-full sm:w-auto">
-            <Plus className="mr-2 h-4 w-4" /> Register Asset
-          </Button>
+          {canImportAsset && (
+            <Button variant="outline" onClick={() => router.push("/assets/import")} className="flex-1 sm:flex-none">
+              <Download className="mr-2 h-4 w-4" />
+              Import
+            </Button>
+          )}
+          {canExportAsset && (
+            <Button variant="outline" onClick={handleExport} className="flex-1 sm:flex-none">
+              <Upload className="mr-2 h-4 w-4" />
+              Export
+            </Button>
+          )}
+          {canCreateAsset && (
+            <Button onClick={() => router.push("/assets/new")} className="w-full sm:w-auto">
+              <Plus className="mr-2 h-4 w-4" /> Register Asset
+            </Button>
+          )}
         </div>
       </div>
 
@@ -216,13 +228,17 @@ export function AssetListPage() {
                           <DropdownMenuItem onClick={() => router.push(`/assets/${asset.id}`)}>
                             <Eye className="mr-2 h-4 w-4" /> View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push(`/assets/${asset.id}/edit`)}>
-                            <Edit className="mr-2 h-4 w-4" /> Edit
-                          </DropdownMenuItem>
+                          {canEditAsset && (
+                            <DropdownMenuItem onClick={() => router.push(`/assets/${asset.id}/edit`)}>
+                              <Edit className="mr-2 h-4 w-4" /> Edit
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => router.push(`/movements/new?assetId=${asset.id}`)}>
-                            <ArrowRightLeft className="mr-2 h-4 w-4" /> Transfer
-                          </DropdownMenuItem>
+                          {canTransferAsset && (
+                            <DropdownMenuItem onClick={() => router.push(`/movements/new?assetId=${asset.id}`)}>
+                              <ArrowRightLeft className="mr-2 h-4 w-4" /> Transfer
+                            </DropdownMenuItem>
+                          )}
                           {canCreateMaintenance && (
                             <DropdownMenuItem onClick={() => router.push(`/maintenance/new?assetId=${asset.id}`)}>
                               <Wrench className="mr-2 h-4 w-4" /> Maintenance
