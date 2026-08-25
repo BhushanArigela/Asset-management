@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
+import { DataTable } from "@/components/ui/data-table";
 
 interface ReportViewerProps {
   type: string;
@@ -152,7 +153,7 @@ export function ReportViewer({ type }: ReportViewerProps) {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <CardTitle className="text-xl capitalize flex items-center gap-2">
             <FileText className="w-5 h-5 text-[#C5A55A]" /> 
             {type.replace(/-/g, " ")} Report
@@ -166,61 +167,11 @@ export function ReportViewer({ type }: ReportViewerProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-hidden">
-            <Table>
-              <TableHeader className="bg-slate-50">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">Loading...</TableCell>
-                  </TableRow>
-                ) : table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">No results.</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-          
-          <div className="flex items-center justify-end space-x-2 py-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-          </div>
+          {loading ? (
+            <div className="h-24 flex items-center justify-center border rounded-md text-muted-foreground">Loading report data...</div>
+          ) : (
+            <DataTable columns={columns} data={data} hideToolbar={true} />
+          )}
         </CardContent>
       </Card>
     </div>
