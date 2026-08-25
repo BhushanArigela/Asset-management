@@ -70,40 +70,47 @@ export function AuditListPage() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <div className="flex gap-2 items-center">
-          <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search audits..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="pl-8 w-[250px]"
-            />
-          </div>
-          <Select value={statusFilter} onValueChange={(val) => { setStatusFilter(val); setPage(1); }}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="w-4 h-4 mr-2" />
-              <SelectValue placeholder="Filter by Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="PLANNED">Planned</SelectItem>
-              <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-              <SelectItem value="COMPLETED">Completed</SelectItem>
-              <SelectItem value="LOCKED">Locked</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="flex items-center space-x-2">
+          <h2 className="text-3xl font-bold tracking-tight">Physical Audits</h2>
         </div>
-        {canCreateAudit && (
-          <Link href="/audits/new">
-            <Button className="bg-[#1B2A4A]">
-              <Plus className="w-4 h-4 mr-2" /> New Audit
-            </Button>
-          </Link>
-        )}
+        <div className="flex items-center space-x-2">
+          {canCreateAudit && (
+            <Link href="/audits/new">
+              <Button className="bg-[#1B2A4A] text-white">
+                <Plus className="w-4 h-4 mr-2" /> New Audit
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
 
       <Card>
+        <CardHeader className="py-4">
+          <div className="flex gap-2 items-center">
+            <div className="relative">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search audits..."
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                className="pl-8 w-[250px]"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={(val) => { setStatusFilter(val); setPage(1); }}>
+              <SelectTrigger className="w-[180px]">
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Filter by Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="PLANNED">Planned</SelectItem>
+                <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                <SelectItem value="COMPLETED">Completed</SelectItem>
+                <SelectItem value="LOCKED">Locked</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardHeader>
         <CardContent>
           <Table>
             <TableHeader className="bg-slate-50">
