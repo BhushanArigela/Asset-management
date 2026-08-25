@@ -1,4 +1,7 @@
+const fs = require('fs');
+let file = 'src/components/roles/role-form-dialog.tsx';
 
+let content = `
 "use client";
 
 import { useState, useEffect } from "react";
@@ -128,8 +131,8 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
     if (open) {
       setExpandedModules({ "ASSETS": true });
       Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/permissions`).then(r => r.json()),
-        isEdit ? fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/roles/${role.id}`).then(r => r.json()) : Promise.resolve(null)
+        fetch(\`\${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/permissions\`).then(r => r.json()),
+        isEdit ? fetch(\`\${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/roles/\${role.id}\`).then(r => r.json()) : Promise.resolve(null)
       ]).then(([permsData, roleData]) => {
         setPermissionsMap(permsData);
         if (roleData) {
@@ -155,7 +158,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
   const onSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const url = isEdit ? `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/roles/${role.id}` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/roles";
+      const url = isEdit ? \`\${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/roles/\${role.id}\` : (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/api/roles";
       const method = isEdit ? "PUT" : "POST";
       
       const res = await fetch(url, {
@@ -166,7 +169,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
       
       if (!res.ok) throw new Error("Failed to save role");
       
-      toast.success(`Role ${isEdit ? "updated" : "created"} successfully`);
+      toast.success(\`Role \${isEdit ? "updated" : "created"} successfully\`);
       onSuccess();
     } catch (error: any) {
       toast.error(error.message);
@@ -308,7 +311,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
                                 onClick={() => toggleModule(module)}
                               >
                                 <div className="flex items-center gap-4">
-                                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${getModuleBg(module)}`}>
+                                  <div className={\`w-10 h-10 rounded-xl flex items-center justify-center \${getModuleBg(module)}\`}>
                                     {getModuleIcon(module)}
                                   </div>
                                   <div>
@@ -317,7 +320,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-4">
-                                  <div className={`px-3 py-1 rounded-full text-[12px] font-bold ${getModuleColor(module)}`}>
+                                  <div className={\`px-3 py-1 rounded-full text-[12px] font-bold \${getModuleColor(module)}\`}>
                                     {selectedCount} / {totalCount} selected
                                   </div>
                                   {isExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
@@ -335,7 +338,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
                                           {groupPerms.map((p: any) => (
                                             <div key={p.id} className="flex items-center space-x-3">
                                               <Checkbox
-                                                id={`perm-${p.id}`}
+                                                id={\`perm-\${p.id}\`}
                                                 checked={field.value?.includes(p.id)}
                                                 onCheckedChange={(checked) => {
                                                   if (checked) field.onChange([...(field.value || []), p.id]);
@@ -343,7 +346,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
                                                 }}
                                                 className="data-[state=checked]:bg-[#2563eb] data-[state=checked]:border-[#2563eb] rounded-[4px] w-5 h-5"
                                               />
-                                              <label htmlFor={`perm-${p.id}`} className="text-[14px] text-gray-800 cursor-pointer font-medium select-none">
+                                              <label htmlFor={\`perm-\${p.id}\`} className="text-[14px] text-gray-800 cursor-pointer font-medium select-none">
                                                 {capitalize(p.action)}
                                               </label>
                                             </div>
@@ -385,3 +388,6 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
     </Dialog>
   );
 }
+`;
+fs.writeFileSync(file, content);
+console.log("Done");
