@@ -170,23 +170,23 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
           {!asset.isDisposed && (
             <>
               {canEditAsset && (
-                <Button variant="outline" onClick={() => router.push(`/assets/${asset.id}/edit`)}>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white border-0" onClick={() => router.push(`/assets/${asset.id}/edit`)}>
                   <Edit className="mr-2 h-4 w-4" /> Edit
                 </Button>
               )}
               {canTransferAsset && (
-                <Button variant="outline" onClick={() => router.push(`/movements/new?assetId=${asset.id}`)}>
+                <Button className="bg-emerald-500 hover:bg-emerald-600 text-white border-0" onClick={() => router.push(`/movements/new?assetId=${asset.id}`)}>
                   <ArrowRightLeft className="mr-2 h-4 w-4" /> Transfer
                 </Button>
               )}
               {canMaintainAsset && (
-                <Button variant="outline" onClick={() => router.push(`/maintenance/new?assetId=${asset.id}`)}>
+                <Button className="bg-amber-500 hover:bg-amber-600 text-white border-0" onClick={() => router.push(`/maintenance/new?assetId=${asset.id}`)}>
                   <Wrench className="mr-2 h-4 w-4" /> Maintenance
                 </Button>
               )}
-              <Button variant="outline" onClick={() => setQrModalOpen(true)}>
-                <QrCode className="mr-2 h-4 w-4" /> Print QR
-              </Button>
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white border-0" onClick={() => setQrModalOpen(true)}>
+                  <QrCode className="mr-2 h-4 w-4" /> Print QR
+                </Button>
               {canDamageAsset && asset.status?.name !== "Damaged" && (
                 <Button variant="outline" className="text-orange-600 border-orange-200 hover:bg-orange-50 hover:text-orange-700" onClick={() => setDamageOpen(true)}>
                   <AlertTriangle className="mr-2 h-4 w-4" /> Report Damage
@@ -298,11 +298,11 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
               </div>
             )}
             <div className={`grid gap-4 md:grid-cols-2 w-full content-start ${!asset.imageUrl ? 'lg:grid-cols-3' : ''}`}>
-              <Card>
+              <Card className="shadow-none border">
               <CardHeader>
                 <CardTitle>Basic Info</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-2 text-sm">
                 <div><span className="font-semibold">Code:</span> {asset.assetCode}</div>
                 <div><span className="font-semibold">Serial:</span> {asset.serialNumber || "N/A"}</div>
                 <div><span className="font-semibold">Category:</span> {asset.category?.name}</div>
@@ -317,11 +317,11 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="shadow-none border">
               <CardHeader>
                 <CardTitle>Location</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-2 text-sm">
                 <div><span className="font-semibold">Company:</span> {asset.company?.name}</div>
                 <div><span className="font-semibold">Building:</span> {asset.building?.name}</div>
                 <div><span className="font-semibold">Floor:</span> {asset.floor?.name}</div>
@@ -330,11 +330,11 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="shadow-none border">
               <CardHeader>
                 <CardTitle>Purchase Info</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-2 text-sm">
                 <div><span className="font-semibold">Purchase Date:</span> {asset.purchaseDate ? formatDateTime(asset.purchaseDate) : "N/A"}</div>
                 <div><span className="font-semibold">Cost:</span> {asset.purchaseCost || "N/A"}</div>
                 <div><span className="font-semibold">Vendor:</span> {asset.vendor?.name || "N/A"}</div>
@@ -347,7 +347,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                 <CardHeader>
                   <CardTitle className="text-red-700">Disposal Info</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="space-y-2 text-sm">
                   <div><span className="font-semibold">Disposal Date:</span> {formatDateTime(asset.assetDisposal.disposalDate)}</div>
                   <div><span className="font-semibold">Method:</span> {asset.assetDisposal.method}</div>
                   <div><span className="font-semibold">Reason:</span> {asset.assetDisposal.reason}</div>
@@ -377,7 +377,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
         </TabsContent>
 
         <TabsContent value="documents">
-          <Card>
+          <Card className="shadow-none border">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Documents</CardTitle>
               <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
@@ -417,7 +417,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                 </DialogContent>
               </Dialog>
             </CardHeader>
-            <CardContent>
+            <CardContent className="text-sm">
               {asset.assetDocuments?.length ? (
                 <ul className="space-y-2">
                   {asset.assetDocuments.map((doc: any) => (
@@ -439,9 +439,9 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
         </TabsContent>
 
         <TabsContent value="status-history">
-          <Card>
+          <Card className="shadow-none border">
             <CardHeader><CardTitle>Status History</CardTitle></CardHeader>
-            <CardContent>
+            <CardContent className="text-sm">
               {asset.assetStatusChanges?.length ? (
                 <ul className="space-y-4 border-l-2 ml-4">
                   {asset.assetStatusChanges.map((m: any) => (
@@ -516,7 +516,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                 })}
               </div>
             ) : (
-              <Card>
+              <Card className="shadow-none border">
                 <CardContent className="flex flex-col items-center justify-center h-40 text-muted-foreground">
                   <Shield className="h-8 w-8 mb-2 opacity-20" />
                   <p>No warranties recorded for this asset.</p>
@@ -583,7 +583,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                 })}
               </div>
             ) : (
-              <Card>
+              <Card className="shadow-none border">
                 <CardContent className="flex flex-col items-center justify-center h-40 text-muted-foreground">
                   <FileText className="h-8 w-8 mb-2 opacity-20" />
                   <p>No AMCs recorded for this asset.</p>
@@ -594,9 +594,9 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
         </TabsContent>
 
         <TabsContent value="movements">
-          <Card>
+          <Card className="shadow-none border">
             <CardHeader><CardTitle>Movement History</CardTitle></CardHeader>
-            <CardContent>
+            <CardContent className="text-sm">
               {asset.assetMovements?.length ? (
                 <ul className="space-y-4 border-l-2 ml-4">
                   {asset.assetMovements.map((m: any) => (
@@ -619,9 +619,9 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
         </TabsContent>
 
         <TabsContent value="maintenance">
-          <Card>
+          <Card className="shadow-none border">
             <CardHeader><CardTitle>Maintenance Requests</CardTitle></CardHeader>
-            <CardContent>
+            <CardContent className="text-sm">
               {asset.maintenanceRequests?.length ? (
                 <div className="space-y-6">
                   {asset.maintenanceRequests.map((mr: any) => (
