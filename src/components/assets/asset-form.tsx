@@ -346,7 +346,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                 />
               </div>
               <div>
-                <FormLabel className="mb-2 block">Asset Image (Optional)</FormLabel>
+                <FormLabel className="mb-1 block">Asset Image (Optional)</FormLabel>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {/* Upload Box */}
                   <div className="border-2 border-dashed border-blue-200 rounded-xl bg-blue-50/30 flex flex-col items-center justify-center py-8 relative hover:bg-blue-50/50 transition-colors cursor-pointer group">
