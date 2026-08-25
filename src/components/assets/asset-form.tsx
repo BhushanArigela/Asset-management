@@ -303,13 +303,13 @@ export function AssetForm({ initialData }: { initialData?: any }) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           
           <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-2 px-6 border-b border-gray-100">
               <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
                 <FileText className="w-4 h-4 text-blue-600" />
               </div>
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Basic Information</CardTitle>
             </CardHeader>
-            <CardContent className="p-6 space-y-3">
+            <CardContent className="p-3 space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <FormField
                   control={form.control}
@@ -346,7 +346,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                 />
               </div>
               <div>
-                <FormLabel className="mb-1 block">Asset Image (Optional)</FormLabel>
+                <FormLabel className="block">Asset Image (Optional)</FormLabel>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {/* Upload Box */}
                   <div className="border-2 border-dashed border-blue-200 rounded-xl bg-blue-50/30 flex flex-col items-center justify-center py-8 relative hover:bg-blue-50/50 transition-colors cursor-pointer group">
@@ -387,13 +387,13 @@ export function AssetForm({ initialData }: { initialData?: any }) {
           </Card>
 
           <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-2 px-6 border-b border-gray-100">
               <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
                 <Tags className="w-4 h-4 text-blue-600" />
               </div>
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Classification</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <FormField
                   control={form.control}
@@ -448,13 +448,13 @@ export function AssetForm({ initialData }: { initialData?: any }) {
           </Card>
 
           <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-2 px-6 border-b border-gray-100">
               <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
                 <MapPin className="w-4 h-4 text-blue-600" />
               </div>
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Location & Assignment</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <FormField
                   control={form.control}
@@ -557,13 +557,13 @@ export function AssetForm({ initialData }: { initialData?: any }) {
           </Card>
 
           <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-2 px-6 border-b border-gray-100">
               <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
                 <ShieldCheck className="w-4 h-4 text-blue-600" />
               </div>
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Status & Condition</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <FormField
                   control={form.control}
@@ -602,13 +602,13 @@ export function AssetForm({ initialData }: { initialData?: any }) {
           </Card>
 
           <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-2 px-6 border-b border-gray-100">
               <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
                 <ShoppingCart className="w-4 h-4 text-blue-600" />
               </div>
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Purchase & Vendor Details</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <FormField
                   control={form.control}
@@ -676,7 +676,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden border">
-              <CardContent className="p-4 space-y-3">
+              <CardContent className="p-3 space-y-3">
                 <FormField
                   control={form.control}
                   name="warrantyApplicable"
@@ -729,7 +729,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
             </Card>
 
             <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden border">
-              <CardContent className="p-4 space-y-3">
+              <CardContent className="p-3 space-y-3">
                 <FormField
                   control={form.control}
                   name="amcApplicable"
@@ -788,13 +788,13 @@ export function AssetForm({ initialData }: { initialData?: any }) {
           </div>
 
           <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-2 px-6 border-b border-gray-100">
               <div className="w-8 h-8 rounded-lg bg-pink-50 flex items-center justify-center">
                 <AlignLeft className="w-4 h-4 text-pink-500" />
               </div>
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Additional Description & Notes</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <FormField
                 control={form.control}
                 name="description"
@@ -811,7 +811,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
           </Card>
 
           <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
+            <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-2 px-6 border-b border-gray-100">
               <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
                 <Paperclip className="w-4 h-4 text-blue-600" />
               </div>
@@ -820,7 +820,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                 <p className="text-xs text-gray-500">Upload invoices, manuals, or certificates. They will be saved when you submit the form.</p>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <div className="flex flex-col md:flex-row items-end gap-3">
                 <div className="space-y-2 flex-1 w-full">
                   <FormLabel>Document Type</FormLabel>
@@ -880,7 +880,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
             </CardContent>
           </Card>
 
-          <div className="flex justify-end items-center gap-3 pt-4 pb-12">
+          <div className="flex justify-end items-center gap-3 pt-3 pb-12">
             <Button type="button" variant="outline" className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50 px-6 font-semibold" onClick={() => router.back()}>Cancel</Button>
             <Button type="submit" disabled={isSubmitting} className="bg-[#1d4ed8] hover:bg-blue-700 text-white px-8 font-semibold shadow-sm">
               {isSubmitting ? "Saving..." : (initialData ? "Save Changes" : "Register Asset")}

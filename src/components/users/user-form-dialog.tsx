@@ -200,7 +200,7 @@ export function UserFormDialog({ open, onOpenChange, user, onSuccess }: UserForm
               control={form.control}
               name="isActive"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
@@ -213,7 +213,7 @@ export function UserFormDialog({ open, onOpenChange, user, onSuccess }: UserForm
                 </FormItem>
               )}
             />
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-end pt-3">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="mr-2">
                 Cancel
               </Button>

@@ -118,7 +118,7 @@ export function CategoryFormDialog({ open, onOpenChange, onSuccess, initialData 
               control={form.control}
               name="isActive"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center space-x-2 space-y-0 pt-4">
+                <FormItem className="flex flex-row items-center space-x-2 space-y-0 pt-3">
                   <FormControl>
                     <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
@@ -127,7 +127,7 @@ export function CategoryFormDialog({ open, onOpenChange, onSuccess, initialData 
               )}
             />
             
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-end pt-3">
               <Button type="button" variant="outline" className="mr-2" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>

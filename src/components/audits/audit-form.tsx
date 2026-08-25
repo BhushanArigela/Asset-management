@@ -95,7 +95,7 @@ export function AuditForm({ userId }: { userId: string }) {
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent className="pt-3">
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="space-y-2">
             <Label htmlFor="name">Audit Name</Label>
@@ -205,7 +205,7 @@ export function AuditForm({ userId }: { userId: string }) {
             />
           </div>
 
-          <div className="pt-4 flex justify-end gap-2">
+          <div className="pt-3 flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
             <Button type="submit" className="bg-[#1B2A4A]" disabled={loading}>
               {loading ? "Creating..." : "Create Audit"}

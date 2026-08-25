@@ -125,7 +125,7 @@ export function MovementForm() {
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent className="pt-3">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -228,7 +228,7 @@ export function MovementForm() {
                 <FormItem className="md:col-span-2"><FormLabel>Remarks</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
               )} />
             </div>
-            <div className="flex justify-end gap-2 pt-4">
+            <div className="flex justify-end gap-2 pt-3">
               <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
               <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Transferring..." : "Transfer"}</Button>
             </div>

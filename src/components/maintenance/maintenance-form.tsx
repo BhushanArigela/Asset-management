@@ -69,7 +69,7 @@ export function MaintenanceForm() {
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent className="pt-3">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -115,7 +115,7 @@ export function MaintenanceForm() {
             <FormField control={form.control} name="problemDescription" render={({ field }) => (
               <FormItem><FormLabel>Problem Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
             )} />
-            <div className="flex justify-end gap-2 pt-4">
+            <div className="flex justify-end gap-2 pt-3">
               <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
               <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Submitting..." : "Submit Request"}</Button>
             </div>

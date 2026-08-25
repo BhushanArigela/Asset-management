@@ -155,7 +155,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
                       const someSelected = modulePermIds.some((id: string) => currentVal.includes(id)) && !allSelected;
 
                       return (
-                        <div key={module} className="border p-4 rounded-md">
+                        <div key={module} className="border p-3 rounded-md">
                           <div className="flex items-center space-x-2 mb-4 border-b pb-2">
                             <Checkbox 
                               checked={allSelected ? true : someSelected ? "indeterminate" : false}
@@ -185,7 +185,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
               />
             </div>
 
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-end pt-3">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="mr-2">Cancel</Button>
               <Button type="submit" disabled={loading} className="bg-[#1B2A4A] text-white">Save</Button>
             </div>

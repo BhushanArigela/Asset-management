@@ -259,7 +259,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                         <Label>Supporting Document</Label>
                         <Input type="file" onChange={(e) => setDisposeFile(e.target.files?.[0] || null)} />
                       </div>
-                      <div className="flex justify-end pt-4 space-x-2">
+                      <div className="flex justify-end pt-3 space-x-2">
                         <Button type="button" variant="outline" onClick={() => setDisposeOpen(false)}>Cancel</Button>
                         <Button type="submit" variant="destructive" disabled={isDisposing}>
                           {isDisposing ? "Processing..." : "Confirm Disposal"}
@@ -355,7 +355,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                   <div><span className="font-semibold">Ref:</span> {asset.assetDisposal.approvalRef || "N/A"}</div>
                   <div><span className="font-semibold">Disposed By:</span> {asset.assetDisposal.disposedBy?.name}</div>
                   {asset.assetDisposal.disposalDocuments && asset.assetDisposal.disposalDocuments.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-red-200">
+                    <div className="mt-4 pt-3 border-t border-red-200">
                       <span className="font-semibold block mb-2">Supporting Documents:</span>
                       <ul className="space-y-2">
                         {asset.assetDisposal.disposalDocuments.map((doc: any) => (
@@ -488,7 +488,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                           </Badge>
                         </div>
                       </CardHeader>
-                      <CardContent className="pt-4 space-y-3 text-sm">
+                      <CardContent className="pt-3 space-y-3 text-sm">
                         <div className="grid grid-cols-2 gap-2 text-muted-foreground">
                           <div>
                             <span className="flex items-center mb-1"><CalendarDays className="mr-1 h-3 w-3" /> Start Date</span>
@@ -552,7 +552,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                           </Badge>
                         </div>
                       </CardHeader>
-                      <CardContent className="pt-4 space-y-3 text-sm">
+                      <CardContent className="pt-3 space-y-3 text-sm">
                         <div className="grid grid-cols-2 gap-2 text-muted-foreground">
                           <div>
                             <span className="flex items-center mb-1"><CalendarDays className="mr-1 h-3 w-3" /> Start Date</span>
@@ -626,7 +626,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                 <div className="-y-3">
                   {asset.maintenanceRequests.map((mr: any) => (
                     <div key={mr.id} className="border rounded-lg overflow-hidden relative">
-                      <div className="bg-slate-50 p-4 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                      <div className="bg-slate-50 p-3 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
                           <div className="font-semibold text-lg">{mr.requestNumber}</div>
                           <div className="text-sm text-slate-500 mt-1">{mr.description}</div>
@@ -649,14 +649,14 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="sm:hidden absolute top-4 right-4 h-8"
+                            className="sm:hidden absolute top-3 right-4 h-8"
                             onClick={() => router.push(`/maintenance/${mr.id}`)}
                           >
                             Update
                           </Button>
                         )}
                       </div>
-                      <div className="p-4 bg-white">
+                      <div className="p-3 bg-white">
                         <h4 className="text-sm font-semibold text-slate-700 mb-3">Updates History</h4>
                         {mr.updates && mr.updates.length > 0 ? (
                           <div className="space-y-3 pl-2 border-l-2 border-slate-100 ml-2">

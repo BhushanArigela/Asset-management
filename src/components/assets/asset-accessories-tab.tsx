@@ -191,7 +191,7 @@ export function AssetAccessoriesTab({ assetId, accessories }: { assetId: string;
       </Card>
 
       <Dialog open={qrModalOpen} onOpenChange={setQrModalOpen}>
-        <DialogContent className="sm:max-w-md flex flex-col items-center justify-center p-6">
+        <DialogContent className="sm:max-w-md flex flex-col items-center justify-center p-3">
           <DialogHeader>
             <DialogTitle className="text-center">Accessory QR Code</DialogTitle>
           </DialogHeader>
