@@ -31,11 +31,13 @@ import { cn } from "@/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  hideToolbar?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  hideToolbar = false,
 }: DataTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
@@ -59,17 +61,15 @@ export function DataTable<TData, TValue>({
   // Decide which columns to hide on mobile
   const isMobileHidden = (index: number, total: number) => {
     // Keep first column (index 0) and last column (actions, index total - 1) visible.
-    // Also keep second column if total > 3 to match screenshot format.
     if (index === 0) return false;
     if (index === total - 1) return false;
-    if (index === 1 && total > 3) return false;
     return true;
   };
 
   return (
     <Card>
       <CardContent className="p-6">
-        <div className="flex items-center pb-4">
+        {!hideToolbar && (<div className="flex items-center pb-4">
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
             className="pl-8"
           />
         </div>
-      </div>
+      </div>)}
       <div>
         <Table>
           <TableHeader>
@@ -168,7 +168,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between py-4">
+      {!hideToolbar && (<div className="flex flex-col sm:flex-row sm:items-center justify-between py-4 gap-4">
         <div className="text-sm text-muted-foreground">
           Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to {Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, table.getFilteredRowModel().rows.length)} of {table.getFilteredRowModel().rows.length} entries
         </div>
@@ -190,7 +190,7 @@ export function DataTable<TData, TValue>({
             Next
           </Button>
         </div>
-      </div>
+      </div>)}
     </CardContent>
   </Card>
 );
