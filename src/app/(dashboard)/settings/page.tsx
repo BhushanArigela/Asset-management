@@ -312,8 +312,8 @@ export default function SettingsPage() {
                   )}
                 />
 
-                <div className="flex items-center gap-4 pt-6">
-                  {canEditSettings && (<Button type="submit" disabled={isLoading} className="bg-[#2563eb] hover:bg-blue-700 text-white px-6 py-6 rounded-[12px] font-semibold text-[15px]">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-6">
+                  {canEditSettings && (<Button type="submit" disabled={isLoading} className="bg-[#2563eb] hover:bg-blue-700 text-white px-6 py-6 rounded-[12px] font-semibold text-[15px] w-full sm:w-auto">
                     {isLoading ? (
                       "Saving..."
                     ) : (
@@ -323,7 +323,7 @@ export default function SettingsPage() {
                       </>
                     )}
                   </Button>)}
-                  <Button type="button" variant="outline" className="px-6 py-6 rounded-[12px] font-semibold text-[15px] border-input text-gray-800 bg-white hover:bg-gray-50" onClick={() => toast.info("Test connection functionality coming soon")}>
+                  <Button type="button" variant="outline" className="px-6 py-6 rounded-[12px] font-semibold text-[15px] border-input text-gray-800 bg-white hover:bg-gray-50 w-full sm:w-auto" onClick={() => toast.info("Test connection functionality coming soon")}>
                     <RefreshCw className="mr-2 h-5 w-5 text-gray-600" />
                     Test Connection
                   </Button>
