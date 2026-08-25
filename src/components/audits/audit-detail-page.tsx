@@ -149,7 +149,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
             </TabsList>
             
             <TabsContent value="expected">
-              <div className="overflow-x-auto">
+              <div>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -225,7 +225,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
             </TabsContent>
             
             <TabsContent value="results">
-              <div className="overflow-x-auto">
+              <div>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -293,8 +293,8 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
               {discrepancies.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">No discrepancies found.</div>
               ) : (
-                <div className="overflow-x-auto">
-                  <Table>
+                <div>
+                <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>Asset Code</TableHead>

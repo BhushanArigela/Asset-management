@@ -175,7 +175,7 @@ export function ImportPage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="max-h-[500px] overflow-auto">
+            <div className="max-h-[500px]">
               <Table>
                 <TableHeader>
                   <TableRow>
