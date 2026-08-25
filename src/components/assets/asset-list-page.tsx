@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Plus, Download, Upload, Search, MoreHorizontal, 
@@ -158,11 +158,11 @@ export function AssetListPage() {
               <TableRow>
                 <TableHead>Code</TableHead>
                 <TableHead>Photo</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Condition</TableHead>
+                <TableHead className="hidden md:table-cell">Name</TableHead>
+                <TableHead className="hidden md:table-cell">Category</TableHead>
+                <TableHead className="hidden md:table-cell">Location</TableHead>
+                <TableHead className="hidden md:table-cell">Status</TableHead>
+                <TableHead className="hidden md:table-cell">Condition</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -187,8 +187,19 @@ export function AssetListPage() {
                 </TableRow>
               ) : (
                 assets.map((asset) => (
-                  <TableRow key={asset.id}>
-                    <TableCell className="font-medium">{asset.assetCode}</TableCell>
+                  <React.Fragment key={asset.id}>
+                    <TableRow>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        <button 
+                          className="md:hidden focus:outline-none shrink-0"
+                          onClick={() => toggleRow(asset.id)}
+                        >
+                          {expandedRows[asset.id] ? <MinusCircle className="w-[18px] h-[18px] fill-[#ef4444] text-white border-none" /> : <PlusCircle className="w-[18px] h-[18px] fill-[#16a34a] text-white border-none" />}
+                        </button>
+                        {asset.assetCode}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       {asset.imageUrl ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
@@ -200,17 +211,17 @@ export function AssetListPage() {
                         <div className="h-10 w-10 bg-muted rounded-md border flex items-center justify-center text-xs text-muted-foreground">No img</div>
                       )}
                     </TableCell>
-                    <TableCell>{asset.name}</TableCell>
-                    <TableCell>{asset.category?.name}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">{asset.name}</TableCell>
+                    <TableCell className="hidden md:table-cell">{asset.category?.name}</TableCell>
+                    <TableCell className="hidden md:table-cell">
                       {asset.building?.name} {asset.floor?.name ? `> ${asset.floor.name}` : ""} {asset.room?.name ? `> ${asset.room.name}` : ""}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       <Badge variant="outline" style={{ borderColor: asset.status?.colorCode, color: asset.status?.colorCode }}>
                         {asset.status?.name}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       <Badge variant="outline" style={{ borderColor: asset.condition?.colorCode, color: asset.condition?.colorCode }}>
                         {asset.condition?.name}
                       </Badge>
@@ -260,8 +271,45 @@ export function AssetListPage() {
                           )}
                         </DropdownMenuContent>
                       </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
+                      </TableCell>
+                    </TableRow>
+                    {expandedRows[asset.id] && (
+                      <TableRow className="md:hidden bg-green-50/30">
+                        <TableCell colSpan={3}>
+                          <div className="py-2 space-y-3 px-2">
+                            <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                              <div className="font-semibold text-sm text-[#1B2A4A]">Name</div>
+                              <div className="col-span-2 text-sm text-gray-700">{asset.name}</div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                              <div className="font-semibold text-sm text-[#1B2A4A]">Category</div>
+                              <div className="col-span-2 text-sm text-gray-700">{asset.category?.name}</div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                              <div className="font-semibold text-sm text-[#1B2A4A]">Location</div>
+                              <div className="col-span-2 text-sm text-gray-700">{asset.building?.name} {asset.floor?.name ? `> ${asset.floor.name}` : ""} {asset.room?.name ? `> ${asset.room.name}` : ""}</div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                              <div className="font-semibold text-sm text-[#1B2A4A]">Status</div>
+                              <div className="col-span-2 text-sm text-gray-700">
+                                <Badge variant="outline" style={{ borderColor: asset.status?.colorCode, color: asset.status?.colorCode }}>
+                                  {asset.status?.name}
+                                </Badge>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="font-semibold text-sm text-[#1B2A4A]">Condition</div>
+                              <div className="col-span-2 text-sm text-gray-700">
+                                <Badge variant="outline" style={{ borderColor: asset.condition?.colorCode, color: asset.condition?.colorCode }}>
+                                  {asset.condition?.name}
+                                </Badge>
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
                 ))
               )}
             </TableBody>
