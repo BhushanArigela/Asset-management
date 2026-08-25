@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { 
   Plus, Download, Upload, Search, MoreHorizontal, 
   Eye, Edit, ArrowRightLeft, Wrench, QrCode, Trash2 
-} from "lucide-react";
+, PlusCircle, MinusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -48,6 +48,8 @@ interface Asset {
 }
 
 export function AssetListPage() {
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const toggleRow = (id: string) => setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
   const { data: session } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();

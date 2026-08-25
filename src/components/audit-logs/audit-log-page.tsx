@@ -131,11 +131,11 @@ export function AuditLogPage() {
                 <TableRow>
                   <TableHead className="w-10"></TableHead>
                   <TableHead>Timestamp</TableHead>
-                  <TableHead>User</TableHead>
-                  <TableHead>Module</TableHead>
-                  <TableHead>Action</TableHead>
-                  <TableHead>Entity</TableHead>
-                  <TableHead>IP Address</TableHead>
+                  <TableHead className="hidden md:table-cell">User</TableHead>
+                  <TableHead className="hidden md:table-cell">Module</TableHead>
+                  <TableHead className="hidden md:table-cell">Action</TableHead>
+                  <TableHead className="hidden md:table-cell">Entity</TableHead>
+                  <TableHead className="hidden md:table-cell">IP Address</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -157,7 +157,7 @@ export function AuditLogPage() {
                         <TableCell className="font-medium whitespace-nowrap">
                           {format(new Date(log.createdAt), "MMM d, yyyy HH:mm:ss")}
                         </TableCell>
-                        <TableCell>{log.user?.name || log.userId}</TableCell>
+                        <TableCell className="hidden md:table-cell">{log.user?.name || log.userId}</TableCell>
                         <TableCell>
                           <span className="px-2 py-1 bg-slate-100 text-xs font-semibold rounded-md">
                             {log.module}
@@ -204,12 +204,34 @@ export function AuditLogPage() {
                             return log.entityId ? `${type} (${log.entityId.substring(0, 8)})` : type;
                           })()
                         }</TableCell>
-                        <TableCell className="text-muted-foreground text-sm">{log.ipAddress || 'N/A'}</TableCell>
+                        <TableCell className="hidden md:table-cell text-muted-foreground text-sm">{log.ipAddress || 'N/A'}</TableCell>
                       </TableRow>
                       {expandedRows[log.id] && (
                         <TableRow className="bg-slate-50">
                           <TableCell colSpan={7}>
-                            <div className="p-4 grid grid-cols-2 gap-4 text-sm font-mono bg-slate-900 text-green-400 rounded-md overflow-x-auto">
+                            <div className="md:hidden py-3 space-y-3 px-2 mb-4">
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">User</div>
+                                  <div className="col-span-2 text-sm text-gray-700">{log.user?.name || log.userId}</div>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">Module</div>
+                                  <div className="col-span-2 text-sm text-gray-700"><span className="px-2 py-1 bg-slate-100 text-xs font-semibold rounded-md">{log.module}</span></div>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">Action</div>
+                                  <div className="col-span-2 text-sm text-gray-700"><Badge variant="outline" className={getActionColor(log.action)}>{log.action}</Badge></div>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">Entity ID</div>
+                                  <div className="col-span-2 font-mono text-xs text-gray-700">{log.entityId}</div>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">IP Address</div>
+                                  <div className="col-span-2 text-sm text-gray-700">{log.ipAddress || 'N/A'}</div>
+                                </div>
+                              </div>
+                              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm font-mono bg-slate-900 text-green-400 rounded-md overflow-x-auto">
                               <div>
                                 <h4 className="text-slate-400 mb-2 border-b border-slate-700 pb-1">Previous Value</h4>
                                 <pre>{log.previousValue ? JSON.stringify(log.previousValue, null, 2) : 'null'}</pre>
