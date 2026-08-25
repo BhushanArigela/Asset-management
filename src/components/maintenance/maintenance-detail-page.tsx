@@ -72,7 +72,7 @@ export function MaintenanceDetailPage({ id }: { id: string }) {
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-20">
-      <div className="flex justify-between items-center bg-white p-6 rounded-lg shadow-sm border">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-lg shadow-sm border">
         <div>
           <div className="text-sm text-muted-foreground font-medium mb-1">Request {mr.requestNumber}</div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-800">{mr.asset?.name} ({mr.asset?.assetCode})</h2>
