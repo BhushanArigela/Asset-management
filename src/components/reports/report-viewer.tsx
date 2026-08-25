@@ -166,7 +166,7 @@ export function ReportViewer({ type }: ReportViewerProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border overflow-hidden">
+          <div className="overflow-hidden">
             <Table>
               <TableHeader className="bg-slate-50">
                 {table.getHeaderGroups().map((headerGroup) => (

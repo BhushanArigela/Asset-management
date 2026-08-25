@@ -113,7 +113,7 @@ export function RoomAssetsModal({ room, open, onOpenChange }: { room: any, open:
           </Button>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto mt-4 border rounded-md">
+        <div className="flex-1 overflow-auto mt-4">
           <Table>
             <TableHeader className="sticky top-0 bg-white z-10 shadow-sm">
               <TableRow>

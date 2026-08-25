@@ -125,7 +125,7 @@ export function AuditLogPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div>
             <Table>
               <TableHeader className="bg-slate-50">
                 <TableRow>
