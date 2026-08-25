@@ -85,7 +85,7 @@ export function RoomFormDialog({ open, onOpenChange, onSuccess, initialData }: a
           <DialogTitle>{isEdit ? "Edit Room" : "Add Room"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="floorId"

@@ -156,7 +156,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full lg:w-auto">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">{asset.name}</h2>
           {asset.isDisposed && <Badge variant="destructive" className="text-sm w-fit">Disposed</Badge>}
@@ -203,7 +203,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                     <DialogHeader>
                       <DialogTitle>Dispose Asset</DialogTitle>
                     </DialogHeader>
-                    <form onSubmit={handleDispose} className="space-y-4">
+                    <form onSubmit={handleDispose} className="space-y-3">
                       <div className="space-y-2">
                         <Label>Disposal Date *</Label>
                         <Input 
@@ -237,7 +237,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                           onChange={(e) => setDisposeData({...disposeData, reason: e.target.value})}
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
                           <Label>Value (Optional)</Label>
                           <Input 
@@ -297,7 +297,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                 </div>
               </div>
             )}
-            <div className={`grid gap-4 md:grid-cols-2 w-full content-start ${!asset.imageUrl ? 'lg:grid-cols-3' : ''}`}>
+            <div className={`grid gap-3 md:grid-cols-2 w-full content-start ${!asset.imageUrl ? 'lg:grid-cols-3' : ''}`}>
               <Card className="shadow-none border">
               <CardHeader>
                 <CardTitle>Basic Info</CardTitle>
@@ -388,7 +388,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                   <DialogHeader>
                     <DialogTitle>Upload Document</DialogTitle>
                   </DialogHeader>
-                  <form onSubmit={handleUpload} className="space-y-4">
+                  <form onSubmit={handleUpload} className="space-y-3">
                     <div className="space-y-2">
                       <Label>Document Type</Label>
                       <Select value={documentType} onValueChange={setDocumentType}>
@@ -463,7 +463,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
         </TabsContent>
 
         <TabsContent value="warranty">
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-medium tracking-tight">Warranties</h3>
               <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
@@ -472,7 +472,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             </div>
             
             {asset.assetWarranties?.length ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {asset.assetWarranties.map((w: any) => {
                   const isExpired = new Date(w.expiryDate) < new Date();
                   return (
@@ -527,7 +527,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
         </TabsContent>
 
         <TabsContent value="amc">
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-medium tracking-tight">AMC Contracts</h3>
               <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200">
@@ -536,7 +536,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             </div>
             
             {asset.assetAmcs?.length ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {asset.assetAmcs.map((a: any) => {
                   const isExpired = new Date(a.expiryDate) < new Date();
                   return (
@@ -626,7 +626,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
                 <div className="space-y-6">
                   {asset.maintenanceRequests.map((mr: any) => (
                     <div key={mr.id} className="border rounded-lg overflow-hidden relative">
-                      <div className="bg-slate-50 p-4 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                      <div className="bg-slate-50 p-4 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
                           <div className="font-semibold text-lg">{mr.requestNumber}</div>
                           <div className="text-sm text-slate-500 mt-1">{mr.description}</div>

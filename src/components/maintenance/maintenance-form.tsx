@@ -71,8 +71,8 @@ export function MaintenanceForm() {
     <Card>
       <CardContent className="pt-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <FormField control={form.control} name="assetId" render={({ field }) => (
                 <FormItem>
                   <FormLabel>Asset</FormLabel>

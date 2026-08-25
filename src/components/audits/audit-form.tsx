@@ -96,7 +96,7 @@ export function AuditForm({ userId }: { userId: string }) {
   return (
     <Card>
       <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div className="space-y-2">
             <Label htmlFor="name">Audit Name</Label>
             <Input 
@@ -108,7 +108,7 @@ export function AuditForm({ userId }: { userId: string }) {
             />
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label>Scope Type</Label>
               <Select value={formData.scopeType} onValueChange={(v) => setFormData({...formData, scopeType: v, scopeId: v === "Company" ? "all" : ""})}>
@@ -170,7 +170,7 @@ export function AuditForm({ userId }: { userId: string }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label htmlFor="auditorId">Auditor</Label>
               <Select value={formData.auditorId} onValueChange={(v) => setFormData({...formData, auditorId: v})}>

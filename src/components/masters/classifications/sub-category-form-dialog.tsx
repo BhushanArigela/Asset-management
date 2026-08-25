@@ -84,7 +84,7 @@ export function SubCategoryFormDialog({ open, onOpenChange, onSuccess, initialDa
           <DialogTitle>{isEdit ? "Edit Sub-Category" : "Add Sub-Category"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="categoryId"

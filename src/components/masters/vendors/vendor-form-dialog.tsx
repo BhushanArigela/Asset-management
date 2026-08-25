@@ -89,7 +89,7 @@ export function VendorFormDialog({ open, onOpenChange, onSuccess, initialData }:
           <DialogTitle>{isEdit ? "Edit Vendor" : "Add Vendor"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="name"

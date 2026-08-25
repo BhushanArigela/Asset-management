@@ -77,7 +77,7 @@ export function DepartmentFormDialog({ open, onOpenChange, onSuccess, initialDat
           <DialogTitle>{isEdit ? "Edit Department" : "Add Department"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="name"

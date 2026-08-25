@@ -101,8 +101,8 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
           <DialogTitle>{isEdit ? "Edit Role" : "Add Role"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
               <FormField
                 control={form.control}
                 name="name"
@@ -140,13 +140,13 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
               )}
             />
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               <h3 className="font-medium text-lg border-b pb-2">Permissions Matrix</h3>
               <FormField
                 control={form.control}
                 name="permissionIds"
                 render={({ field }) => (
-                  <div className="space-y-6">
+                  <div className="space-y-3">
                     {Object.entries(permissionsMap).map(([module, perms]: any) => {
                       const safePerms = Array.isArray(perms) ? perms : [];
                       const modulePermIds = safePerms.map((p: any) => p.id);
@@ -163,7 +163,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
                             />
                             <h4 className="font-medium uppercase">{module}</h4>
                           </div>
-                          <div className="grid grid-cols-3 gap-4">
+                          <div className="grid grid-cols-3 gap-3">
                             {perms.map((p: any) => (
                               <div key={p.id} className="flex items-center space-x-2">
                                 <Checkbox

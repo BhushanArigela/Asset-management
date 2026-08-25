@@ -289,7 +289,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div>
         <h1 className="text-[24px] font-bold text-[#1B2A4A] tracking-tight">
           {initialData ? "Edit Asset" : "Register New Asset"}
@@ -300,7 +300,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
       </div>
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           
           <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden">
             <CardHeader className="flex flex-row items-center gap-3 bg-gray-50/50 py-4 px-6 border-b border-gray-100">
@@ -310,7 +310,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Basic Information</CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <FormField
                   control={form.control}
                   name="name"
@@ -347,7 +347,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
               </div>
               <div>
                 <FormLabel className="mb-2 block">Asset Image (Optional)</FormLabel>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {/* Upload Box */}
                   <div className="border-2 border-dashed border-blue-200 rounded-xl bg-blue-50/30 flex flex-col items-center justify-center py-8 relative hover:bg-blue-50/50 transition-colors cursor-pointer group">
                     <input 
@@ -363,7 +363,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                     <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider">JPG, PNG up to 2MB</p>
                   </div>
                   {/* Preview Box */}
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-3">
                     <div className="w-[120px] h-[90px] rounded-lg border border-gray-100 bg-gray-50 flex flex-col items-center justify-center shrink-0 overflow-hidden relative shadow-sm">
                       {imageFile ? (
                         <img src={URL.createObjectURL(imageFile)} alt="Preview" className="w-full h-full object-cover" />
@@ -394,7 +394,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Classification</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <FormField
                   control={form.control}
                   name="categoryId"
@@ -455,7 +455,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Location & Assignment</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <FormField
                   control={form.control}
                   name="companyId"
@@ -564,7 +564,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Status & Condition</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <FormField
                   control={form.control}
                   name="statusId"
@@ -609,7 +609,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Purchase & Vendor Details</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <FormField
                   control={form.control}
                   name="vendorId"
@@ -674,7 +674,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden border">
               <CardContent className="p-4 space-y-4">
                 <FormField
@@ -709,7 +709,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                         <FormMessage />
                       </FormItem>
                     )} />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3">
                       <FormField control={form.control} name="warranty.startDate" render={({ field }) => (
                         <FormItem><FormLabel>Start Date *</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
@@ -762,7 +762,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                         <FormMessage />
                       </FormItem>
                     )} />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3">
                       <FormField control={form.control} name="amc.startDate" render={({ field }) => (
                         <FormItem><FormLabel>Start Date *</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
@@ -770,7 +770,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                         <FormItem><FormLabel>Expiry Date *</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3">
                       <FormField control={form.control} name="amc.contractRef" render={({ field }) => (
                         <FormItem><FormLabel>Contract Ref</FormLabel><FormControl><Input placeholder="AMC-123" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
@@ -821,7 +821,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
               </div>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row items-end gap-4">
+              <div className="flex flex-col md:flex-row items-end gap-3">
                 <div className="space-y-2 flex-1 w-full">
                   <FormLabel>Document Type</FormLabel>
                   <Select value={docType} onValueChange={setDocType}>
@@ -880,7 +880,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
             </CardContent>
           </Card>
 
-          <div className="flex justify-end items-center gap-4 pt-4 pb-12">
+          <div className="flex justify-end items-center gap-3 pt-4 pb-12">
             <Button type="button" variant="outline" className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50 px-6 font-semibold" onClick={() => router.back()}>Cancel</Button>
             <Button type="submit" disabled={isSubmitting} className="bg-[#1d4ed8] hover:bg-blue-700 text-white px-8 font-semibold shadow-sm">
               {isSubmitting ? "Saving..." : (initialData ? "Save Changes" : "Register Asset")}

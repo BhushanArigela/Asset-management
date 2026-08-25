@@ -83,7 +83,7 @@ export function CompanyFormDialog({ open, onOpenChange, onSuccess, initialData }
           <DialogTitle>{isEdit ? "Edit Company" : "Add Company"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="name"
@@ -128,7 +128,7 @@ export function CompanyFormDialog({ open, onOpenChange, onSuccess, initialData }
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <FormField
                 control={form.control}
                 name="phone"
