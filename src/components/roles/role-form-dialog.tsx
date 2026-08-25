@@ -387,6 +387,8 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
                   />
                 </div>
               </div>
+              {/* Spacer to fix mobile scroll padding issue */}
+              <div className="h-4 md:h-0 w-full shrink-0" />
             </div>
 
             {/* Bottom Actions */}
