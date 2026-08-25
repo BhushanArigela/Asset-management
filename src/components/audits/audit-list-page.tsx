@@ -88,18 +88,18 @@ export function AuditListPage() {
 
       <Card>
         <CardHeader className="py-4">
-          <div className="flex gap-2 items-center">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center w-full">
+            <div className="relative w-full sm:w-auto">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search audits..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                className="pl-8 w-[250px]"
+                className="pl-8 w-full sm:w-[250px]"
               />
             </div>
             <Select value={statusFilter} onValueChange={(val) => { setStatusFilter(val); setPage(1); }}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px]">
                 <Filter className="w-4 h-4 mr-2" />
                 <SelectValue placeholder="Filter by Status" />
               </SelectTrigger>
