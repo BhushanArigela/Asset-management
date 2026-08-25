@@ -175,10 +175,10 @@ export default function SettingsPage() {
                         <FormLabel className="font-semibold text-[15px] text-gray-800 block mb-3">SMTP Host</FormLabel>
                         <FormControl>
                           <div className="flex items-center gap-3">
-                            <div className="w-[48px] h-[48px] bg-[#f0f4fe] border border-[#e1eafc] text-blue-500 rounded-[12px] flex items-center justify-center shrink-0">
+                            <div className="w-[48px] h-[48px] bg-[#f0f4fe] border border-input text-blue-500 rounded-[12px] flex items-center justify-center shrink-0">
                               <Server className="w-5 h-5" />
                             </div>
-                            <Input placeholder="mail.tecnolynx.com" className="flex-1 h-[48px] rounded-[12px] border-gray-200 shadow-sm" {...field} />
+                            <Input placeholder="mail.tecnolynx.com" className="flex-1 h-[48px] rounded-[12px] border-input shadow-sm" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -194,10 +194,10 @@ export default function SettingsPage() {
                         <FormLabel className="font-semibold text-[15px] text-gray-800 block mb-3">SMTP Port</FormLabel>
                         <FormControl>
                           <div className="flex items-center gap-3">
-                            <div className="w-[48px] h-[48px] bg-purple-50 border border-purple-100 text-purple-500 rounded-[12px] flex items-center justify-center shrink-0">
+                            <div className="w-[48px] h-[48px] bg-purple-50 border border-input text-purple-500 rounded-[12px] flex items-center justify-center shrink-0">
                               <Hash className="w-5 h-5" />
                             </div>
-                            <Input type="number" placeholder="465" className="flex-1 h-[48px] rounded-[12px] border-gray-200 shadow-sm" {...field} />
+                            <Input type="number" placeholder="465" className="flex-1 h-[48px] rounded-[12px] border-input shadow-sm" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -213,10 +213,10 @@ export default function SettingsPage() {
                         <FormLabel className="font-semibold text-[15px] text-gray-800 block mb-3">Username</FormLabel>
                         <FormControl>
                           <div className="flex items-center gap-3">
-                            <div className="w-[48px] h-[48px] bg-[#f0f4fe] border border-[#e1eafc] text-blue-500 rounded-[12px] flex items-center justify-center shrink-0">
+                            <div className="w-[48px] h-[48px] bg-[#f0f4fe] border border-input text-blue-500 rounded-[12px] flex items-center justify-center shrink-0">
                               <User className="w-5 h-5" />
                             </div>
-                            <Input placeholder="operations@tecnolynx.com" className="flex-1 h-[48px] rounded-[12px] border-gray-200 shadow-sm" {...field} />
+                            <Input placeholder="operations@tecnolynx.com" className="flex-1 h-[48px] rounded-[12px] border-input shadow-sm" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -232,10 +232,10 @@ export default function SettingsPage() {
                         <FormLabel className="font-semibold text-[15px] text-gray-800 block mb-3">Password</FormLabel>
                         <FormControl>
                           <div className="flex items-center gap-3">
-                            <div className="w-[48px] h-[48px] bg-purple-50 border border-purple-100 text-purple-500 rounded-[12px] flex items-center justify-center shrink-0">
+                            <div className="w-[48px] h-[48px] bg-purple-50 border border-input text-purple-500 rounded-[12px] flex items-center justify-center shrink-0">
                               <Lock className="w-5 h-5" />
                             </div>
-                            <Input type="password" placeholder="Leave blank to keep unchanged" className="flex-1 h-[48px] rounded-[12px] border-gray-200 shadow-sm" {...field} />
+                            <Input type="password" placeholder="Leave blank to keep unchanged" className="flex-1 h-[48px] rounded-[12px] border-input shadow-sm" {...field} />
                           </div>
                         </FormControl>
                         <p className="text-[13px] text-gray-500 mt-2 ml-[60px]">
@@ -254,10 +254,10 @@ export default function SettingsPage() {
                         <FormLabel className="font-semibold text-[15px] text-gray-800 block mb-3">From Email Address</FormLabel>
                         <FormControl>
                           <div className="flex items-center gap-3">
-                            <div className="w-[48px] h-[48px] bg-emerald-50 border border-emerald-100 text-emerald-500 rounded-[12px] flex items-center justify-center shrink-0">
+                            <div className="w-[48px] h-[48px] bg-emerald-50 border border-input text-emerald-500 rounded-[12px] flex items-center justify-center shrink-0">
                               <Mail className="w-5 h-5" />
                             </div>
-                            <Input placeholder="operations@tecnolynx.com" className="flex-1 h-[48px] rounded-[12px] border-gray-200 shadow-sm" {...field} />
+                            <Input placeholder="operations@tecnolynx.com" className="flex-1 h-[48px] rounded-[12px] border-input shadow-sm" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -273,10 +273,10 @@ export default function SettingsPage() {
                         <FormLabel className="font-semibold text-[15px] text-gray-800 block mb-3">From Name</FormLabel>
                         <FormControl>
                           <div className="flex items-center gap-3">
-                            <div className="w-[48px] h-[48px] bg-amber-50 border border-amber-100 text-amber-500 rounded-[12px] flex items-center justify-center shrink-0">
+                            <div className="w-[48px] h-[48px] bg-amber-50 border border-input text-amber-500 rounded-[12px] flex items-center justify-center shrink-0">
                               <User className="w-5 h-5" />
                             </div>
-                            <Input placeholder="Asset Management System" className="flex-1 h-[48px] rounded-[12px] border-gray-200 shadow-sm" {...field} />
+                            <Input placeholder="Asset Management System" className="flex-1 h-[48px] rounded-[12px] border-input shadow-sm" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -323,7 +323,7 @@ export default function SettingsPage() {
                       </>
                     )}
                   </Button>)}
-                  <Button type="button" variant="outline" className="px-6 py-6 rounded-[12px] font-semibold text-[15px] border-gray-200 text-gray-800 bg-white hover:bg-gray-50" onClick={() => toast.info("Test connection functionality coming soon")}>
+                  <Button type="button" variant="outline" className="px-6 py-6 rounded-[12px] font-semibold text-[15px] border-input text-gray-800 bg-white hover:bg-gray-50" onClick={() => toast.info("Test connection functionality coming soon")}>
                     <RefreshCw className="mr-2 h-5 w-5 text-gray-600" />
                     Test Connection
                   </Button>
