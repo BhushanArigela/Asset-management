@@ -18,6 +18,7 @@ const getStatusColor = (status: string) => {
     case 'OPEN': return 'border-red-500 text-red-600';
     case 'IN_PROGRESS': return 'border-orange-500 text-orange-600';
     case 'RESOLVED': return 'border-green-500 text-green-600';
+    case 'COMPLETED': return 'border-green-500 text-green-600';
     case 'CLOSED': return 'border-gray-500 text-gray-600';
     default: return 'border-blue-500 text-blue-600';
   }
