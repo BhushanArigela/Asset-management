@@ -68,7 +68,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{audit.name}</h2>
           <div className="flex flex-wrap items-center gap-2 mt-2 text-muted-foreground text-sm">
-            <Badge variant="outline">{audit.status}</Badge>
+            <Badge variant="outline" className={audit.status === "COMPLETED" ? "border-green-500 text-green-600" : audit.status === "IN_PROGRESS" ? "border-orange-500 text-orange-600" : "border-blue-500 text-blue-600"}>{audit.status}</Badge>
             <span>•</span>
             <span>{format(new Date(audit.auditDate), "PP")}</span>
             <span>•</span>
@@ -163,17 +163,9 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                           </TableCell>
                           <TableCell>
                             {result ? (
-                              <Badge className={
-                                result.classification === "VERIFIED" ? "bg-green-600" :
-                                result.classification === "WRONG_LOCATION" ? "bg-orange-500" :
-                                result.classification === "DAMAGED" ? "bg-yellow-600" :
-                                result.classification === "MISSING" ? "bg-red-600" :
-                                "bg-purple-600"
-                              }>
-                                {result.classification.replace("_", " ")}
-                              </Badge>
+                              <Badge variant="outline" className={result.classification === "VERIFIED" ? "border-green-500 text-green-600" : result.classification === "MISSING" ? "border-red-500 text-red-600" : "border-orange-500 text-orange-600"}>{result.classification.replace("_", " ")}</Badge>
                             ) : (
-                              <Badge variant="secondary">PENDING</Badge>
+                              <Badge variant="outline" className="border-gray-500 text-gray-600">PENDING</Badge>
                             )}
                           </TableCell>
                         </TableRow>
@@ -201,7 +193,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                     {audit.auditResults?.map((r: any) => (
                       <TableRow key={r.id}>
                         <TableCell>{r.assetCode || r.asset?.assetCode}</TableCell>
-                        <TableCell><Badge>{r.classification}</Badge></TableCell>
+                        <TableCell><Badge variant="outline" className={r.classification === "VERIFIED" ? "border-green-500 text-green-600" : r.classification === "MISSING" ? "border-red-500 text-red-600" : "border-orange-500 text-orange-600"}>{r.classification}</Badge></TableCell>
                         <TableCell>{r.physicalCondition || "N/A"}</TableCell>
                         <TableCell>{r.newStatus ? r.newStatus.name : "No Change"}</TableCell>
                         <TableCell>{r.newCondition ? r.newCondition.name : "No Change"}</TableCell>

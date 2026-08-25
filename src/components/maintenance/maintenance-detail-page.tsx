@@ -15,6 +15,17 @@ import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'OPEN': return 'border-red-500 text-red-600';
+    case 'IN_PROGRESS': return 'border-orange-500 text-orange-600';
+    case 'RESOLVED': return 'border-green-500 text-green-600';
+    case 'CLOSED': return 'border-gray-500 text-gray-600';
+    default: return 'border-blue-500 text-blue-600';
+  }
+};
+
 export function MaintenanceDetailPage({ id }: { id: string }) {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -80,7 +91,7 @@ export function MaintenanceDetailPage({ id }: { id: string }) {
             <CardHeader><CardTitle>Details</CardTitle></CardHeader>
             <CardContent className="space-y-3">
               <div><span className="font-semibold text-slate-600 block text-sm">Priority:</span> {mr.priority}</div>
-              <div><span className="font-semibold text-slate-600 block text-sm">Current Status:</span> <Badge>{mr.status}</Badge></div>
+              <div><span className="font-semibold text-slate-600 block text-sm">Current Status:</span> <Badge variant="outline" className={getStatusColor(mr.status)}>{mr.status}</Badge></div>
               <div><span className="font-semibold text-slate-600 block text-sm">Created:</span> {formatDateTime(mr.createdAt)}</div>
               <div><span className="font-semibold text-slate-600 block text-sm">Problem Description:</span> <div className="bg-slate-50 p-3 rounded mt-1 text-sm">{mr.description}</div></div>
             </CardContent>

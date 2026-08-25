@@ -31,7 +31,7 @@ export function DepartmentTab() {
     { accessorKey: "name", header: "Name" },
     { accessorKey: "code", header: "Code" },
     { accessorKey: "isActive", header: "Status", cell: ({ row }) => (
-      <Badge variant={row.original.isActive ? "default" : "destructive"}>
+      <Badge variant="outline" className={row.original.isActive ? "border-green-500 text-green-600" : "border-red-500 text-red-600"}>
         {row.original.isActive ? "Active" : "Inactive"}
       </Badge>
     )},

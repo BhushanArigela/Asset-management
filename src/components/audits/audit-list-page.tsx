@@ -141,7 +141,7 @@ export function AuditListPage() {
                     <TableCell>{format(new Date(audit.auditDate), "PP")}</TableCell>
                     <TableCell>{audit.auditor?.name || "Unknown"}</TableCell>
                     <TableCell>
-                      <Badge className={getStatusColor(audit.status)}>{audit.status.replace("_", " ")}</Badge>
+                      <Badge variant="outline" className={getStatusColor(audit.status)}>{audit.status.replace("_", " ")}</Badge>
                     </TableCell>
                     <TableCell>
                       {audit.totalVerified} / {audit.totalExpected} Verified

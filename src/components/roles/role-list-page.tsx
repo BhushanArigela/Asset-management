@@ -88,7 +88,7 @@ export function RoleListPage() {
       cell: ({ row }) => {
         const isActive = row.getValue("isActive") as boolean;
         return (
-          <Badge variant={isActive ? "default" : "destructive"}>
+          <Badge variant="outline" className={isActive ? "border-green-500 text-green-600" : "border-red-500 text-red-600"}>
             {isActive ? "Active" : "Inactive"}
           </Badge>
         );

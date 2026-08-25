@@ -12,6 +12,17 @@ import { Eye, Plus } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'OPEN': return 'border-red-500 text-red-600';
+    case 'IN_PROGRESS': return 'border-orange-500 text-orange-600';
+    case 'RESOLVED': return 'border-green-500 text-green-600';
+    case 'CLOSED': return 'border-gray-500 text-gray-600';
+    default: return 'border-blue-500 text-blue-600';
+  }
+};
+
 export function MaintenanceListPage() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -44,7 +55,7 @@ export function MaintenanceListPage() {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => <Badge>{row.original.status}</Badge>,
+      cell: ({ row }) => <Badge variant="outline" className={getStatusColor(row.original.status)}>{row.original.status}</Badge>,
     },
     {
       accessorKey: "createdAt",
