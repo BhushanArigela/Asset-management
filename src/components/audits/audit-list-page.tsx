@@ -20,25 +20,42 @@ export function AuditListPage() {
   const [audits, setAudits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     async function fetchAudits() {
       try {
         const params = new URLSearchParams();
         if (statusFilter !== "all") params.append("status", statusFilter);
+        if (search) params.append("search", search);
+        params.append("page", page.toString());
+        params.append("limit", "10");
         
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/audits?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to load audits");
         const json = await res.json();
-        setAudits(json);
+        if (json.data && json.pagination) {
+          setAudits(json.data);
+          setTotalPages(json.pagination.totalPages);
+          setTotal(json.pagination.total);
+        } else {
+          setAudits(Array.isArray(json) ? json : []);
+        }
       } catch (error) {
         console.error(error);
       } finally {
         setLoading(false);
       }
     }
-    fetchAudits();
-  }, [statusFilter]);
+    
+    const timeoutId = setTimeout(() => {
+      fetchAudits();
+    }, 300);
+    return () => clearTimeout(timeoutId);
+  }, [statusFilter, search, page]);
 
   const getStatusColor = (status: string) => {
     switch(status) {
@@ -54,7 +71,16 @@ export function AuditListPage() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search audits..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              className="pl-8 w-[250px]"
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={(val) => { setStatusFilter(val); setPage(1); }}>
             <SelectTrigger className="w-[180px]">
               <Filter className="w-4 h-4 mr-2" />
               <SelectValue placeholder="Filter by Status" />
@@ -125,6 +151,32 @@ export function AuditListPage() {
               )}
             </TableBody>
           </Table>
+
+          {total > 0 && (
+            <div className="flex items-center justify-between mt-4">
+              <div className="text-sm text-muted-foreground">
+                Showing {(page - 1) * 10 + 1} to {Math.min(page * 10, total)} of {total} entries
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages || totalPages === 0}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

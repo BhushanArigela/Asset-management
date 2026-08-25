@@ -16,21 +16,45 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
+    const search = searchParams.get("search") || "";
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "10", 10);
+    const skip = (page - 1) * limit;
     
     const whereClause: any = {};
-    if (status) {
+    if (status && status !== "all") {
       whereClause.status = status;
     }
+    
+    if (search) {
+      whereClause.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { auditor: { name: { contains: search, mode: 'insensitive' } } },
+      ];
+    }
 
-    const audits = await prisma.auditSession.findMany({
-      where: whereClause,
-      include: {
-        auditor: { select: { id: true, name: true } }
-      },
-      orderBy: { auditDate: "desc" },
+    const [audits, total] = await Promise.all([
+      prisma.auditSession.findMany({
+        where: whereClause,
+        include: {
+          auditor: { select: { id: true, name: true } }
+        },
+        orderBy: { auditDate: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.auditSession.count({ where: whereClause })
+    ]);
+
+    return NextResponse.json({
+      data: audits,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
     });
-
-    return NextResponse.json(audits);
   } catch (error) {
     console.error("[AUDITS_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
