@@ -309,7 +309,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
               </div>
               <CardTitle className="text-base font-bold text-[#1B2A4A] !mt-0">Basic Information</CardTitle>
             </CardHeader>
-            <CardContent className="p-6 space-y-6">
+            <CardContent className="p-6 space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <FormField
                   control={form.control}
@@ -676,7 +676,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden border">
-              <CardContent className="p-4 space-y-4">
+              <CardContent className="p-4 space-y-3">
                 <FormField
                   control={form.control}
                   name="warrantyApplicable"
@@ -696,7 +696,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                 />
                 
                 {watchWarranty && (
-                  <div className="space-y-4 pt-2">
+                  <div className="space-y-3 pt-2">
                     <FormField control={form.control} name="warranty.providerVendorId" render={({ field }) => (
                       <FormItem>
                         <FormLabel>Warranty Provider *</FormLabel>
@@ -729,7 +729,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
             </Card>
 
             <Card className="rounded-xl border-gray-100 shadow-sm overflow-hidden border">
-              <CardContent className="p-4 space-y-4">
+              <CardContent className="p-4 space-y-3">
                 <FormField
                   control={form.control}
                   name="amcApplicable"
@@ -749,7 +749,7 @@ export function AssetForm({ initialData }: { initialData?: any }) {
                 />
 
                 {watchAmc && (
-                  <div className="space-y-4 pt-2">
+                  <div className="space-y-3 pt-2">
                     <FormField control={form.control} name="amc.vendorId" render={({ field }) => (
                       <FormItem>
                         <FormLabel>AMC Vendor *</FormLabel>

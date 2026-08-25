@@ -155,7 +155,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
   const canDisposeAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_DISPOSE] as any);
 
   return (
-    <div className="space-y-6">
+    <div className="-y-3">
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full lg:w-auto">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">{asset.name}</h2>
@@ -274,7 +274,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
         </div>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4 w-full">
+      <Tabs defaultValue="overview" className="-y-3">
         <div className="w-full overflow-x-auto pb-2">
           <TabsList className="w-full flex justify-start overflow-x-auto pb-2 -mb-2 no-scrollbar bg-white p-1 rounded-md border shadow-sm">
             <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -287,8 +287,8 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="overview" className="space-y-6">
-          <div className="flex flex-col lg:flex-row gap-6">
+        <TabsContent value="overview" className="-y-3">
+          <div className="-3">
             {asset.imageUrl && (
               <div className="w-full lg:w-1/3 flex-shrink-0">
                 <div className="bg-white p-2 rounded-xl border shadow-sm flex items-center justify-center h-full min-h-[300px]">
@@ -443,7 +443,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             <CardHeader><CardTitle>Status History</CardTitle></CardHeader>
             <CardContent className="text-sm">
               {asset.assetStatusChanges?.length ? (
-                <ul className="space-y-4 border-l-2 ml-4">
+                <ul className="-y-3">
                   {asset.assetStatusChanges.map((m: any) => (
                     <li key={m.id} className="relative pl-6 pb-4 border-b last:border-0">
                       <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-2"></div>
@@ -598,7 +598,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             <CardHeader><CardTitle>Movement History</CardTitle></CardHeader>
             <CardContent className="text-sm">
               {asset.assetMovements?.length ? (
-                <ul className="space-y-4 border-l-2 ml-4">
+                <ul className="-y-3">
                   {asset.assetMovements.map((m: any) => (
                     <li key={m.id} className="relative pl-6 pb-4 border-b">
                       <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-2"></div>
@@ -623,7 +623,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             <CardHeader><CardTitle>Maintenance Requests</CardTitle></CardHeader>
             <CardContent className="text-sm">
               {asset.maintenanceRequests?.length ? (
-                <div className="space-y-6">
+                <div className="-y-3">
                   {asset.maintenanceRequests.map((mr: any) => (
                     <div key={mr.id} className="border rounded-lg overflow-hidden relative">
                       <div className="bg-slate-50 p-4 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">

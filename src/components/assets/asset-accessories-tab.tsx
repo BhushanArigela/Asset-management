@@ -125,7 +125,7 @@ export function AssetAccessoriesTab({ assetId, accessories }: { assetId: string;
               <DialogHeader>
                 <DialogTitle>Add New Accessory</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4 pt-4">
+              <form onSubmit={handleSubmit} className="-y-3">
                 <div className="space-y-2">
                   <Label>Name / Description</Label>
                   <Input value={name} onChange={(e) => setName(e.target.value)} required placeholder="e.g., Laptop Charger" />
@@ -197,7 +197,7 @@ export function AssetAccessoriesTab({ assetId, accessories }: { assetId: string;
           </DialogHeader>
           
           {selectedQr && (
-            <div className="flex flex-col items-center justify-center space-y-4 my-4">
+            <div className="-y-3">
               <img src={selectedQr.qrCode} alt={selectedQr.name} className="w-64 h-64 border rounded-md" />
               <h2 className="text-2xl font-bold tracking-tight">{selectedQr.name}</h2>
             </div>
