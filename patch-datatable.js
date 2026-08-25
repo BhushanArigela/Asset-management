@@ -1,4 +1,7 @@
+const fs = require('fs');
+const file = 'src/components/ui/data-table.tsx';
 
+let content = `
 "use client";
 
 import * as React from "react";
@@ -120,10 +123,10 @@ export function DataTable<TData, TValue>({
                             {/* Render expand toggle on first cell for mobile ONLY */}
                             {index === 0 && (
                               <button 
-                                className="md:hidden focus:outline-none shrink-0"
+                                className="md:hidden text-green-600 hover:text-green-700 focus:outline-none shrink-0"
                                 onClick={() => row.toggleExpanded()}
                               >
-                                {row.getIsExpanded() ? <MinusCircle className="w-[18px] h-[18px] fill-[#ef4444] text-white border-none" /> : <PlusCircle className="w-[18px] h-[18px] fill-[#16a34a] text-white border-none" />}
+                                {row.getIsExpanded() ? <MinusCircle className="w-4 h-4" /> : <PlusCircle className="w-4 h-4" />}
                               </button>
                             )}
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -195,3 +198,7 @@ export function DataTable<TData, TValue>({
   </Card>
 );
 }
+`;
+
+fs.writeFileSync(file, content);
+console.log("Done");
