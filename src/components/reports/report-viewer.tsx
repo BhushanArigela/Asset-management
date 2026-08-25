@@ -154,11 +154,13 @@ export function ReportViewer({ type }: ReportViewerProps) {
 
       <Card>
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <CardTitle className="text-xl capitalize flex items-center gap-2">
-            <FileText className="w-5 h-5 text-[#C5A55A]" /> 
-            {type.replace(/-/g, " ")} Report
-            <span className="text-sm font-normal text-muted-foreground ml-2">({data.length} records)</span>
-          </CardTitle>
+          <div className="flex flex-col gap-1">
+            <CardTitle className="text-xl capitalize flex items-center gap-2">
+              <FileText className="w-5 h-5 text-[#C5A55A]" /> 
+              {type.replace(/-/g, " ")} Report
+            </CardTitle>
+            <span className="text-sm font-normal text-muted-foreground ml-7">({data.length} Records)</span>
+          </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => window.print()}><Printer className="w-4 h-4 mr-2" /> Print</Button>
             <Button onClick={handleExport} className="bg-green-600 hover:bg-green-700 text-white">
