@@ -32,12 +32,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   hideToolbar?: boolean;
+  noCard?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   hideToolbar = false,
+  noCard = false,
 }: DataTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
@@ -66,9 +68,10 @@ export function DataTable<TData, TValue>({
     return true;
   };
 
-  return (
-    <Card>
-      <CardContent className="p-6">
+  
+  const tableContent = (
+    <>
+      
         {!hideToolbar && (<div className="flex items-center pb-4">
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -191,7 +194,19 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
       </div>)}
-    </CardContent>
-  </Card>
-);
+    
+    </>
+  );
+
+  if (noCard) {
+    return tableContent;
+  }
+
+  return (
+    <Card>
+      <CardContent className="p-6">
+        {tableContent}
+      </CardContent>
+    </Card>
+  );
 }
