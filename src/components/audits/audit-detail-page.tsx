@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { Play, CheckCircle, Lock, Camera, AlertTriangle, FileText } from "lucide-react";
@@ -16,6 +16,14 @@ import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 export function AuditDetailPage({ auditId }: { auditId: string }) {
   const router = useRouter();
+  const [expandedExpected, setExpandedExpected] = useState<Record<string, boolean>>({});
+  const toggleExpected = (id: string) => setExpandedExpected(prev => ({ ...prev, [id]: !prev[id] }));
+  
+  const [expandedResults, setExpandedResults] = useState<Record<string, boolean>>({});
+  const toggleResults = (id: string) => setExpandedResults(prev => ({ ...prev, [id]: !prev[id] }));
+
+  const [expandedDiscrepancies, setExpandedDiscrepancies] = useState<Record<string, boolean>>({});
+  const toggleDiscrepancies = (id: string) => setExpandedDiscrepancies(prev => ({ ...prev, [id]: !prev[id] }));
   const { data: session } = useSession();
   
   const canExecuteAudit = hasPermission(session?.user?.permissions, [PERMISSIONS.AUDITS_EXECUTE] as any);
@@ -146,18 +154,29 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Asset Code</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>System Status</TableHead>
-                      <TableHead>Audit Status</TableHead>
+                      <TableHead className="hidden md:table-cell">Name</TableHead>
+                      <TableHead className="hidden md:table-cell">System Status</TableHead>
+                      <TableHead className="hidden md:table-cell">Audit Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {audit.auditExpectedAssets?.map((ea: any) => {
                       const result = audit.auditResults?.find((r: any) => r.assetId === ea.assetId);
                       return (
-                        <TableRow key={ea.id}>
-                          <TableCell className="font-medium">{ea.asset.assetCode}</TableCell>
-                          <TableCell>{ea.asset.name}</TableCell>
+                        <React.Fragment key={ea.id}>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center gap-2">
+                                <button 
+                                  className="md:hidden focus:outline-none shrink-0"
+                                  onClick={() => toggleExpected(ea.id)}
+                                >
+                                  {expandedExpected[ea.id] ? <MinusCircle className="w-[18px] h-[18px] fill-[#ef4444] text-white border-none" /> : <PlusCircle className="w-[18px] h-[18px] fill-[#16a34a] text-white border-none" />}
+                                </button>
+                                {ea.asset.assetCode}
+                              </div>
+                            </TableCell>
+                          <TableCell className="hidden md:table-cell">{ea.asset.name}</TableCell>
                           <TableCell>
                             <Badge variant="outline">{ea.asset.status?.name || "Unknown"}</Badge>
                           </TableCell>
@@ -168,10 +187,39 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                               <Badge variant="outline" className="border-gray-500 text-gray-600">PENDING</Badge>
                             )}
                           </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
+                          </TableRow>
+                          {expandedExpected[ea.id] && (
+                            <TableRow className="md:hidden bg-green-50/30">
+                              <TableCell colSpan={1}>
+                                <div className="py-2 space-y-3 px-2">
+                                  <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                    <div className="font-semibold text-sm text-[#1B2A4A]">Name</div>
+                                    <div className="col-span-2 text-sm text-gray-700">{ea.asset.name}</div>
+                                  </div>
+                                  <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                    <div className="font-semibold text-sm text-[#1B2A4A]">System Status</div>
+                                    <div className="col-span-2 text-sm text-gray-700">
+                                      <Badge variant="outline">{ea.asset.status?.name || "Unknown"}</Badge>
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                    <div className="font-semibold text-sm text-[#1B2A4A]">Audit Status</div>
+                                    <div className="col-span-2 text-sm text-gray-700">
+                                      {result ? (
+                                        <Badge variant="outline" className={result.classification === "VERIFIED" ? "border-green-500 text-green-600" : result.classification === "MISSING" ? "border-red-500 text-red-600" : "border-orange-500 text-orange-600"}>{result.classification.replace("_", " ")}</Badge>
+                                      ) : (
+                                        <Badge variant="outline" className="border-gray-500 text-gray-600">PENDING</Badge>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </React.Fragment>
+                        );
+                      })}
+                    </TableBody>
                 </Table>
               </div>
             </TabsContent>
@@ -182,25 +230,61 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Asset Code</TableHead>
-                      <TableHead>Classification</TableHead>
-                      <TableHead>Condition (Physical)</TableHead>
-                      <TableHead>Proposed Status</TableHead>
-                      <TableHead>Proposed Condition</TableHead>
-                      <TableHead>Scanned By</TableHead>
+                      <TableHead className="hidden md:table-cell">Classification</TableHead>
+                      <TableHead className="hidden md:table-cell">Condition (Physical)</TableHead>
+                      <TableHead className="hidden md:table-cell">Proposed Status</TableHead>
+                      <TableHead className="hidden md:table-cell">Proposed Condition</TableHead>
+                      <TableHead className="hidden md:table-cell">Scanned By</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {audit.auditResults?.map((r: any) => (
-                      <TableRow key={r.id}>
-                        <TableCell>{r.assetCode || r.asset?.assetCode}</TableCell>
-                        <TableCell><Badge variant="outline" className={r.classification === "VERIFIED" ? "border-green-500 text-green-600" : r.classification === "MISSING" ? "border-red-500 text-red-600" : "border-orange-500 text-orange-600"}>{r.classification}</Badge></TableCell>
-                        <TableCell>{r.physicalCondition || "N/A"}</TableCell>
-                        <TableCell>{r.newStatus ? r.newStatus.name : "No Change"}</TableCell>
-                        <TableCell>{r.newCondition ? r.newCondition.name : "No Change"}</TableCell>
-                        <TableCell>{r.scannedBy?.name || "Unknown"}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
+                      <React.Fragment key={r.id}>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center gap-2">
+                                <button 
+                                  className="md:hidden focus:outline-none shrink-0"
+                                  onClick={() => toggleDiscrepancies(r.id)}
+                                >
+                                  {expandedDiscrepancies[r.id] ? <MinusCircle className="w-[18px] h-[18px] fill-[#ef4444] text-white border-none" /> : <PlusCircle className="w-[18px] h-[18px] fill-[#16a34a] text-white border-none" />}
+                                </button>
+                                {r.assetCode || r.asset?.assetCode}
+                              </div>
+                            </TableCell>
+                        <TableCell className="hidden md:table-cell"><Badge variant="outline" className={r.classification === "VERIFIED" ? "border-green-500 text-green-600" : r.classification === "MISSING" ? "border-red-500 text-red-600" : "border-orange-500 text-orange-600"}>{r.classification}</Badge></TableCell>
+                        <TableCell className="hidden md:table-cell">{r.physicalCondition || "N/A"}</TableCell>
+                        <TableCell className="hidden md:table-cell">{r.newStatus ? r.newStatus.name : "No Change"}</TableCell>
+                        <TableCell className="hidden md:table-cell">{r.newCondition ? r.newCondition.name : "No Change"}</TableCell>
+                        <TableCell className="hidden md:table-cell">{r.scannedBy?.name || "Unknown"}</TableCell>
+                          </TableRow>
+                          {expandedDiscrepancies[r.id] && (
+                            <TableRow className="md:hidden bg-green-50/30">
+                              <TableCell colSpan={1}>
+                                <div className="py-2 space-y-3 px-2">
+                                  <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                    <div className="font-semibold text-sm text-[#1B2A4A]">Issue</div>
+                                    <div className="col-span-2 text-sm text-gray-700"><span className="text-red-600 font-medium">{r.classification.replace("_", " ")}</span></div>
+                                  </div>
+                                  <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                    <div className="font-semibold text-sm text-[#1B2A4A]">Sys Location</div>
+                                    <div className="col-span-2 text-sm text-gray-700">{r.asset ? `${r.asset.building?.name || 'Unknown'} / ${r.asset.room?.name || 'Unknown'}` : 'Unknown'}</div>
+                                  </div>
+                                  <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                    <div className="font-semibold text-sm text-[#1B2A4A]">Found Loc</div>
+                                    <div className="col-span-2 text-sm text-gray-700">{r.classification === "MISSING" ? "N/A (Missing)" : `Audit: ${audit.name}`}</div>
+                                  </div>
+                                  <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                    <div className="font-semibold text-sm text-[#1B2A4A]">Remarks</div>
+                                    <div className="col-span-2 text-sm text-gray-700">{r.remarks || "No remarks"}</div>
+                                  </div>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </React.Fragment>
+                        ))}
+                      </TableBody>
                 </Table>
               </div>
             </TabsContent>
@@ -214,16 +298,27 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Asset Code</TableHead>
-                        <TableHead>Issue</TableHead>
-                        <TableHead>System Location</TableHead>
-                        <TableHead>Found Location</TableHead>
-                        <TableHead>Remarks</TableHead>
+                        <TableHead className="hidden md:table-cell">Issue</TableHead>
+                        <TableHead className="hidden md:table-cell">System Location</TableHead>
+                        <TableHead className="hidden md:table-cell">Found Location</TableHead>
+                        <TableHead className="hidden md:table-cell">Remarks</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {discrepancies.map((r: any) => (
-                        <TableRow key={r.id}>
-                          <TableCell>{r.assetCode || r.asset?.assetCode}</TableCell>
+                        <React.Fragment key={r.id}>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-2">
+                              <button 
+                                className="md:hidden focus:outline-none shrink-0"
+                                onClick={() => toggleResults(r.id)}
+                              >
+                                {expandedResults[r.id] ? <MinusCircle className="w-[18px] h-[18px] fill-[#ef4444] text-white border-none" /> : <PlusCircle className="w-[18px] h-[18px] fill-[#16a34a] text-white border-none" />}
+                              </button>
+                              {r.assetCode || r.asset?.assetCode}
+                            </div>
+                          </TableCell>
                           <TableCell>
                             <span className="text-red-600 font-medium">{r.classification.replace("_", " ")}</span>
                           </TableCell>
@@ -233,8 +328,37 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                           <TableCell>
                             {r.classification === "MISSING" ? "N/A (Missing)" : `Audit: ${audit.name}`}
                           </TableCell>
-                          <TableCell>{r.remarks || "No remarks"}</TableCell>
+                          <TableCell className="hidden md:table-cell">{r.remarks || "No remarks"}</TableCell>
                         </TableRow>
+                        {expandedResults[r.id] && (
+                          <TableRow className="md:hidden bg-green-50/30">
+                            <TableCell colSpan={1}>
+                              <div className="py-2 space-y-3 px-2">
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">Classification</div>
+                                  <div className="col-span-2 text-sm text-gray-700"><Badge variant="outline" className={r.classification === "VERIFIED" ? "border-green-500 text-green-600" : r.classification === "MISSING" ? "border-red-500 text-red-600" : "border-orange-500 text-orange-600"}>{r.classification}</Badge></div>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">Condition</div>
+                                  <div className="col-span-2 text-sm text-gray-700">{r.physicalCondition || "N/A"}</div>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">Proposed Status</div>
+                                  <div className="col-span-2 text-sm text-gray-700">{r.newStatus ? r.newStatus.name : "No Change"}</div>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">Proposed Cond.</div>
+                                  <div className="col-span-2 text-sm text-gray-700">{r.newCondition ? r.newCondition.name : "No Change"}</div>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                                  <div className="font-semibold text-sm text-[#1B2A4A]">Scanned By</div>
+                                  <div className="col-span-2 text-sm text-gray-700">{r.scannedBy?.name || "Unknown"}</div>
+                                </div>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </React.Fragment>
                       ))}
                     </TableBody>
                   </Table>
