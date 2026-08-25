@@ -158,7 +158,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
     <div className="-y-3">
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full lg:w-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">{asset.name}</h2>
+          <h2 className="text-2xl sm:text-2xl font-bold tracking-tight">{asset.name}</h2>
           {asset.isDisposed && <Badge variant="destructive" className="text-sm w-fit">Disposed</Badge>}
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">

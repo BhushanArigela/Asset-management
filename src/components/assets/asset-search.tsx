@@ -217,7 +217,7 @@ export function AssetSearch({ initialQuery = "" }: AssetSearchProps) {
       <div className={`flex flex-col transition-all duration-300 ${isSearching ? "pb-4 space-y-3" : "items-center justify-center space-y-4 py-8"}`}>
         {!isSearching && (
           <>
-            <h1 className="text-3xl font-bold tracking-tight">Search Assets</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Search Assets</h1>
             <p className="text-muted-foreground text-center max-w-lg">
               Quickly find assets by their QR Code, Name, Model, or Serial Number.
             </p>

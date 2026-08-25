@@ -76,7 +76,7 @@ export function MaintenanceListPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold tracking-tight">Maintenance Requests</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Maintenance Requests</h2>
         {canCreate && (
           <Button onClick={() => router.push("/maintenance/new")}><Plus className="h-4 w-4 mr-2" /> Raise Request</Button>
         )}

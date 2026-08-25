@@ -71,7 +71,7 @@ export function AuditListPage() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <h2 className="text-3xl font-bold tracking-tight">Physical Audits</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Physical Audits</h2>
         </div>
         <div className="flex items-center space-x-2">
           {canCreateAudit && (

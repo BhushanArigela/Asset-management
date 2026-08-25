@@ -113,7 +113,7 @@ export function AssetListPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-3xl font-bold tracking-tight">Assets</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Assets</h2>
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           {canImportAsset && (
             <Button variant="outline" onClick={() => router.push("/assets/import")} className="flex-1 sm:flex-none">

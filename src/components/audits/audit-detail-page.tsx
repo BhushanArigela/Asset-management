@@ -66,7 +66,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">{audit.name}</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{audit.name}</h2>
           <div className="flex flex-wrap items-center gap-2 mt-2 text-muted-foreground text-sm">
             <Badge variant="outline" className={audit.status === "COMPLETED" ? "border-green-500 text-green-600" : audit.status === "IN_PROGRESS" ? "border-orange-500 text-orange-600" : "border-blue-500 text-blue-600"}>{audit.status}</Badge>
             <span>•</span>

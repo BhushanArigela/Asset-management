@@ -21,7 +21,7 @@ export default async function AuditScannerPage(props: { params: Promise<{ id: st
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Asset Scanner</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Asset Scanner</h2>
           <p className="text-muted-foreground">Session ID: {params.id}</p>
         </div>
         <Link href={`/audits/${params.id}`}>
