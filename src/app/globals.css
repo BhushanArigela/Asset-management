@@ -91,3 +91,8 @@
     }
   }
 }
+
+.space-y-0 label {
+  margin-bottom: 10px;
+  display: inline-block;
+}
