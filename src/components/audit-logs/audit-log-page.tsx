@@ -21,6 +21,25 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
+
+const getActionColor = (action: string) => {
+  switch (action?.toUpperCase()) {
+    case "CREATE":
+    case "LOGIN":
+    case "SUCCESS":
+      return "border-green-500 text-green-600";
+    case "DELETE":
+    case "FAIL":
+    case "ERROR":
+      return "border-red-500 text-red-600";
+    case "UPDATE":
+    case "EDIT":
+      return "border-blue-500 text-blue-600";
+    default:
+      return "border-gray-500 text-gray-600";
+  }
+};
+
 export function AuditLogPage() {
   const { data: session } = useSession();
   const canExportLogs = hasPermission(session?.user?.permissions, [PERMISSIONS.AUDIT_LOGS_EXPORT] as any);
