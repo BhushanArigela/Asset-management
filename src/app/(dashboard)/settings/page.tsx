@@ -323,7 +323,7 @@ export default function SettingsPage() {
                       </>
                     )}
                   </Button>)}
-                  <Button type="button" variant="outline" className="px-6 py-6 rounded-[12px] font-semibold text-[15px] border-input text-gray-800 bg-white hover:bg-gray-50 w-full sm:w-auto" onClick={() => toast.info("Test connection functionality coming soon")}>
+                  <Button type="button" variant="outline" className="px-6 py-6 rounded-[12px] font-semibold text-[15px] border-input text-gray-800 bg-white hover:bg-gray-50 hover:text-gray-900 w-full sm:w-auto" onClick={() => toast.info("Test connection functionality coming soon")}>
                     <RefreshCw className="mr-2 h-5 w-5 text-gray-600" />
                     Test Connection
                   </Button>
