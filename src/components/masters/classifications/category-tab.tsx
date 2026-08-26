@@ -44,7 +44,7 @@ export function CategoryTab() {
 
   return (
     <div>
-      <div className="absolute top-6 right-4 md:right-8">
+      <div className="flex justify-end mb-4 md:absolute md:top-6 md:right-8 md:mb-0">
         <Button 
           className="bg-[#1B2A4A] text-white"
           onClick={() => {

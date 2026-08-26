@@ -1,11 +1,16 @@
 const fs = require('fs');
-const file = 'src/components/assets/asset-detail-page.tsx';
-let content = fs.readFileSync(file, 'utf8');
+const path = require('path');
 
-content = content.replace(
-  /<Tabs defaultValue="overview" className="-y-3">/g,
-  '<Tabs defaultValue="overview" className="space-y-4">'
-);
+const dir = 'src/components/masters/classifications/';
+const files = fs.readdirSync(dir).filter(f => f.endsWith('-tab.tsx'));
 
-fs.writeFileSync(file, content);
+files.forEach(file => {
+    const filePath = path.join(dir, file);
+    let content = fs.readFileSync(filePath, 'utf8');
+    content = content.replace(
+        /<div className="absolute top-6 right-4 md:right-8">/g,
+        '<div className="flex justify-end mb-4 md:absolute md:top-6 md:right-8 md:mb-0">'
+    );
+    fs.writeFileSync(filePath, content);
+});
 console.log("Done");
