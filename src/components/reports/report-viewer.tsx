@@ -172,7 +172,7 @@ export function ReportViewer({ type }: ReportViewerProps) {
           {loading ? (
             <div className="h-24 flex items-center justify-center border rounded-md text-muted-foreground">Loading report data...</div>
           ) : (
-            <DataTable columns={columns} data={data} hideToolbar={true} noCard={true} />
+            <DataTable columns={columns} data={data} hideToolbar={false} noCard={true} />
           )}
         </CardContent>
       </Card>

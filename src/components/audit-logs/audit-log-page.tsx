@@ -51,6 +51,8 @@ export function AuditLogPage() {
   // Filters
   const [moduleFilter, setModuleFilter] = useState("all");
   const [actionFilter, setActionFilter] = useState("all");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
   const fetchLogs = async () => {
     setLoading(true);
@@ -73,6 +75,7 @@ export function AuditLogPage() {
   };
 
   useEffect(() => {
+    setPage(1);
     fetchLogs();
   }, [moduleFilter, actionFilter]);
 
@@ -168,7 +171,7 @@ export function AuditLogPage() {
                     <TableCell colSpan={7} className="h-24 text-center">No logs found.</TableCell>
                   </TableRow>
                 ) : (
-                  logs.map((log) => (
+                  logs.slice((page - 1) * pageSize, page * pageSize).map((log) => (
                     <React.Fragment key={log.id}>
                       <TableRow className="cursor-pointer hover:bg-slate-50" onClick={() => toggleRow(log.id)}>
                         <TableCell>
@@ -269,8 +272,36 @@ export function AuditLogPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
-        </CardContent>
+
+            </div>
+            
+            {logs.length > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4 px-2">
+                <div className="text-sm text-muted-foreground text-center sm:text-left w-full sm:w-auto">
+                  Page {page} of {Math.ceil(logs.length / pageSize) || 1} (Total {logs.length} logs)
+                </div>
+                <div className="flex items-center space-x-2 w-full sm:w-auto justify-center sm:justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.min(Math.ceil(logs.length / pageSize), p + 1))}
+                    disabled={page === Math.ceil(logs.length / pageSize) || logs.length === 0}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+
       </Card>
     </div>
   );
