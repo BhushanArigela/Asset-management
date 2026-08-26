@@ -177,10 +177,10 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                               </div>
                             </TableCell>
                           <TableCell className="hidden md:table-cell">{ea.asset.name}</TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             <Badge variant="outline">{ea.asset.status?.name || "Unknown"}</Badge>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             {result ? (
                               <Badge variant="outline" className={result.classification === "VERIFIED" ? "border-green-500 text-green-600" : result.classification === "MISSING" ? "border-red-500 text-red-600" : "border-orange-500 text-orange-600"}>{result.classification.replace("_", " ")}</Badge>
                             ) : (
@@ -190,7 +190,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                           </TableRow>
                           {expandedExpected[ea.id] && (
                             <TableRow className="md:hidden bg-green-50/30">
-                              <TableCell colSpan={1}>
+                              <TableCell colSpan={10}>
                                 <div className="py-2 space-y-3 px-2">
                                   <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
                                     <div className="font-semibold text-sm text-[#1B2A4A]">Name</div>
@@ -260,7 +260,7 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                           </TableRow>
                           {expandedDiscrepancies[r.id] && (
                             <TableRow className="md:hidden bg-green-50/30">
-                              <TableCell colSpan={1}>
+                              <TableCell colSpan={10}>
                                 <div className="py-2 space-y-3 px-2">
                                   <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
                                     <div className="font-semibold text-sm text-[#1B2A4A]">Issue</div>
@@ -319,20 +319,20 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
                               {r.assetCode || r.asset?.assetCode}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             <span className="text-red-600 font-medium">{r.classification.replace("_", " ")}</span>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             {r.asset ? `${r.asset.building?.name || 'Unknown'} / ${r.asset.room?.name || 'Unknown'}` : 'Unknown'}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             {r.classification === "MISSING" ? "N/A (Missing)" : `Audit: ${audit.name}`}
                           </TableCell>
                           <TableCell className="hidden md:table-cell">{r.remarks || "No remarks"}</TableCell>
                         </TableRow>
                         {expandedResults[r.id] && (
                           <TableRow className="md:hidden bg-green-50/30">
-                            <TableCell colSpan={1}>
+                            <TableCell colSpan={10}>
                               <div className="py-2 space-y-3 px-2">
                                 <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
                                   <div className="font-semibold text-sm text-[#1B2A4A]">Classification</div>
