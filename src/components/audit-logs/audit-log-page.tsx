@@ -178,13 +178,13 @@ export function AuditLogPage() {
                           {format(new Date(log.createdAt), "MMM d, yyyy HH:mm:ss")}
                         </TableCell>
                         <TableCell className="hidden md:table-cell">{log.user?.name || log.userId}</TableCell>
-                        <TableCell>
-                          <span className="px-2 py-1 bg-slate-100 text-xs font-semibold rounded-md">
+                        <TableCell className="hidden md:table-cell">
+                            <span className="px-2 py-1 bg-slate-100 text-xs font-semibold rounded-md">
                             {log.module}
                           </span>
                         </TableCell>
-                        <TableCell>
-                          <span className={`px-2 py-1 text-xs font-bold rounded-md ${
+                        <TableCell className="hidden md:table-cell">
+                            <span className={`px-2 py-1 text-xs font-bold rounded-md ${
                             log.action === 'created' ? 'bg-green-100 text-green-700' :
                             log.action === 'deleted' ? 'bg-red-100 text-red-700' :
                             log.action === 'updated' ? 'bg-blue-100 text-blue-700' :
@@ -193,8 +193,8 @@ export function AuditLogPage() {
                             {log.action}
                           </span>
                         </TableCell>
-                        <TableCell>{
-                          (() => {
+                        <TableCell className="hidden md:table-cell">{
+                            (() => {
                             const payload = log.newValue || log.previousValue;
                             
                             if (typeof payload === 'string') {
