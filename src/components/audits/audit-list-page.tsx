@@ -204,11 +204,11 @@ export function AuditListPage() {
           </Table>
 
           {total > 0 && (
-            <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-muted-foreground">
-                Showing {(page - 1) * 10 + 1} to {Math.min(page * 10, total)} of {total} entries
-              </div>
-              <div className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4">
+                <div className="text-sm text-muted-foreground text-center sm:text-left w-full sm:w-auto">
+                  Page {page} of {totalPages || 1} (Total {total} audits)
+                </div>
+                <div className="flex items-center space-x-2 w-full sm:w-auto justify-center sm:justify-end">
                 <Button
                   variant="outline"
                   size="sm"
