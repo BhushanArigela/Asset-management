@@ -210,9 +210,9 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[950px] p-0 overflow-hidden bg-[#fafafa]">
+      <DialogContent className="sm:max-w-[950px] p-0 overflow-hidden bg-[#fafafa] flex flex-col max-h-[95vh] md:max-h-[85vh]">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 bg-white border-b border-gray-100">
+        <div className="flex items-center justify-between p-6 bg-white border-b border-gray-100 shrink-0">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-[#eff6ff] rounded-2xl flex items-center justify-center shrink-0 shadow-sm text-[#2563eb]">
               <Shield className="w-6 h-6 fill-current" />
@@ -225,8 +225,8 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="p-6 md:p-8 space-y-8 max-h-[75vh] overflow-y-auto">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
+            <div className="p-6 md:p-8 space-y-8 flex-1 overflow-y-auto">
               {/* Top Form Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 <FormField
@@ -392,7 +392,7 @@ export function RoleFormDialog({ open, onOpenChange, role, onSuccess }: any) {
             </div>
 
             {/* Bottom Actions */}
-            <div className="flex items-center justify-end gap-3 p-5 border-t border-gray-100 bg-white">
+            <div className="flex items-center justify-end gap-3 p-5 border-t border-gray-100 bg-white shrink-0">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="px-6 h-[44px] rounded-lg font-semibold text-[14px] text-gray-700 border-gray-200 flex items-center gap-2">
                 <X className="w-4 h-4" /> Cancel
               </Button>
