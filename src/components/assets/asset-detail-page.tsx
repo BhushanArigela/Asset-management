@@ -155,7 +155,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
   const canDisposeAsset = hasPermission(session?.user?.permissions, [PERMISSIONS.ASSETS_DISPOSE] as any);
 
   return (
-    <div className="-y-3">
+    <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full lg:w-auto">
           <h2 className="text-2xl sm:text-2xl font-bold tracking-tight">{asset.name}</h2>
@@ -274,7 +274,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
         </div>
       </div>
 
-      <Tabs defaultValue="overview" className="-y-3">
+      <Tabs defaultValue="overview" className="space-y-4">
         <div className="w-full overflow-x-auto pb-2">
           <TabsList className="w-full flex justify-start overflow-x-auto pb-2 -mb-2 no-scrollbar bg-white p-1 rounded-md border shadow-sm">
             <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -623,7 +623,7 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             <CardHeader><CardTitle>Maintenance Requests</CardTitle></CardHeader>
             <CardContent className="text-sm">
               {asset.maintenanceRequests?.length ? (
-                <div className="-y-3">
+                <div className="space-y-6">
                   {asset.maintenanceRequests.map((mr: any) => (
                     <div key={mr.id} className="border rounded-lg overflow-hidden relative">
                       <div className="bg-slate-50 p-3 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
