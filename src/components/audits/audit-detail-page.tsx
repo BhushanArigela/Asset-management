@@ -111,8 +111,8 @@ export function AuditDetailPage({ auditId }: { auditId: string }) {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-        <Card className="lg:col-span-2">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+        <Card className="col-span-2 md:col-span-4 lg:col-span-2">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Overall Progress</CardTitle>
           </CardHeader>
