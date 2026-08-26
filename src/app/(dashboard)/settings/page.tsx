@@ -39,6 +39,7 @@ export default function SettingsPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [isTesting, setIsTesting] = useState(false);
 
   const form = useForm<z.infer<typeof smtpFormSchema>>({
     resolver: zodResolver(smtpFormSchema),
@@ -80,6 +81,35 @@ export default function SettingsPage() {
     }
     loadSettings();
   }, [form]);
+
+  
+  const handleTestConnection = async () => {
+    try {
+      const values = form.getValues();
+      if (!values.host || !values.port || !values.user) {
+        toast.error("Please fill in Host, Port, and Username before testing.");
+        return;
+      }
+      setIsTesting(true);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/settings/smtp/test`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to connect");
+      }
+      
+      toast.success("Connection successful! SMTP settings are valid.");
+    } catch (error: any) {
+      toast.error(error.message || "Connection failed. Please check your settings.");
+    } finally {
+      setIsTesting(false);
+    }
+  };
+
 
   async function onSubmit(values: z.infer<typeof smtpFormSchema>) {
     setIsLoading(true);
@@ -323,9 +353,9 @@ export default function SettingsPage() {
                       </>
                     )}
                   </Button>)}
-                  <Button type="button" variant="outline" className="px-6 py-6 rounded-[12px] font-semibold text-[15px] border-input text-gray-800 bg-white hover:bg-gray-50 hover:text-gray-900 w-full sm:w-auto" onClick={() => toast.info("Test connection functionality coming soon")}>
-                    <RefreshCw className="mr-2 h-5 w-5 text-gray-600" />
-                    Test Connection
+                  <Button type="button" variant="outline" className="px-6 py-6 rounded-[12px] font-semibold text-[15px] border-input text-gray-800 bg-white hover:bg-gray-50 hover:text-gray-900 w-full sm:w-auto" onClick={handleTestConnection} disabled={isTesting}>
+                    {isTesting ? <RefreshCw className="mr-2 h-5 w-5 text-gray-600 animate-spin" /> : <RefreshCw className="mr-2 h-5 w-5 text-gray-600" />}
+                    {isTesting ? "Testing..." : "Test Connection"}
                   </Button>
                 </div>
               </form>
