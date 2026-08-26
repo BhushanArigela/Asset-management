@@ -126,7 +126,7 @@ export function ImportPage() {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Bulk Import Assets</h2>
           <p className="text-muted-foreground mt-1">Upload multiple assets via Excel. Download the template first to ensure correct formatting.</p>
@@ -143,8 +143,8 @@ export function ImportPage() {
             <CardDescription>Only .xlsx files are supported</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center gap-4">
-              <input 
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <input 
                 type="file" 
                 accept=".xlsx" 
                 className="block w-full max-w-sm text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
