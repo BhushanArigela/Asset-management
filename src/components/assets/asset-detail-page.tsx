@@ -287,8 +287,8 @@ export function AssetDetailPage({ assetId }: { assetId: string }) {
             <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="overview" className="-y-3">
-          <div className="-3">
+        <TabsContent value="overview" className="space-y-3">
+          <div className="flex flex-col lg:flex-row gap-4">
             {asset.imageUrl && (
               <div className="w-full lg:w-1/3 flex-shrink-0">
                 <div className="bg-white p-2 rounded-xl border shadow-sm flex items-center justify-center h-full min-h-[300px]">
