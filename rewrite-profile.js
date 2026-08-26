@@ -1,4 +1,7 @@
-"use client";
+const fs = require('fs');
+const file = 'src/app/(dashboard)/profile/page.tsx';
+
+const newCode = `"use client";
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -64,7 +67,7 @@ export default function ProfilePage() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/profile`);
+        const res = await fetch(\`\${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/profile\`);
         if (res.ok) {
           const { data } = await res.json();
           setUserData(data);
@@ -86,7 +89,7 @@ export default function ProfilePage() {
   async function onSubmit(values: z.infer<typeof profileSchema>) {
     setIsLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/profile`, {
+      const res = await fetch(\`\${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/profile\`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -245,7 +248,7 @@ export default function ProfilePage() {
                             <div className="absolute left-1 top-1 bottom-1 w-10 flex items-center justify-center rounded-md bg-indigo-50 text-indigo-500">
                               <Key className="w-4 h-4" />
                             </div>
-                            <Input type={showCurrent ? "text" : "password"} placeholder="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" className="pl-14 pr-10 h-11 border-gray-200" {...field} />
+                            <Input type={showCurrent ? "text" : "password"} placeholder="••••••••" className="pl-14 pr-10 h-11 border-gray-200" {...field} />
                             <button type="button" onClick={() => setShowCurrent(!showCurrent)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                               {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
@@ -268,7 +271,7 @@ export default function ProfilePage() {
                             <div className="absolute left-1 top-1 bottom-1 w-10 flex items-center justify-center rounded-md bg-green-50 text-green-500">
                               <Lock className="w-4 h-4" />
                             </div>
-                            <Input type={showNew ? "text" : "password"} placeholder="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" className="pl-14 pr-10 h-11 border-gray-200" {...field} />
+                            <Input type={showNew ? "text" : "password"} placeholder="••••••••" className="pl-14 pr-10 h-11 border-gray-200" {...field} />
                             <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                               {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
@@ -291,7 +294,7 @@ export default function ProfilePage() {
                             <div className="absolute left-1 top-1 bottom-1 w-10 flex items-center justify-center rounded-md bg-green-50 text-green-500">
                               <Lock className="w-4 h-4" />
                             </div>
-                            <Input type={showConfirm ? "text" : "password"} placeholder="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" className="pl-14 pr-10 h-11 border-gray-200" {...field} />
+                            <Input type={showConfirm ? "text" : "password"} placeholder="••••••••" className="pl-14 pr-10 h-11 border-gray-200" {...field} />
                             <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                               {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
@@ -322,3 +325,7 @@ export default function ProfilePage() {
     </div>
   );
 }
+`;
+
+fs.writeFileSync(file, newCode);
+console.log("Done");
