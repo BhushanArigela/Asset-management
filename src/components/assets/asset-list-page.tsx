@@ -160,11 +160,11 @@ export function AssetListPage() {
               <TableRow>
                 <TableHead>Code</TableHead>
                 <TableHead>Photo</TableHead>
-                <TableHead className="hidden md:table-cell">Name</TableHead>
-                <TableHead className="hidden md:table-cell">Category</TableHead>
-                <TableHead className="hidden md:table-cell">Location</TableHead>
-                <TableHead className="hidden md:table-cell">Status</TableHead>
-                <TableHead className="hidden md:table-cell">Condition</TableHead>
+                <TableHead className="hidden lg:table-cell">Name</TableHead>
+                <TableHead className="hidden lg:table-cell">Category</TableHead>
+                <TableHead className="hidden lg:table-cell">Location</TableHead>
+                <TableHead className="hidden lg:table-cell">Status</TableHead>
+                <TableHead className="hidden lg:table-cell">Condition</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -194,7 +194,7 @@ export function AssetListPage() {
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
                         <button 
-                          className="md:hidden focus:outline-none shrink-0"
+                          className="lg:hidden focus:outline-none shrink-0"
                           onClick={() => toggleRow(asset.id)}
                         >
                           {expandedRows[asset.id] ? <MinusCircle className="w-[18px] h-[18px] fill-[#ef4444] text-white border-none" /> : <PlusCircle className="w-[18px] h-[18px] fill-[#16a34a] text-white border-none" />}
@@ -213,17 +213,17 @@ export function AssetListPage() {
                         <div className="h-10 w-10 bg-muted rounded-md border flex items-center justify-center text-xs text-muted-foreground">No img</div>
                       )}
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">{asset.name}</TableCell>
-                    <TableCell className="hidden md:table-cell">{asset.category?.name}</TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    <TableCell className="hidden lg:table-cell">{asset.name}</TableCell>
+                    <TableCell className="hidden lg:table-cell">{asset.category?.name}</TableCell>
+                    <TableCell className="hidden lg:table-cell">
                       {asset.building?.name} {asset.floor?.name ? `> ${asset.floor.name}` : ""} {asset.room?.name ? `> ${asset.room.name}` : ""}
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    <TableCell className="hidden lg:table-cell">
                       <Badge variant="outline" style={{ borderColor: asset.status?.colorCode, color: asset.status?.colorCode }}>
                         {asset.status?.name}
                       </Badge>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    <TableCell className="hidden lg:table-cell">
                       <Badge variant="outline" style={{ borderColor: asset.condition?.colorCode, color: asset.condition?.colorCode }}>
                         {asset.condition?.name}
                       </Badge>
@@ -276,7 +276,7 @@ export function AssetListPage() {
                       </TableCell>
                     </TableRow>
                     {expandedRows[asset.id] && (
-                      <TableRow className="md:hidden bg-green-50/30">
+                      <TableRow className="lg:hidden bg-green-50/30">
                         <TableCell colSpan={3}>
                           <div className="py-2 space-y-3 px-2">
                             <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">

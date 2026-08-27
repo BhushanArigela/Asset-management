@@ -154,11 +154,11 @@ export function AuditLogPage() {
                 <TableRow>
                   <TableHead className="w-10"></TableHead>
                   <TableHead>Timestamp</TableHead>
-                  <TableHead className="hidden md:table-cell">User</TableHead>
-                  <TableHead className="hidden md:table-cell">Module</TableHead>
-                  <TableHead className="hidden md:table-cell">Action</TableHead>
-                  <TableHead className="hidden md:table-cell">Entity</TableHead>
-                  <TableHead className="hidden md:table-cell">IP Address</TableHead>
+                  <TableHead className="hidden lg:table-cell">User</TableHead>
+                  <TableHead className="hidden lg:table-cell">Module</TableHead>
+                  <TableHead className="hidden lg:table-cell">Action</TableHead>
+                  <TableHead className="hidden lg:table-cell">Entity</TableHead>
+                  <TableHead className="hidden lg:table-cell">IP Address</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -180,13 +180,13 @@ export function AuditLogPage() {
                         <TableCell className="font-medium whitespace-nowrap">
                           {format(new Date(log.createdAt), "MMM d, yyyy HH:mm:ss")}
                         </TableCell>
-                        <TableCell className="hidden md:table-cell">{log.user?.name || log.userId}</TableCell>
-                        <TableCell className="hidden md:table-cell">
+                        <TableCell className="hidden lg:table-cell">{log.user?.name || log.userId}</TableCell>
+                        <TableCell className="hidden lg:table-cell">
                             <span className="px-2 py-1 bg-slate-100 text-xs font-semibold rounded-md">
                             {log.module}
                           </span>
                         </TableCell>
-                        <TableCell className="hidden md:table-cell">
+                        <TableCell className="hidden lg:table-cell">
                             <span className={`px-2 py-1 text-xs font-bold rounded-md ${
                             log.action === 'created' ? 'bg-green-100 text-green-700' :
                             log.action === 'deleted' ? 'bg-red-100 text-red-700' :
@@ -196,7 +196,7 @@ export function AuditLogPage() {
                             {log.action}
                           </span>
                         </TableCell>
-                        <TableCell className="hidden md:table-cell">{
+                        <TableCell className="hidden lg:table-cell">{
                             (() => {
                             const payload = log.newValue || log.previousValue;
                             
@@ -227,12 +227,12 @@ export function AuditLogPage() {
                             return log.entityId ? `${type} (${log.entityId.substring(0, 8)})` : type;
                           })()
                         }</TableCell>
-                        <TableCell className="hidden md:table-cell text-muted-foreground text-sm">{log.ipAddress || 'N/A'}</TableCell>
+                        <TableCell className="hidden lg:table-cell text-muted-foreground text-sm">{log.ipAddress || 'N/A'}</TableCell>
                       </TableRow>
                       {expandedRows[log.id] && (
                         <TableRow className="bg-slate-50">
                           <TableCell colSpan={7}>
-                            <div className="md:hidden py-3 space-y-3 px-2 mb-4">
+                            <div className="lg:hidden py-3 space-y-3 px-2 mb-4">
                                 <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
                                   <div className="font-semibold text-sm text-[#1B2A4A]">User</div>
                                   <div className="col-span-2 text-sm text-gray-700">{log.user?.name || log.userId}</div>
