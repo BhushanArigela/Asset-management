@@ -159,14 +159,14 @@ export default function SettingsPage() {
             </div>
             <div>
               <h3 className="text-[22px] font-bold text-gray-900 leading-none mb-2">SMTP Configuration</h3>
-              <p className="text-[14px] text-gray-600 max-w-lg">
+              <p className="text-[14px] text-gray-600 max-w-[280px] sm:max-w-sm md:max-w-[340px] lg:max-w-lg">
                 Configure the SMTP server used for sending system emails (e.g., password resets).
               </p>
             </div>
           </div>
           
           {/* Decorative Elements */}
-          <div className="hidden lg:block absolute right-12 top-1/2 -translate-y-1/2 opacity-90 z-0">
+          <div className="hidden md:block absolute right-12 top-1/2 -translate-y-1/2 opacity-90 z-0">
             <div className="relative">
               {/* Envelope graphic simulation */}
               <div className="w-[110px] h-[75px] bg-[#2563eb] rounded-lg shadow-lg relative z-10 overflow-hidden mt-4 mr-8">
