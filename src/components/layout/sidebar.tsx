@@ -69,6 +69,7 @@ const navigation = [
 ];
 
 export function Sidebar() {
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
   const userPermissions = session?.user?.permissions;
@@ -101,7 +102,8 @@ export function Sidebar() {
                   return (
                     <li key={item.title}>
                       <Link
-                        href={item.href}
+                          href={item.href}
+                          onClick={() => setOpen(false)}
                         className={cn(
                           "group flex items-center gap-4 rounded-lg px-4 py-2.5 text-[14px] font-medium transition-colors hover:bg-white/10 hover:text-white",
                           isActive
@@ -138,7 +140,7 @@ export function Sidebar() {
 
       {/* Mobile/Tablet Sidebar */}
       <div className="xl:hidden">
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="xl:hidden fixed top-3 left-4 z-50">
               <Menu className="h-5 w-5" />
