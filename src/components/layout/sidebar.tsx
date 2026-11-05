@@ -82,11 +82,11 @@ export function Sidebar() {
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-[#1c2d4a]">
-      <div className="flex h-16 shrink-0 items-center justify-center bg-white border-b px-6">
+      <div className="flex h-16 shrink-0 items-center justify-center bg-white border-b px-6 py-2">
         <img 
           src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo-inner.png`} 
-          alt="Sheraton Logo" 
-          className="h-full w-full object-contain scale-[1.75]"
+          alt="New Life Assembly of God Logo" 
+          className="max-h-full max-w-full object-contain"
         />
       </div>
       <div className="flex flex-1 flex-col overflow-y-auto px-4 py-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">

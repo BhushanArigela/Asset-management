@@ -92,7 +92,7 @@ export default function LoginPage() {
           <div className="h-20 sm:h-24">
             <img 
               src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo.png`} 
-              alt="Sheraton Logo" 
+              alt="New Life Assembly of God Logo" 
               className="h-full object-contain mix-blend-multiply"
             />
           </div>
