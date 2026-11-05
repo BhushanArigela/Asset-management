@@ -1,6 +1,6 @@
 "use client";
 
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Breadcrumbs } from "./breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,14 +18,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface HeaderProps {
-  user: {
+  user?: {
     name?: string | null;
     email?: string | null;
     role?: string;
   };
 }
 
-export function Header({ user }: HeaderProps) {
+export function Header({ user: propUser }: HeaderProps) {
+  const { data: session } = useSession();
+  const user = session?.user || propUser;
   const router = useRouter();
   const [search, setSearch] = useState("");
 
@@ -61,7 +63,7 @@ export function Header({ user }: HeaderProps) {
             <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
               <Avatar className="h-8 w-8 border cursor-pointer">
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                  {user?.name?.charAt(0) || "U"}
+                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
             </Button>

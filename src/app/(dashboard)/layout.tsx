@@ -1,20 +1,16 @@
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
-
-// A mock session check, integrate with actual next-auth later
-async function getSession() {
-  return { user: { name: "Admin", email: "admin@sheraton.com", role: "admin" } };
-}
+import { auth } from "@/lib/auth";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
+  const session = await auth();
 
-  if (!session) {
+  if (!session?.user) {
     redirect("/login");
   }
 
