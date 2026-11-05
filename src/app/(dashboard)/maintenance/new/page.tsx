@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { MaintenanceForm } from "@/components/maintenance/maintenance-form";
 
 export const metadata = {
-  title: "New Maintenance Request | Sheraton Asset Management",
+  title: "New Maintenance Request | NLAG Asset Management",
 };
 
 export default function NewMaintenancePage() {

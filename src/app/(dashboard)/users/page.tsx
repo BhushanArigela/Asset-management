@@ -1,7 +1,7 @@
 import { UserListPage } from "@/components/users/user-list-page";
 
 export const metadata = {
-  title: "User Management - Sheraton Asset Management",
+  title: "User Management - NLAG Asset Management",
 };
 
 export default function UsersPage() {

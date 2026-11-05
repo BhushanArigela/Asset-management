@@ -1,7 +1,7 @@
 import { VendorListPage } from "@/components/masters/vendors/vendor-list-page";
 
 export const metadata = {
-  title: "Vendors - Sheraton Asset Management",
+  title: "Vendors - NLAG Asset Management",
 };
 
 export default function VendorsPage() {

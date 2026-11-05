@@ -1,7 +1,7 @@
 import { RoleListPage } from "@/components/roles/role-list-page";
 
 export const metadata = {
-  title: "Role Management - Sheraton Asset Management",
+  title: "Role Management - NLAG Asset Management",
 };
 
 export default function RolesPage() {

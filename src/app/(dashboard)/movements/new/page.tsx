@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { MovementForm } from "@/components/movements/movement-form";
 
 export const metadata = {
-  title: "Transfer Asset | Sheraton Asset Management",
+  title: "Transfer Asset | NLAG Asset Management",
 };
 
 export default function NewMovementPage() {

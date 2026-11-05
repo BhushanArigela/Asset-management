@@ -7,7 +7,7 @@ import { ConditionTab } from "@/components/masters/classifications/condition-tab
 import { StatusTab } from "@/components/masters/classifications/status-tab";
 
 export const metadata = {
-  title: "Classifications Master - Sheraton Asset Management",
+  title: "Classifications Master - NLAG Asset Management",
 };
 
 export default function ClassificationsPage() {

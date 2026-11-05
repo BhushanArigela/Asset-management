@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { AuditLogPage } from "@/components/audit-logs/audit-log-page";
 
 export const metadata = {
-  title: "System Audit Logs | Sheraton Asset Management",
+  title: "System Audit Logs | NLAG Asset Management",
 };
 
 export default async function AuditLogsRoute() {

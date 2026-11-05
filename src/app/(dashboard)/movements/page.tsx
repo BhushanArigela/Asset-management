@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { MovementListPage } from "@/components/movements/movement-list-page";
 
 export const metadata = {
-  title: "Asset Movements | Sheraton Asset Management",
+  title: "Asset Movements | NLAG Asset Management",
 };
 
 export default function MovementsPage() {

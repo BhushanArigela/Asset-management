@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 export const metadata = {
-  title: "QR Codes | Sheraton Asset Management",
+  title: "QR Codes | NLAG Asset Management",
 };
 
 export default function QrManagementPage() {

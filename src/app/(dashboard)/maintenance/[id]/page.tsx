@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { MaintenanceDetailPage } from "@/components/maintenance/maintenance-detail-page";
 
 export const metadata = {
-  title: "Maintenance Detail | Sheraton Asset Management",
+  title: "Maintenance Detail | NLAG Asset Management",
 };
 
 export default async function MaintenanceDetailPageWrapper(props: { params: Promise<{ id: string }> }) {

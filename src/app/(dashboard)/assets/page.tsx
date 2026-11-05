@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { AssetListPage } from "@/components/assets/asset-list-page";
 
 export const metadata = {
-  title: "Assets | Sheraton Asset Management",
+  title: "Assets | NLAG Asset Management",
   description: "Manage all hotel assets",
 };
 

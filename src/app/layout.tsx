@@ -6,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Sheraton Asset Management",
-  description: "Enterprise asset management system for Sheraton Hotel",
+  title: "NLAG Asset Management",
+  description: "Enterprise asset management system for NLAG",
 };
 
 import { Providers } from "@/components/providers";

@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { FileText, Building, Layers, AlertTriangle, ShieldAlert, Package, Calendar } from "lucide-react";
 
 export const metadata = {
-  title: "Reports | Sheraton Asset Management",
+  title: "Reports | NLAG Asset Management",
 };
 
 export default async function ReportsPage() {

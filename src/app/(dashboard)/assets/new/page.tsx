@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { AssetForm } from "@/components/assets/asset-form";
 
 export const metadata = {
-  title: "Register Asset | Sheraton Asset Management",
+  title: "Register Asset | NLAG Asset Management",
 };
 
 export default function NewAssetPage() {

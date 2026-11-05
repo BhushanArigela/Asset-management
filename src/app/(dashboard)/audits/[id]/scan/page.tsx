@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-  title: "Audit Scanner | Sheraton Asset Management",
+  title: "Audit Scanner | NLAG Asset Management",
 };
 
 export default async function AuditScannerPage(props: { params: Promise<{ id: string }> }) {

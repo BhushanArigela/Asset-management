@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
 export const metadata = {
-  title: "Edit Asset | Sheraton Asset Management",
+  title: "Edit Asset | NLAG Asset Management",
 };
 
 export default async function EditAssetPage(props: { params: Promise<{ id: string }> }) {

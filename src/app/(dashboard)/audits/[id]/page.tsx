@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { AuditDetailPage } from "@/components/audits/audit-detail-page";
 
 export const metadata = {
-  title: "Audit Details | Sheraton Asset Management",
+  title: "Audit Details | NLAG Asset Management",
 };
 
 export default async function AuditDetailRoute(props: { params: Promise<{ id: string }> }) {

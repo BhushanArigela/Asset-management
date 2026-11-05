@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { ImportPage } from "@/components/assets/import-page";
 
 export const metadata = {
-  title: "Import Assets | Sheraton Asset Management",
+  title: "Import Assets | NLAG Asset Management",
 };
 
 export default function ImportAssetsPage() {

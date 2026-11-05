@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { AuditForm } from "@/components/audits/audit-form";
 
 export const metadata = {
-  title: "New Audit | Sheraton Asset Management",
+  title: "New Audit | NLAG Asset Management",
 };
 
 export default async function NewAuditRoute() {

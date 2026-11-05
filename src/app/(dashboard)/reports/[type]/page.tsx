@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { ReportViewer } from "@/components/reports/report-viewer";
 
 export const metadata = {
-  title: "Report Viewer | Sheraton Asset Management",
+  title: "Report Viewer | NLAG Asset Management",
 };
 
 export default async function ReportTypePage(props: { params: Promise<{ type: string }> }) {

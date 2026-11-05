@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { AssetDetailPage } from "@/components/assets/asset-detail-page";
 
 export const metadata = {
-  title: "Asset Details | Sheraton Asset Management",
+  title: "Asset Details | NLAG Asset Management",
 };
 
 export default async function AssetDetail(props: { params: Promise<{ id: string }> }) {

@@ -7,7 +7,7 @@ import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RoutedTabs } from "@/components/ui/routed-tabs";
 
 export const metadata = {
-  title: "Locations Master - Sheraton Asset Management",
+  title: "Locations Master - NLAG Asset Management",
 };
 
 export default function LocationsPage() {

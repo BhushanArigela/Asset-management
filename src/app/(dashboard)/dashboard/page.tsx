@@ -4,7 +4,7 @@ import { DashboardPage } from "@/components/dashboard/dashboard-page";
 import Script from "next/script";
 
 export const metadata = {
-  title: "Dashboard | Sheraton Asset Management",
+  title: "Dashboard | NLAG Asset Management",
   description: "Asset Management Dashboard",
 };
 

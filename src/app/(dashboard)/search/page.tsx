@@ -2,7 +2,7 @@ import { AssetSearch } from "@/components/assets/asset-search";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Search Assets | Sheraton Asset Management",
+  title: "Search Assets | NLAG Asset Management",
 };
 
 export default async function SearchPage(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {

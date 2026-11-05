@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { MaintenanceListPage } from "@/components/maintenance/maintenance-list-page";
 
 export const metadata = {
-  title: "Maintenance | Sheraton Asset Management",
+  title: "Maintenance | NLAG Asset Management",
 };
 
 export default function MaintenancePage() {

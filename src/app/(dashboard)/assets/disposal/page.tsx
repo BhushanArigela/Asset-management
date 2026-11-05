@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { DisposalListPage } from "@/components/assets/disposal-list-page";
 
 export const metadata = {
-  title: "Disposed Assets | Sheraton Asset Management",
+  title: "Disposed Assets | NLAG Asset Management",
 };
 
 export default function DisposalPage() {
